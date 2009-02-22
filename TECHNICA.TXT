@@ -1,0 +1,216 @@
+The PW128 Mid-Game Completion Patch
+===================================
+
+The JSW128 version of Party Willy (PW128) uses a special patch whereby both Rooms 33 and 97 behave like "The Bathroom", and both Rooms 35 and 99 behave like "Master Bedroom".
+
+On collecting the 128 items from Part 1, the Part 1 Maria disappears and you can run into the toilet. On falling into the toilet, you are teleported to the start-room of Part 2, with a minute of flashing colours like when you gain an extra life in Manic Miner!
+
+Once you have collected all 256 items, the Part 2 Maria disappears and you can complete the game in the usual way.
+
+In the regular JSW (and JSW128) engine, the code to handle the end-game sequence is arranged as follows:
+
+38196-38275: Master Bedroom routine
+38276-38297: Routine to detect the toilet when Willy is running
+38298-38343: Routine to draw the toilet
+
+The corresponding code in PW128 is arranged as follows:
+
+38196-38280: Master Bedroom (Part 2) routine (finishes 5 bytes later)
+38281-38285: Extended test for "got all items?" (38286-38292 unused)
+38293-38343: Routine to draw the Part 2 toilet (starts 5 bytes earlier)
+
+38912-38984: Master Bedroom (Part 1) routine
+38985-39036: Routine to detect both toilets when Willy is running
+39037-39067: Routine to draw the Part 1 toilet
+39068-39075: Subroutine to select sprites for remaining lives
+
+(38912-39423 are spare in JSW128, since the title-screen is stored elsewhere.)
+
+----------------------
+Master Bedroom routine
+----------------------
+
+In the regular JSW engine, the main routine to handle Master Bedroom is as follows:
+
+38196: LD A,(33824) ; get current room-number
+38199: CP 35        ; are you in Master Bedroom?
+38201: JR NZ,+95    ; if not then jump to toilet-drawing routine (38298)
+38203: LD A,(34271) ; get current game-status
+38206: OR A         ; is Status 0? (Status 0: not all items collected yet)
+38207: JR NZ,+53    ; if not then jump to bed-detection routine (38262)
+38209: LD A,(34251) ; get ticker (which is incremented every time-frame)
+38212: AND 2        ; AND 00000010 - Maria's foot moves every two time-frames
+38214: RRCA         ;     0000000X
+38215: RRCA         ;     X0000000
+38216: RRCA         ;     0X000000
+38217: RRCA         ;     00X00000 - A is now either 0 or 32
+38218: OR 128       ; OR 10000000 - A is either 128 (Sprite 4) or 160 (Sprite 5)
+38220: LD E,A
+38221: LD A,(34255) ; get Willy's vertical position (YYYYyyy0)
+38224: CP 208       ; at row 13?
+38226: JR Z,+8      ; if so then jump to 38236 - Willy is at ground-level
+38228: LD E,192     ; Sprite 6 (Maria's finger cocked)
+38230: CP 192       ; at row 12?
+38232: JR NC,+2     ; if >= then jump to 38236 - Willy is on lower ramp-block
+38234: LD E,224     ; Sprite 7 (Maria pointing her finger)
+38236: LD D,156     ; Maria's sprite-page
+38238: LD HL,26734  ; position in pixel-buffer to draw Maria (AT 11,14)
+38241: LD C,1       ; Maria will kill you if she pixel-collides
+38243: CALL 37974   ; generic guardian-drawing & collision-detection subroutine
+38246: JP NZ,37047  ; if collided then flag you as fallen too far so you'll die
+38249: LD HL,17733  ; Maria's upper colour-attributes (bright cyan ink)
+38252: LD (23918),HL; write them to attribute-buffer (AT 11,14/15)
+38255: LD HL,1799   ; Maria's lower colour-attributes (white ink)
+38258: LD (23950),HL; write them to attribute-buffer (AT 12,14/15)
+38261: RET
+
+The bed-detection routine, which is jumped-to from the above, is as follows:
+
+38262: LD A,(34259) ; get Willy's horizontal position (YYYXXXXX)
+38265: AND 31       ; AND 00011111 - extract the column only
+38267: CP 6         ; at column 6?
+38269: RET NC       ; if Willy is to the right of column 6 then return
+38270: LD A,2
+38272: LD (34271),A ; set Status 2 (running-right mode)
+38275: RET
+
+
+In PW128, the Part 2 Master Bedroom is Room 35 ("Jet Set Willy ;->"). The routine to handle it starts by checking whether you are in the Part 1 Master Bedroom, which is Room 99 ("Attributes of Maria (Sharapova)"):
+
+38196: LD A,(33824) ; get current room-number
+38199: CP 99        ; are you in Part 1 Master Bedroom?
+38201: JP Z,38912   ; if so then jump to Part 1 Master Bedroom routine
+
+It continues with a copy of the regular Master Bedroom routine (38199-38275) in 38204-38280 - i.e. everything is shunted up 5 bytes. The instruction to jump to the toilet-drawing routine (JR NZ,+95) is replaced with JR NZ,+85, because it is ten bytes nearer due to code-relocation.
+
+The routine to handle the Part 1 (mid-game) Master Bedroom is a copy of 38203-38275 in 38912-38984. The colour-attributes of Maria are different in the two parts, as is her sprite-page.
+
+------------------------
+Toilet-detection routine
+------------------------
+
+In the regular JSW engine, the subroutine to detect when Willy hits the toilet - which is called when Willy is running right (Status 2) - is as follows:
+
+38276: LD A,(33824) ; get current room-number
+38279: CP 33        ; are you in The Bathroom?
+38281: RET NZ       ; if not then return
+38282: LD A,(34259) ; get Willy's horizontal position (YYYXXXXX)
+38285: CP 188       ; is Willy in column 28, at row 5 or 13?
+38287: RET NZ       ; if not then return
+38288: XOR A
+38289: LD (34251),A ; set ticker to 0
+38292: LD A,3
+38294: LD (34271),A ; set Status 3 (Willy in toilet)
+38297: RET
+
+
+In PW128, this subroutine is relocated to 38985-39036, and extended to handle both toilets. First of all, the call to the subroutine has to be fixed to accommodate the relocation:
+
+35302: CALL Z,38985
+
+The new toilet-detection routine starts by ascertaining which Bathroom you are in:
+
+38985: LD A,(33824) ; get current room-number
+38988: CP 97        ; are you in the Part 1 Bathroom?
+38990: JR Z,+19     ; if so then jump to 39011
+
+A copy of 38279-38297 follows in 38992-39010 to handle the Part 2 toilet (in Room 33) in the usual way.
+
+The code to handle the Part 1 toilet (in Room 97) is different. Instead of setting Status 3, it sets Status 0 and teleports you to the start-room of Part 2. So it uses a copy of 38282-38291 in 39011-39020 - which leaves A as 0 - and continues as follows:
+
+39021: LD (34271),A ; set Status 0
+39024: LD A,20
+39026: LD (33824),A ; set room to 20 (Part 2 start-room)
+39029: LD A,255
+39031: LD (35253),A
+
+The byte at 35253 is a fossil from Manic Miner, used to control the length of time for which the PAPER-colour cycles by the extra-life routine, which still exists in JSW! POKE 35253,255 (which only works at runtime, BTW) sets it in this mode for well over a JSW-minute!
+
+Finally...
+
+39034: JP 35090
+
+...actually teleports you to Room 20, forcing the room to be drawn at that point. I know it's not a proper return from the subroutine, but what the user don't see, the programmer gets away with! ;-)
+
+----------------------
+Toilet-drawing routine
+----------------------
+
+In the regular JSW engine, the routine to draw the toilet - which is only jumped-to when you're NOT in Master Bedroom - is as follows:
+
+38298: LD A,(33824) ; get current room-number
+38301: CP 33        ; are you in The Bathroom?
+38303: RET NZ       ; if not then return
+38304: LD A,(34251) ; get ticker
+38307: AND 1        ; AND 00000001 - is this an even or odd time-frame?
+38309: RRCA         ;     X0000000
+38310: RRCA         ;     0X000000
+38311: RRCA         ;     00X00000 - A is now either 0 or 32
+38312: LD E,A       ; select Sprite 0 or Sprite 1
+38313: LD A,(34271) ; get status
+38316: CP 3         ; Status 3 (Willy in toilet)?
+38318: JR NZ,+2     ; if not then jump to 38322
+38320: SET 6,E      ; E is now either 64 (Sprite 2) or 96 (Sprite 3)
+38322: LD D,166     ; toilet sprite-page
+38324: LD IX,33488  ; index into lookup-table (vertical position of toilet)
+38328: LD BC,4124   ; B: 16 pixel-rows to draw; C: column 28
+38331: CALL 38504   ; toilet-drawing subroutine
+38334: LD HL,1799   ; toilet's colour-attributes (white ink)
+38337: LD (23996),HL; write them to attribute-buffer (AT 13,28/29)
+38340: LD (24028),HL; write them to attribute-buffer (AT 14,28/29)
+38343: RET
+
+
+In PW128, the routine starts 5 bytes lower in memory because it is 5 bytes longer. It starts by checking whether you are in the Part 1 Bathroom, which is Room 97 ("Where I Ends and II Begins."):
+
+38293: LD A,(33824) ; get current room-number
+38296: CP 97        ; are you in Part 1 Bathroom?
+38298: JP Z,39037   ; if so then jump to Part 1 toilet-drawing routine
+
+The code from 38301-38343 is the usual code in the usual place.
+
+The routine to handle the Part 1 (mid-game) toilet is a simplified copy of the regular toilet-drawing routine. It need not concern itself with Status 3 (Willy in the toilet), so it simply copies 38304-38312 into 39037-39045 (to select Sprite 0 or 1 only), and copies 38322-38343 into 39046-39067 (to actually draw the toilet). The position and colour-attributes of the toilet are different in the two parts, as is its sprite-page.
+
+----------------
+"Got all items?"
+----------------
+
+JSW maintains a count of the items collected in 34270, which is always 256 minus the number of items remaining (except when they're all collected, when it goes `up' to 0). Whenever an item is collected, the following code is executed:
+
+37918: LD A,(34270) ; get item-count
+37921: INC A
+37922: LD (34270),A ; add 1 to item-count
+37925: JR NZ,+5     ; if not got all items then jump to 37932
+37927: LD A,1
+37929: LD (34271),A ; set Status 1 (got all items - Maria will disappear)
+
+
+But in PW128, we need to set Status 1 when we've got 128 items (so that we can teleport to Part 2), and again when we've got all 256 items. To achieve this, the LD (34270),A instruction is replaced with a call to a subroutine:
+
+37922: CALL 38281
+
+The subroutine (which fits into the cavity left by all the relocation above) applies an AND-mask of 01111111 to the item-count in order that 128 and 256 both appear to the calling routine as 0:
+
+38281: LD (34270),A
+38284: AND 127      ; AND 01111111
+38286: RET
+
+---------------
+Remaining lives
+---------------
+
+When JSWED v2.0.3 upgrades a 48K JSW game to JSW128, it checks for my patch for specifying the player's sprite-page in Room-Offset 237 (as documented in _Jet Set Willy: The Lord of the Rings_). If it recognises my patch, it leaves it in instead of applying the JSW128 patch to specify the player's sprite-page.
+
+However, because JSW128 relocates the code which draws the remaining lives, this breaks my patch for drawing the remaining lives - they appear as Willy facing left (because my patch entails swapping the two halves of Sprite-Page 157 so that Willy is treated consistently with horizontal guardians).
+
+Recall from TECHNICA.TXT of JSW:LOTR that I wrote a subroutine to select the sprites for the remaining lives. In PW128, this is located at 39068-39075:
+
+39068: XOR 128      ; select other half of sprite-page
+39070: LD E,A
+39071: LD A,(33005) ; get Offset 237 for current room
+39074: LD D,A       ; use it as the sprite-page for remaining lives
+39075: RET
+
+Recall that the call to this subroutine replaces instructions LD E,A and LD D,157 (at 35232-35234 in JSW48). In JSW128 these are located at 60175-60177, so that's where the subroutine-call goes:
+
+60175: CALL 39068

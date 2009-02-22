@@ -1,0 +1,12 @@
+Presumably you have just unzipped a file called "zxwtbs.zip". This
+archive contains files relating to "ZX Willy the Bug Slayer"; you
+should have:
+
+README (this file)
+zxwtbs.txt (documentation)
+zxwtbs.tap (file to load into your Spectrum emulator)
+zxwtbs.jsw (text file from which the game was compiled)
+
+If you don't understand this, or have any commentd, visit:
+
+http://www.cix.co.uk/~morven/jsw

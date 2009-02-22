@@ -1,0 +1,850 @@
+The Rooms in Party Willy (Part 2)
+=================================
+
+Here is a list of the 64 rooms in Party Willy (Part 2), ordered by room-number.
+
+As specified, some of the rooms are reinterpretations of rooms from the original Jet Set Willy by Matthew Smith (laterally inverted using MirrorJSW), some are rare rooms from other sources, some are revamped versions of rooms that I wrote in 1993 for _Jet Set Willy: Manic Miner_, and some are brand new rooms by me.
+
+Abbreviations:
+* HG: horizontal guardian
+* VG: vertical guardian
+* ILB: innocent-looking block (if you jump through it at the correct angle, you fall through the platform below it!)
+* IDS: infinite-death scenario
+(Please note that the term "sudden multiple-death scenario" does NOT mean infinite death - it means you must move as soon as you enter a room.)
+
+This file - together with ROOMS_PART1.TXT - supersedes the room-descriptions in the old README.TXT for JSW:MM.
+
+--------------
+Part 2: Inside
+--------------
+
+START ROOM: 20
+
+ROOM 0: "Through The Wall"
+SOURCE: JSW:MM ("East  Wing" [31])
+COMMENTS: Originally a companion to "West  Wing" in the original JSW (which is also in JSW:MM), this appears in a laterally-inverted form next to the East Wall (now known as the West Wall, since Party Willy is based on a laterally-inverted version of Jet Set Willy).
+	The name "Through The Wall" comes from my primary school, as does the name "Party Willy". I was talking to a girl about the Spectrum and Jet Set Willy (I wish I'd realised at the time how LUCKY I was to be able to talk to a girl about these things! ;-) ), and she asked me "Have you got Thro' The Wall?". I said "What wall?", thinking she meant the East Wall in Jet Set Willy - but she meant a BASIC game by Psion about knocking bricks out of a wall! I did indeed have Thro' The Wall - it was on a cassette that came with my 48K Spectrum.
+TIPS:
+* This room contains an invalid-arrow pair (pixel-row 0), which produces the black blob onto which you must jump in order to progress to the upper part of the screen.
+* Jump through the ILB at the bottom-left to access the top ledge in Rooms 20, 11 and 10.
+LEFT: 46 (Promised Land)
+RIGHT: 26
+UP: 1
+DOWN: 20 (one-way)
+
+ROOM 1: "The Land of Wind and Ghosts"
+SOURCE: JSW:MM ("East Wing Roof" [37])
+COMMENTS: Originally a companion to "West Wing Roof" in the original JSW (which is also in JSW:MM), this too appears in a laterally-inverted form next to the West Wall (fka East Wall).
+	The room-name is a reference to The Simpsons, Episode 4F18 "In Marge We Trust", which features a Japanese detergent called Mr. Sparkle which "banishes dirt to the land of wind and ghosts". Mr. Sparkle looked just like Homer Simpson, being a composite of a light-bulb and a fish; I think my Mr. Sparkle sprite turned out very well, considering how difficult it was to draw as a 16x16-pixel monochrome sprite.
+	The ultra-fast flickering VG is the mask that the killers wore in the Scream film-trilogy, which in turn is based on a painting called "The Cry" by Edvard Munch.
+TIPS:
+* A clever jump near the top of the ramp provides access to the middle item, and to the bottom-left of the screen.
+* Sometimes you have to go backwards before you can go forwards.
+* Things aren't always what they seem in this room, in more ways than one.
+* To get the bottom-left item requires a jump which looks suicidal (and would be if this room were laterally inverted, or converted to Manic Miner), but is perfectly safe.
+LEFT: 7 (Promised Land)
+RIGHT: 32
+UP: 4
+DOWN: 0
+
+ROOM 2: "Cannelloni Ned"
+SOURCE: Derrick Rowson's _Jet Set Willy II: The Final Frontier_ ("Macaroni Ted")
+COMMENTS: Like "Ravioli Fred" in _Willy the Rogue_ by the DrUnKeN mAsTeR, this is a reinterpretation of "Macaroni Ted" (which uses an unused sprite from the original JSW), and a tribute to a rare but belting pasta-dish. The room also features a devastatingly innovative array of arrows.
+TIPS:
+* The upper ramp is, in fact, made up of static nasties - it is not possible or necessary to get past it (the floors to the left and above are Forbidden Holy Ground).
+* Tight timing is required to take the items without sacrificing a life - in the case of the right item, your manoeuvre has to be absolutely perfect.
+* After exiting to the right, walk right immediately to avoid a sudden multiple-death scenario (static nasties in column 0).
+LEFT: 34
+RIGHT: 36
+
+ROOM 3: "The Toilet Department"
+SOURCE: the original JSW ("The Bathroom" [33])
+COMMENTS: Having been fascinated by toilets from an early age, I rarely write a MM/JSW game without including toilet facilities! ;-) So, this room features the toilet-sprites from both Manic Miner and Jet Set Willy - the former as HGs which are more adept at teaming up on you than in any MM/JSW room I can remember! :-)
+	The room-name came from a graffito in the toilets of the Department of Computer Science at the University of Manchester. It read: "The Toilet Department - where more jobs get done than in C.S." ;->
+TIPS:
+* When entering at the bottom-left, stand in one character-space under the base of the ramp, and jump straight up over the yellow toilet four times. If you do so only the obvious two times, the cyan and magenta toilets will team up on you.
+* It is possible to collect the left item without sacrificing a life if you jump left in front of the blue toilet when it's at its right boundary.
+LEFT: 32
+RIGHT: 34
+UP: 39
+
+ROOM 4: "Jump For My Love"
+SOURCE: new
+COMMENTS: This was inspired by Girls Aloud's exhilarating single "Jump" - there just had to be a JSW room in this! ;-) My interpretation is nothing if not literal, with hearts as the items! The design is very much in the style of a Manic Miner cavern, and I feel that the flashing background helps to get across the thumping beats of the song.
+	This was one of the last rooms to be written for Party Willy (going up from "The Land of Wind and Ghosts" [1] originally took you to "Father Ted's Craggy Hidey-Hole" [38]). As such, it reuses four Kari Krisníková guardian-classes and adds a fifth, representing the five members of Girls Aloud. I put the four existing guardian-classes in first, and designed the screen-layout around them (which necessitated a room to the left).
+TIPS:
+* On entering at the bottom, stand above "or" (halfway between, facing left). Timing it to avoid the yellow girls: jump straight up, then jump left twice. Then jump left out of the hole (jump left again immediately to take the item), and hold left to climb the invisible ramp and take the lower left exit.
+* On reentering at the lower left, wait until the lower yellow girl is out of the way, then descend the ramp until you're standing above a floor-block and a static nasty (halfway between). Then jump right twice to reach the middle platform.
+* Once you've got past the blue drum and are standing on the wall-block, you have two options: to go left and take the upper left exit, or to go right and up off the top of the screen. I recommend going left first, because you won't have to cross the bottom of the screen again.
+* To take the upper left exit entails four jumps through overhead wall-blocks in the presence of the magenta girl. Having done so, you must reemerge at the lower left (it is not possible to cross the top of this room from the upper left exit).
+* To go right and up off the top of the screen, please note that the invisible ramp wraps around onto the right side of the screen. You can follow it up through the wall!
+* Going up through the wall takes you to the bottom-right of this screen. You have to get up onto the wall (jump left - facing left, on one leg) - the timing of this jump is very tight because of the cyan Kari. Then you have to jump left for the item (again facing left, on one leg).
+LEFT: 6
+RIGHT: 38 (Promised Land)
+DOWN: 1
+
+ROOM 5: "The Devil's Intestines!"
+SOURCE: new
+COMMENTS: This room is a conceptual companion to "slime surfers & jissom monkeys" in my 2003 Manic Miner game _Ma jolie_, both being inspired by quotes from the agoraphobic Matthew Malone in the 1990s' TV comedy _Game On_. This one comes from the very last episode, when Matthew was explaining to Mandy's fiancé Archie why he couldn't come to their wedding:
+- ARCHIE: You step outside, and what's the first thing that happens?
+- MATTHEW: I feel the Devil's breath, touching my face. It smells like all the dead people there's ever been. I try and walk, but the pavement's soft and wormy, sucking at my shoes. And it starts bubbling up until there's a sea of boiling pus seething round my ankles. I start to run, but my legs don't work, and I'm slipping, slipping down, down... and it's hot there. Coils of grey slimy matter thrashed against my skin! Acid snot burns my eyeballs! And suddenly, suddenly I realise where I am! I'M INSIDE THE DEVIL'S INTESTINES!!! And I see my mum and dad there. Mum's face is all burnt off. Dad's brain is hanging out of his head! And I call out to them: "Mum, Dad, it's me, Matt!" But they don't hear me. And then I sort of come to, and I'm lying on the pavement about two feet away from the front door!
+	You have to make your way down to collect the hanging turd; it is not possible to collect it when you enter at the bottom (excuse the pun!). You have to dodge the vertical devils, which are quite capable of teaming up on you, and the arrows which are cleverly timed to trap you if you venture forth from the bends at the wrong time (the large bend on the left is a key strategic position). If you make it back up and out without sacrificing a life, give yourself a pat on the back!
+LEFT: 43 (Promised Land)
+RIGHT: 16 (Promised Land)
+UP: 10
+DOWN: 19 (Promised Land)
+
+ROOM 6: "Condescending Footnotes"
+SOURCE: new
+COMMENTS: The examiners of my PhD thesis wrote that "The tone of the footnotes is in general condescending", and asked me to remove some of them. This room represents a page of my PhD thesis (be grateful I didn't decide on a white-paper background!), with the footnotes at the bottom (one of which has to be removed) and a big slash of red ink representing the need for corrections. Of course there have to be some big feet too... so that they can (con)descend! ;-)
+TIPS: Crossing the middle row from left to right is one of the most difficult parts of the game, but you need to bare with it as it's the only escape when you enter this room at the top-right:
+* Heavy use of the pause-button and snapshotting are recommended here!
+* You're looking to jump OVER all six red and yellow feet.
+* All three of these jumps need to be from the very edge of the platform (with your legs apart). The positions of the feet in the tips below refer to when you're standing in this position - not standing in one character space waiting to step out.
+* Yellow-red pairs (on the left and right): jump when the yellow foot is one step from the bottom line and the top of the red foot is aligned with the top line.
+* Red-yellow pair (in the middle): jump when the red foot is below you and the yellow foot is above the top line (there's only one time-frame in which a jump is possible, i.e. ASAP).
+RIGHT: 4
+
+ROOM 7: "The Men in White Coats"
+SOURCE: new
+COMMENTS: One of the insanity-themed brick-hard rooms which guard the entrance to Room 35, and should not therefore be attempted until you have all 128 items (256 items if you're playing the JSW128 version). The design of this room reminds me very much of Booty - quite possibly the scariest Spectrum game I've ever played.
+TIPS: Since the floors are conveyors, the challenge is to wait at the edge of each row and set off on exactly the right time-frame to be able to jump the men in white coats:
+* On entry, walk right and stop on the conveyor so as to wait facing left above "hi" (halfway between). Jump left when the bottom man is above the first "i" with his legs apart, so that the arrow passes just underneath you.
+* An invisible ramp on the left lets you walk up through the wall to the middle row.
+* To cross the middle row, wait by the conveyor with your legs apart, and set off when the man is going right and aligned in one character-space with the "t" in "White": jump so as to land just after the leftmost static nasty, followed by four more jumps without stopping.
+* To cross the top row, wait just under the conveyor (as far right as you go). When the man is walking left and on one leg above "Me", jump straight up onto the conveyor and let it take you immediately.
+LEFT: 57 (Promised Land)
+RIGHT: 1 (Promised Land)
+UP: 8 (one-way)
+DOWN: 16
+
+ROOM 8: "The Funny Farm"
+SOURCE: new
+COMMENTS: Probably the room in the whole of Party Willy of which I'm the most proud, this room is unorthodox and extremely effective with springy platforms (background colour-attribute = ramp colour-attribute), raised HGs and a `time-limit' (when the white and blue birds collide).
+	The design of this room, which has a suitable farm-esque atmosphere, came about when I looked up all the `animal' guardian-classes, placed eight compatible guardian-instances in the room, and designed the screen-layout around them (although the guardians can safely walk through the inkless floor-blocks). The springy platforms allowed me to impose some unusual constraints. I couldn't believe I finally managed to get these constraints to `add up' the way I wanted them to. It gave me such a buzz to pull off a room like this! :-)
+TIPS:
+* Use the gap in the pond to stand halfway down the pond, then jump over the leftmost static nasty so as to land halfway down the pond again.
+* Then jump behind the blue bird as close as possible, go right until you're on the wall-block, and walk left to walk down into the wall-block.
+* Then exit and reenter the room at the bottom-right - this is necessary because of the time-limit.
+* On reentering the room at the bottom-right, jump twice immediately to clear the white spider and the magenta rabbit - any significant delay here will be fatal later on.
+* Jump left straight onto the wall-block, jump right onto the lowest isolated water-block (floor-block), jump right again onto the next water-block, and jump right immediately to land on the rightmost isolated water-block.
+* Then jump left onto the water-block below the conveyor, and jump left ASAP to land on the lower isolated water-block above "a". Then turn round and jump right onto the water-block you just jumped off of, and jump left onto the upper isolated water-block above "a".
+* Then jump left ASAP to land on the double water-block, wait there (on the right edge, facing left in one character-space) until the flying pig has started going left, then walk down onto the lower semi-detached water-block, jump straight up onto the left edge of the upper block, and jump right onto the isolated water-block above the space in "Funny Farm", and jump right again immediately to land on the upper isolated water-block above "m".
+* Stand on the left edge of the upper isolated water-block above "m", facing right on one leg. When the yellow bird is aligned between the conveyor and the spider with its neck out, jump right three times without stopping (the best way to enter the room to the right at the top is to jump into it).
+RIGHT: 9
+
+ROOM 9: "Porcine Aviation"
+SOURCE: new
+COMMENTS: A variation on the saying "pigs might fly", the apparent big blank space in this room is actually an intricate array of invisible wall-blocks and conveyor, designed to carry you back to "The Funny Farm" if you fall off the top level - I feel justified in being this mean when you're so close to the end of the game (assuming you've got this far with all the items collected). ;-)
+- MR. BURNS: You know, Smithers, I think I'll donate a million dollars to the local orphanage... when pigs fly!
+- SMITHERS: Will you be donating that money now, sir?
+- MR. BURNS: I'd still prefer not.
+[The Simpsons, Episode 3F03 "Lisa the Vegetarian"]
+TIPS:
+* You're trying to exit the room at the bottom-right, in order to reach that all-important floor-block in Room 40 that will give you access to Room 35.
+* The bottom of the screen (to the left of the river) is a red herring; its only useful purpose is to reregister your position in "The Funny Farm".
+* To reach the non-swinging rope, you `simply' have to cross the top of the room from left to right... not being able to see the difference between wall and background.
+LEFT: 8
+DOWN: 40
+
+ROOM 10: "An Agoraphobic's Nightmare"
+SOURCE: the original JSW ("The Front Door")
+COMMENTS: Now that Willy is agoraphobic, nasty things happen to him when he ventures out of his front door (cf. "The Devil's Intestines!" [5]). And yes, I know the priest gets shot by an arrow, killing you if you wait around for this to happen. The rest of Part 2 (to the right of this room) is set indoors.
+TIPS:
+* To reach the top ledge entails jumping through an ILB in "Through The Wall" [0].
+* There are two ways to avoid the top arrow in order to collect the item: (a) stand inside the ladder, or (b) jump through the overhead wall-block.
+RIGHT: 11
+UP: 0
+DOWN: 5
+
+ROOM 11: "Something for the Rag & Bone Man"
+SOURCE: the original JSW ("The Hall")
+COMMENTS: An atmospheric and well-designed tribute to the Radiohead song "Go to Sleep." (from their 2003 album _Hail to the Thief._), the first line of which is "Something for the rag & bone man" - hence the white man at the top collecting the item (a bone) for you. The lower white HG I've always thought was a bone - or possibly a bath-sponge, or a pair of atlases. The green HG is the todhopper from Manic Miner rather than the Jet Set Willy one.
+	The second line of the song is ""Over my dead body"", hence the positioning of the item above a supine Willy!
+TIPS:
+* When exiting this room at the bottom-right, you have to jump into the room to the right, but do NOT jump from the rightmost column (31) as this will result in infinite death!
+* Although you cannot collide with the red and green HGs (they are in Forbidden Holy Ground), they collide with each other after a time just sufficient to cross the bottom of the room either way.
+* To cross the bottom from right to left: jump over the rightmost static nasty so as to land directly on the floor-block. Jump straight up over the HG, and walk right off the floor-block. Stand on one leg, facing left, above "or" and jump left into the overhead wall-block.
+* To cross the bottom from left to right: stand one character below the top of the ramp with your legs apart. When the cyan VG, going down, has the top of the ramp halfway up its face, jump right twice without stopping. Drop down from the wall and wait in one character space. When the white HG, going left, is above "B", jump right onto the conveyor (which looks just like a floor-block), and jump right again from the right edge of the conveyor.
+* To collect the lower item, jump left from "Where I Ends and II Begins." [20] with your legs apart over the "t" in "Items".
+LEFT: 10
+RIGHT: 20
+
+ROOM 12: "Chester J. Lampwick"
+SOURCE: new
+COMMENTS: A tribute to The Simpsons, Episode 3F16 "The Day the Violence Died". Chester J. Lampwick was the original inventor of inner cartoon Itchy & Scratchy, but Roger Meyers, Sr., stole the Itchy character and became rich, while Chester became a tramp. Many decades later, Chester sued Itchy & Scratchy Studios, and they were shut down while Chester bought himself a solid gold house.
+	Chester J. Lampwick reminds me very much of Matthew Smith in the way that he invented something great, but was screwed by an unscrupulous company and disappeared for many years. And his rags-to-riches tale - complete with a top hat - reminds me very much of Miner Willy! :-)
+	The two Willys - yellow because that's the standard skin-colour for Simpsons characters - represent Chester before and after he got rich. The item is the reel of the first-ever episode of Itchy & Scratchy, now in the attic of the solid gold house (even though it was destroyed before he bought the solid gold house). The sprite of the black VG comes from Goodnite Luddite (Broadsoft, 2002).
+TIPS:
+* To get inside the solid gold house, go up from "The Castle" [15]. If you do so in column 31, you'll land inside the wall and be able to exit at the bottom-right!
+* To access the upper storey of the solid gold house, walk up the ramp as high as you can go, then jump up.
+* To collect the item, walk up the ramp as high as you can go, press jump while holding left, and walk left.
+* To get back down and out, jump through the ILB on the right. In the lower storey, hold jump as you walk left up the ramp. Then jump into the displaced wall-block above "L".
+LEFT: 50
+RIGHT: 13
+
+ROOM 13: "Screams from a Shopping Mall"
+SOURCE: new
+COMMENTS: A tribute to the Itchy & Scratchy cartoon "Screams from a Mall" in The Simpsons, Episode 9F16 "The Front". Itchy nails Scratchy's feet to an escalator so that when Scratchy reaches the top, he gets pulled into the machine and skinned alive!
+	This inspired me to have a conveyor-ramp with a static nasty at the top, which you can only jump over if you jump on exactly the right time-frame. So I designed this simple but effective room around this idea, with a few more tricks thrown in for good measure.
+TIPS:
+* To reach this room, stand in the very top-right corner of "The Castle" [15] and jump right.
+* You then need to curl up into one character-space, as I've deployed the age-old platform-game trick of having a guardian that looks like it's going to kill you on entry, but actually turns round leaving you a small space to wait in. I first remember seeing this trick in Peter M. Harrap's _Monty On The Run_ (Gremlin Graphics Software, 1985).
+* Then follow Freddy Krueger as closely as possible, and jump as soon as you will be able to clear the wall above.
+* To get down to the room below, set off up the conveyor-ramp, and jump so as to land on a wall-layer - if you land on a floor-layer, you will be forced to commit suicide.
+* Once you've taken the top-right exit, you will need to reemerge at the bottom-left from the room to the right - a very difficult task! :-> I recommend going down first.
+* Eventually, you will need to exit this room to the left from whence you came. This entails jumping over Freddy Krueger from the right side of the ramp (to get there when entering this room from below, stand above " a" - halfway between - and jump right). Stand two steps from the lower static nasty, facing left, and jump left when Freddy is above the second "m".
+LEFT: 12
+RIGHT: 14
+DOWN: 62
+
+ROOM 14: "A Punchup at a Selection Centre."
+SOURCE: new
+COMMENTS: A titular nod to Radiohead's "A Punchup at a Wedding." (from their 2003 album _Hail to the Thief._), this was inspired by an anecdote in _The Careers Service Guide 2003_ (University of Manchester & UMIST, as they were known before they merged to form a single University of Manchester in autumn 2004) which cracked me up:
+	"The assessment centre where the group discussion became heated and two candidates went into the car park for a punch-up at the tea break."
+	So I designed a punch-up sprite based on Bruce Lee (US Gold, 1984 - brilliant game BTW, combining platform-action with the martial arts in an atmospheric Oriental setting), and used it for an ultra-fast flickering VG. The red-paper background and border symbolise the rage that the two candidates were no doubt feeling, as in the expression "to see red"!
+	This room is mind-bogglingly difficult, due to the fact that each VG (they're three instances of the same guardian-class) has four different animation-phases. Your movement has to be not only time-frame perfect, but also in the correct phase.
+TIPS:
+* Don't bother crossing the bottom from left to right. You need to enter at the top-left to collect the item.
+* Jump over the first VG and immediately curl up into one character-space. Do this when it's going down (first phase), and the lower image shows the men both standing straight, with six vertical pixels of floor aligned below their feet.
+* Then emerge from the character-space, turn round and jump over the first pair of static nasties. Do this (start emerging) when the VG is going down (next phase after curling up) such that the lower image shows the left man punching the right, their feet two pixels above the bottom platform.
+* Then stand two steps from the right edge of the platform (over "at"), jump right so as to land on the very left edge of the next platform, and jump right again immediately over the second pair of static nasties. Do this (start the first jump) when the middle VG is going down (next phase after jumping the first pair of static nasties) such that the upper image shows the left man punching the right, aligned three pixels above the top of the platform.
+* Then stand in one character space at the right edge of the middle platform (over "t"). When the third VG is going down (next phase after jumping the second pair of static nasties) such that the lower image shows the men both standing straight, their feet four pixels above the bottom platform, step out and jump onto the rightmost platform.
+* To collect the item, stand at the top of the rightmost pillar facing right, on one leg above "nt" and jump right into the room to the right. Jump left back into this room so that you jump up off the top of the screen and collect the item at the bottom.
+* Then stand at the top of the rightmost pillar facing right, above "en" (halfway between) and jump right into the room to the right. Walk left back into this room, and you'll fall into the cavity in the rightmost pillar.
+* Then cross the room from right to left (easy).
+* Drop onto the conveyor-ramp (you cannot drop straight to the bottom because of strategically-placed static nasties), and cross the room from left to right - this is easy, but avoid the temptation of jumping up to the overhead wall or you will have to commit suicide.
+* Only from the rightmost pillar can you safely fall to the bottom.
+* Then jump over the rightmost triple of static nasties when the VG is going up, the upper image three pixels above the static nasties at the top.
+* Jump over the middle triple of static nasties when the VG is going up, the upper image one pixel above the static nasties at the top. Ditto re. the leftmost pair of static nasties.
+LEFT: 13
+RIGHT: 51 (Promised Land)
+
+ROOM 15: "The Castle"
+SOURCE: new
+COMMENTS: I wrote this as an extension to Softricks' "The Moat" [45]. It's very much the kind of room I would have written as a sixteen-year-old (as I was when I wrote JSW:MM  back in 1992), with such a plain room-name! ;-) But I think I've captured the atmosphere of a castle-interior pretty well, with some tricky challenges to boot! The item is meant to be a crown.
+TIPS: This is the pivotal room of this section of the map (to the right of Thunder Ocean). You can enter it three different ways from "The Moat" [45]:
+	1. The TOP LEVEL provides access to the inside of Chester J. Lampwick's solid gold house (Room 12 - above), and to the Shopping Mall cluster (Room 13 and beyond) - for the latter, stand in the very top-right corner and jump right.
+* The challenge of the top level is to jump over triples of static nasties while on a conveyor. To make it a little easier, jump right from column 31 of "The Moat" [45] whilst standing on top of the battlement with your legs apart (be sure you know what you're doing, though, or you risk an infinite-death scenario!).
+	2. The MIDDLE LEVEL is a stern test of manual dexterity, as you have to stop on a conveyor (jump and hold left) and walk under the vicious guards.
+* To make matters worse, there are arrows, and only one place in which you can jump over the arrows! To do this, you need to stand in one character-space, facing left, under this gap - which is very difficult because one step too far and the conveyor will take you.
+* The return-trip after collecting the item is even tougher, as you have to keep stopping in one character-space between conveyor and guard. Lack of delay is also important to reach the gap before the next arrow comes!
+	3. The BOTTOM LEVEL provides access to the lower half of the Central Asian cluster (Rooms 62 and 63), and - via a very non-obvious quirky feature - to the business-end of "bedroom role reversal games" [18].
+* Crossing the bottom from left to right: The easiest way to jump over the cyan girl is to jump as you enter this room from "The Moat" [45]. (If reentering from the bottom row, this must be from the very right edge of "The Moat" with your legs apart, otherwise it's infinite death.)
+* Crossing the bottom from right to left: Jump as you enter this room from "The Steppes of Central Asia" [62] to avoid a sudden multiple-death scenario and to walk easily into the wall.
+* The hidden entrance to "bedroom role reversal games" [18]: Stand above the "s" of "Items", facing left with your legs apart, and jump left. This takes you slap through the bottom of "The Moat" [45]! This is because the wall in "The Moat" acts like an ILB, even though it is blocked - a feature first exploited in Goodnite Luddite (Broadsoft, 2002).
+LEFT: 45
+RIGHT: 62
+UP: 12
+
+ROOM 16: "Willy Meets Dr Jones"
+SOURCE: new
+COMMENTS: Located above the room formerly known as "Dr Jones will never believe this" [40], this screen makes clever use of flashing colour-attributes to give the illusion of a giant two-frame-animated sprite (the one I've always associated with Dr Jones - probably because it appears in that room in the original JSW). I first used this technique in Goodnite Luddite (2002), and of course it originates from the loading-screen of Manic Miner.
+	To design this room, I drew the pixel-patterns for two animation-frames of the `Dr Jones' sprite on a single 16x16 grid, using "/" for pixels in one frame and "\" for pixels in the other. Thus some squares were blank, some had a single mark ("/" or "\") and some had a double mark ("X"). I then chose which of these four would be background, floor, wall and static nasty, and set up the screen-layout and the blocks' colour-attributes accordingly.
+TIPS:
+* Turn back if you are not holding all 128 items (or 256 items in the JSW128 version). By going up from this room, you embark on a series of brick-hard rooms that guard the entrance to Room 35 (which triggers the end-of-game sequence if you've got all the items).
+* If you do have all the items, jump up onto the left foot, jump up the left side of the body, and go up to the left of the left ear.
+* The red block at the bottom-right provides access to Room 35. The red block is reached by jumping up from the highest block in the rightmost column of "A Secret Elephant!" [40]. That block can only be reached by going through the brick-hard series of rooms above this one.
+LEFT: 5 (Promised Land)
+RIGHT: 35
+UP: 7
+DOWN: 40
+
+ROOM 17: "The Fish-Gutting Factory"
+SOURCE: new
+COMMENTS: The room-name is a reference to Matthew Smith's post-JSW life. In 2001, he gave an interview to a TV documentary about the history of computer-games called _Thumb Candy_, which was televised in the UK on Channel 4. Asked about a rumour that he worked as a fish-seller, he said, "I don't think I ever /sold/ fish. I tried to get a job in a fish-gutting factory, but I applied at the wrong time of year."
+	Although I don't really know how a fish-gutting factory works (other than what I saw in The Simpsons, Episode AABF20 "30 Minutes over Tokyo"), I think I got the concept across quite effectively with this room! :-) I blagged most of the block-graphics from "The Fishmarket" in Jet Set Willy III (Michael Blanke and Arno Gitz, MBG/APG Software, 1985).
+TIPS:
+* To jump over the static nasties at the bottom, jump through the overhead wall-blocks (stand on one leg facing left).
+* Stand in floor-blocks at the bottom to avoid the arrows.
+* After jumping into the leftmost overhead wall-block, jump right onto the conveyor, and jump right again immediately to land on a floor-block. Then jump left onto the ramp.
+* Wait at the bottom of the ramp to cross the conveyor. Set off at a time when the red guard has just started going down. Jump over the static nasties as close after them as possible, so as to land directly back on the (sticky) conveyor.
+* After collecting the item, return to the ramp and cross the conveyor from left to right again, but this time jump through the ILB on the right if you wish to exit the room without sacrificing a life.
+* See "Tulips in Amsterdam" [50] for how to collect the item on the right.
+LEFT: 18 (Promised Land)
+RIGHT: 50
+DOWN: 45
+
+ROOM 18: "bedroom role reversal games"
+SOURCE: the original JSW ("Master Bedroom" [35])
+COMMENTS: According to Geocities, "bedroom role reversal games" is the search-term most frequently used on Google to access the List of MM/JSW Games on my website! No doubt it matched Sendy's JSW game _Role Reversal_ in which you play as Maria, with Willy in charge - hence the design of this room, where you play as my horizontal Maria, with Willy guarding the bed (I had not played Role Reversal yet when I wrote this room).
+TIPS:
+* The item is collectable only when you enter this room via a hidden back door - see "The Castle" [15].
+* After collecting the item, you must escape by going up from the left half of the screen. The room is filled with tricky jumps that might fool some initially, but most of them don't need spelling out here...
+* After jumping into the left half of the screen, stand above the "r" in "role" facing left with your legs apart, and jump left over the static nasty, so as to fall through the adjacent floor.
+* Then stand above "ed" facing left with the left foot up, and jump left.
+LEFT: 48 (Promised Land)
+RIGHT: 17 (Promised Land)
+UP: 45
+
+ROOM 19: "Stable to Stable"
+SOURCE: JSW:MM ("The Final Barrier")
+COMMENTS: The top of this room is, of course, based on the bottom half of "The Final Barrier" from Manic Miner. In JSW:MM, this was the topmost Manic Miner cavern, with "The Wine Cellar" to the left, "Welcome To The Playground" to the right, and a repeat of the Manic Miner caverns if you went up.
+	For Party Willy, this room has been given a completely different place in the map, and been given a makeover to make it more visually attractive and atmospheric as well as more technically challenging, and to add the guardians from "The Final Barrier" in Manic Miner.
+	The room-name comes from a sketch in BBC Radio 1's Mark Radcliffe Show where they made up parody-names for David Bowie albums - "Ziggy Sawdust" [51] for _Ziggy Stardust_", and "Stable To Stable" for _Station To Station_.
+TIPS:
+* To collect the items in the WIN (Wall-Item-Nasty) position, stand in one character-space under the nasty, facing left, and jump left.
+* To collect the middle item, stand halfway under the nasty to the right, facing left, and jump left through the overhead wall-block.
+* To collect the top item, jump off the very left edge of the conveyor into the room above. To avoid a sudden multiple-death scenario, be sure to hold left as you drop back down into this room!
+* To escape after collecting the items, jump through one of the ILBs on either side of the screen. The coolest way out is to jump through the two ILBs on the right! :-)
+LEFT: 51
+RIGHT: 49
+UP: 5 (Promised Land)
+
+ROOM 20: "Where I Ends and II Begins."
+SOURCE: the original JSW ("Ballroom East")
+COMMENTS: The start-room of Part 2 corresponds to the ending-room of Part 1 [33] (with a teleport to the Part 2 room in the JSW128 version). The room-name is a titular nod to the brilliant Radiohead song "Where I End and You Begin." from _Hail to the Thief._
+	This room was straightforward until I added the two lowest horizontal guardians! I didn't plan to make it brick-hard (I only reused two HGs from Room 28, after all), but the way the bird teams up with the yellow and green Willys, and the way the green Willy provides a time-limit by colliding with the cyan VG to kill you, were too classic not to keep! :->
+TIPS:
+* There's a possibility of infinite death when entering this room from the left ("Something for the Rag & Bone Man" [11]): you have to jump into this room to get past the yellow HG, but if you do so from the rightmost column (31), it's infinite death! Sorry about this, but putting the two overhead wall-blocks in both rooms was the only way I could reduce the occasion of infinite death without editing the guardians out of their `perfect' paths.
+* If you're playing with a serious intention to complete the game, I strongly suggest going left first, as there are only three rooms reachable this way, and because of the potential IDS when reentering this room from the left.
+* To cross this room from right to left: wait to the right of the cyan VG, and walk as close as possible behind the green Willy. When you're above the "n" in "Ends", jump left twice without stopping. Then walk left out of the room; to collect the lower item in "Something for the Rag & Bone Man" [11], jump left with your legs apart over the "t" in "Items".
+* To cross this room from left to right: jump over the yellow HG from the room to the left ("Something for the Rag & Bone Man" [11]) - not from column 31 unless you're fond of infinite death! Jump over the green HG and walk as close as possible in front of it to walk under the cyan VG. Then jump up the ladder, and when you're just below the top platform, jump right from the very right edge of the ladder so as to land directly on the first rung of the top ladder - it has to be done this way or the green HG will collide with the cyan VG - and jump up off the top of the screen.
+* To collect the items without sacrificing a life, enter the room from the right, and standing under Maria on one leg facing left, jump into the overhead wall-block, and immediately go right out of the room.
+LEFT: 11
+RIGHT: 21
+UP: 26
+
+ROOM 21: "Indoor Rabbits and 'Loungeroos'"
+SOURCE: the original JSW ("Ballroom West")
+COMMENTS: This room is intended to make a statement about the kangaroos in Manic Miner's "The Vat" and the rabbits in JSW, which some people have been known to confuse! ;-) It's also a reference to the episode of _Game On_ where the agoraphobic Matthew Malone was discussing Australia with his psychologist Jason:
+- MATTHEW: So what's it like in Australia?
+- JASON: Oh... wide open spaces, incredible! Talk about the outdoor life!
+- MATTHEW (clutching his head): Mmm...
+- JASON: Kangaroos! Lots of kangaroos! You can be having a drink and one will go past, guaranteed!
+- MATTHEW: These kangaroos were *inside* the pub, right?
+- JASON: Oh, absolutely, mate! Strictly indoor kangaroos - none of that outside shit for them!
+TIPS:
+* To reach the top platform, go right from "Climbing up the Walls." [26] and down from "The Explicitly Christian Room" [27].
+* When entering at the middle-left, jump through the upper ILB to land on the conveyor. You might then want to take the bottom-left exit to return to the bottom-right of "Where I Ends and II Begins." [20], or just to reregister your position.
+* To cross the bottom from left to right, jump through the lower ILB (from as far left on the screen as possible).
+* Then wait above "bb" in the crouching position. When the VG, going down, is within one character-row of its bottom boundary, jump right, and jump right again off the very right edge of the conveyor so as to land on the lowest isolated floor-block.
+* To collect the item at the top of the wall, jump right from the left edge of the lowest isolated floor-block so as to land *inside* the wall. Only in this way can you safely jump out and get the item.
+LEFT: 20
+RIGHT: 22
+
+ROOM 22: "Marilyn Mansion"
+SOURCE: the original JSW ("To the Kitchens    Main Stairway")
+COMMENTS: A tribute to the band Marilyn Manson, of whom I am a demi-fan, this white-PAPER room ("Coma White"? "Great Big White World"?) builds up a suitably `dark' atmosphere through its graphics: Kari Krisníková symbolises the juxtaposition of beauty with a murderer that characterises the stage-name of each member of Marilyn Manson, and there are also a Freddy Krueger sprite, a skull, an angel with cyan (rather than scabbed) wings, a mechanical animal, and the shock-symbol from _Antichrist Superstar_.
+TIPS:
+* If you look carefully, you can see Willy in yellow (the background INK) as he moves.
+* The angel eventually collides with the Swiss-Army knife, imposing a time-limit.
+* The spider is actually a guardian rather than a static nasty, so you can jump over it without dying.
+* Middle section: from the isolated wall-block above the "i" in "Marilyn", you can either jump right /through/ the floor to get the lower item, or jump right /onto/ the floor to get the upper item (which of course requires jumping into a wall-block).
+* A jump through an overhead wall-block is required to collect the bottom-right item.
+* On entering at the bottom-right, immediately walk left until you're just past the isolated wall-block above the "n" in "Manson", then jump straight up over the Swiss-Army knife.
+* To cross the top of the room from left to right, stand under the top isolated wall-block, facing right with your legs apart. Jump through the ramp onto the sticky conveyor when Freddy Krueger steps out into mid-air.
+* The top-right exit is one-way - to get back, you'll have to go up at some point, then make your way back left.
+LEFT: 21
+RIGHT: 23
+UP: 28
+
+ROOM 23: "In the Valley..................."
+SOURCE: the original JSW ("The Kitchen")
+COMMENTS: The left side of my two-room "In the Valley of the Shadow of Death" (see also Room 24), the screen-layouts of these rooms are similar to "The Kitchen" and "West of Kitchen" in the original JSW, but here the floors are invisible!
+	These rooms are not exactly another Marilyn Manson tribute, for their phrase is "In the Shadow of the Valley of Death". Rather, they are a biblical reference: "Even though I walk through the valley of the shadow of death, I fear no evil; for thou art with me; thy rod and thy staff, they comfort me" [Psalms 23:4].
+TIPS:
+* Willy turns green when he's in a floor-block.
+* Where there's a VG, there's a gap. The converse is only sometimes true.
+* To get the item, jump from the ramp onto the isolated wall-block above "a". Jump right from the left edge of this wall-block. Standing above "le" facing left with your legs apart, jump left. Standing above " V" with your claw up, jump left. Standing above " t" on one leg, jump left once more.
+LEFT: 22
+RIGHT: 24
+
+ROOM 24: "..........of the Shadow of Death"
+SOURCE: the original JSW ("West of Kitchen")
+COMMENTS: The right side of my two-room "In the Valley of the Shadow of Death" (see Room 23).
+TIPS:
+* As in the original "West of Kitchen", your sole purpose in ascending the platforms in the valley is to get an item at the bottom of Room 30.
+* See "New Killer Star" [25] for how to get the lower item.
+LEFT: 23
+RIGHT: 52
+UP: 30
+
+ROOM 25: "New Killer Star"
+SOURCE: the original JSW ("Cold Store")
+COMMENTS: A tribute to David Bowie's 2003 DVD-single "New Killer Star", the guardians in this room mimic the forwards and backwards animation of the video, which also inspired the graphical design of this reinterpretation of "Cold Store". I associate the song with Maria Sharapova (for whom 2003 was a breakthrough year), hence the Maria graphic and the tennis-balls.
+	The satellite-sprite is from _Manic Miner: Allana Truman_ (Broadsoft, 2004).
+TIPS:
+* To reach this room, go left from "Willy's Generic Geoff Eddy Room" [52].
+* It is not possible to cross this room from left to right, so I tweaked the map to skip over it: go left to "..........of the Shadow of Death" [24] and right to "Willy's Generic Geoff Eddy Room" [52].
+* To collect the lower item in "..........of the Shadow of Death" [24], go as far down the rope as possible, and jump into the embedded floor-blocks in the wall. Do NOT jump out of "..........of the Shadow of Death" [24] unless you're fond of infinite death!
+* To take the upper-left exit, stand halfway under the satellite with your legs apart, and go left up the invisible ramp as close under the satellite as possible. Go left into "..........of the Shadow of Death" [24] and, making sure you don't fall off the floor-block you've just attained, go right into "Willy's Generic Geoff Eddy Room" [52], and left to reach the top-right of this room - it's the only way to get the top-right item.
+* To get the item above the bird, take the second-highest exit from "Willy's Generic Geoff Eddy Room" [52] (the easiest way is to go right from the top of the hill in "..........of the Shadow of Death" [24]). Jump the arrow on entering this room. Stand halfway between the item and the static nasty, and jump left when the rope is coming under you.
+* To get the item above the saw, take the second-lowest exit from "Willy's Generic Geoff Eddy Room" [52]. Stand in one character-space above the ":" in the time, and when the saw is going left and showing two specks of sawdust, jump left.
+* To get the bottom-right item, drop onto the ice (a right-conveyor) between the two stars, and hold left until the black HG is at its left-boundary. Jump left for the item from the right, as you would any item in the WIN (Wall-Item-Nasty) position. Stop on the conveyor between the two stars, and jump straight up onto the rope - hold right as you hit the rope.
+* To get the bottom-left item, climb to the top of the rope, wait till it swings out to the left, and jump left off the top of the screen between two static nasties.
+LEFT: 24
+RIGHT: 52
+
+ROOM 26: "Climbing up the Walls."
+SOURCE: the original JSW ("East Wall Base")
+COMMENTS: This is a tribute to "Climbing Up The Walls" from Radiohead's 1997 album _OK Computer_. The idea that there was a JSW room in this actually occurred to me when I attended a Radiohead concert in November 2003 and they performed this song live. The colour-scheme matches their use of green and cyan light.
+	This is one of my favourite rooms in Part 2, combining a golden oldie with a dazzling array of quirky features. For once I actually resisted the temptation to leave the guardians as difficult as the ones I tried (I removed an instance of Guardian-Class 6 from column 1) because I didn't want to detract from the sheer fun of this room with off-putting difficulty. However, I did double the speed of the VGs from the original!
+TIPS:
+* Hold jump as you emerge into the left side of the room, so as to land inside the floor-block next to the static nasty. You then have two choices:
+	1. Jump off the very left edge of the platform onto the conveyor, and jump onto the floor-blocks at the top-left of the screen. Jump right off the top of the screen from the floor-block above the "l" in "Climbing" to get an item in the room above, then take the middle-top exit.
+	2. Jump from one step back from the very left edge of the platform to miss the conveyor and land on the floor-block under the conveyor. Jump left from the right edge of the wall above "b" and you'll land on the bottom-left platform! Take the left exit.
+* There are two ways to cross this room from left to right, depending on whether you prefer to jump left off the conveyor or to jump over the middle VG. Either way, you need to jump the central static nasty so that you hit the overhead wall-block from the side rather than from below.
+* To collect the item, go up from "Father Ted" [38].
+LEFT: 0
+RIGHT: 27
+UP: 32
+DOWN: 20
+
+ROOM 27: "The Explicitly Christian Room"
+SOURCE: the original JSW ("The Chapel")
+COMMENTS: A remix of "The Chapel" with more and better Christian imagery: more candles, three Crosses symbolising Jesus and the two criminals with whom he was crucified, an upper gallery, the `disrespectful' monk now bidirectional instead of always facing away from the altar, and instead of a cyan devil a white angel.
+TIPS:
+* Playing as a monk, you cannot stand in one character-space to avoid VGs.
+* The bottom-left is only accessible by going right from "Climbing up the Walls." [26].
+* Yes, it /is/ possible to jump over the bird at the top. You only need to jump over it once to collect the items without sacrificing a life.
+LEFT: 26
+RIGHT: 28
+DOWN: 21
+
+ROOM 28: "Political Correctness Gone Mad"
+SOURCE: the original JSW ("First Landing")
+COMMENTS: Formerly known as "The Secular Landing", this room sends up the ridiculous idea of having to remove all religious references in order to appease those with an excessive desire to be offended. Thus the Cross has been removed to "The Explicitly Christian Room" [27], and the monk is now Willy.
+	I've also added a selection of silly, incongruous guardians, including a toilet with someone in it, Dr Jones (cf. Room 16), and Maria in the Standing Melkor pose. Unfortunately I had to move Dr Jones one column to the left in order to make it possible to jump over the green Willy from the ramp.
+TIPS:
+* To ascend, stand on the lower isolated floor-block above "G" on one leg and jump right just before the bottom of the jelly (going up) is aligned with the bottom of the overhead floor. Then stand at the left edge of the floor-block above "M", and jump left. Then stand back in one character-space and jump left when Maria is going to be either above or below.
+* To take the upper-left exit (and the invisible item), stand on one leg to the left of the static nasty on the ramp and jump left twice.
+* To descend, fall down from the upper ledge onto an invisible platform, and jump over the static nasty on the ramp.
+* To take the bottom or bottom-left exits from the other side of the green Willy, jump onto the bottom character of the ramp by standing above the "ne" in "Gone" (halfway between) and jumping left. Wait with your legs apart, and jump the green Willy when he's above "re" (halfway between).
+LEFT: 27
+RIGHT: 29
+UP: 34
+DOWN: 22
+
+ROOM 29: "The Nefarious Frightmare Room"
+SOURCE: the original JSW ("The Nightmare Room")
+COMMENTS: A tribute to the Spectrum game Frightmare (Cascade Games, 1988), where your rank increases in adjective (the highest is Nefarious) and noun (the highest is Frightmare). Frightmare also features green Medusa guardians! I find this room very atmospheric with the sleeping Willy, who gets coloured by the spiders!
+	The item-graphic is the unused static-nasty graphic from the original Nightmare Room.
+	My original idea was simply to double the speed of the VGs in "The Nightmare Room"; however the graphical changes to this room make it a different rather than a harder challenge.
+TIPS:
+* On entering at the lower right (not the very bottom), make your way up the floor-blocks and then across the top.
+* It is not possible to cross the bottom of this room from right to left. To take the left exit, you must fall off the lowest floor-block on that side.
+LEFT: 28
+RIGHT: 30
+
+ROOM 30: "Where is Matthew Smith?"
+SOURCE: the original JSW ("The Banyan Tree")
+COMMENTS: Inspired by the fascination about the whereabouts of Matthew Smith since his mysterious disappearance after releasing Jet Set Willy, this room takes its title from Stephen Smith's (no relation) site [http://www.jonlan.demon.co.uk/spectrum/matsmith/], and is an extended version of "The Banyan Tree".
+	See my web-page http://www.geocities.com/andrewbroad/spectrum/willy/matthew_smith.html for everything I know about the whereabouts of Matthew Smith. In terms of this game, my Matthew Smith sprite appears only in Part 1.
+TIPS:
+* It is not possible to cross this room from left to right, nor from right to left. The quickest way to get across is to go up two rooms to "Under the Womb" [42], where you can go back down twice to get to the left side of this room, or go right to the top of "This game may contain an insect" [43] to make your way down to the right side of this room.
+* To get the bottom item, go up from "..........of the Shadow of Death" [24].
+* See "Willy is obviously Jesus! ;-)" [31] for how to get the two items on the right side.
+LEFT: 29
+RIGHT: 31
+UP: 36
+DOWN: 24
+
+ROOM 31: "Willy is obviously Jesus! ;-)"
+SOURCE: the original JSW ("Swimming Pool")
+COMMENTS: This is a reference to a thread started on comp.sys.sinclair by Andy Kavanagh in 1997 which claims that Willy is the Messiah because he can walk on water, rise from the dead, and is worshipped by us!
+	This thread is well worth a read (go to http://groups.google.com/ and type "Willy is obviously Jesus"), as it was in this very thread that AutismUK claimed that the JSW protection-card had correctly prophesied several events that had taken place between 1984 and 1997, and also prophesied that Matthew Smith would be crucified and that the world would end on 22nd October 2004!
+	The item on top of the pool is present in the original "Swimming Pool", but is automatically collected on entry to that room, which has white-ink background.
+TIPS:
+* To get the lower-right item in "Where is Matthew Smith?" [30], stand at the top of the water above the "y" in "Willy" with your legs apart, jump left into the wall-block, and walk left off the screen.
+* To get the upper-right item in "Where is Matthew Smith?" [30], stand on the rope such that there are seven pixels of rope below your feet when the rope is in its central position. As the rope approaches its left-boundary, jump left when the top of your hat is aligned with the bottom of the isolated floor-blocks. Then jump left of the screen from the very left edge of the screen with your legs apart, so as to jump the six-character gap.
+* See "Entrance to Habsu" [54] for how to get the top-right item in this room, and remember to press jump to walk through the wall-blocks at head-height!
+LEFT: 30
+RIGHT: 54
+UP: 37
+DOWN: 25
+
+ROOM 32: "Halfway up the West Wall"
+SOURCE: the original JSW ("Halfway up the East Wall")
+COMMENTS: An extension of "Climbing up the Walls." [26], continuing the green and cyan colour-scheme. This room has four separate zones: one to the right of the main wall (based on "Halfway up the West Wall"), and three to the left which require a good command of quirky features - two of these zones occurring in the bottom-left quarter of the room.
+TIPS:
+* Playing as the saw gives you an ability to duck!
+* To get the bottommost, leftmost item, jump onto the right edge of the conveyor from the room below [26], and jump when you're going left with the saw at its highest.
+* To get the other bottom-left item without sacrificing a life, stand on the small low floor at the bottom-right of "The Land of Wind and Ghosts" [1], at the far-right edge of the screen (with your lid at a 30-degree angle to your bowl) and jump right to clear the six-character gap and land on the wall-block. Jump right to get the item. Then jump left off the left edge of the floor-block, drop onto the lower isolated floor-block, and jump left onto the bottom floor.
+* On entering at the bottom-middle, stand on the floor-block above "u" facing left with two pixels of sawdust showing, and jump left through the overhead wall-block when the top of the priest's mouth (going up) is aligned with the top of the floor-block on the other side of the wall to the left of the priest's mouth. Immediately walk right and hug the wall-block. Jump up the floor-blocks and walk left off the screen.
+* On entering at the top-left, curl up into the left edge of the screen, facing right with three pixels of sawdust showing. When the lower lip of the eye is aligned with the top of the static nasties, jump right, walk right one step, jump right again, and wait at the edge of the wall with the saw at its lowest. When the spider has just started going up, jump right, and walk right to hug the wall before exiting to the left once more.
+LEFT: 1
+RIGHT: 3
+UP: 38 (one-way)
+DOWN: 26
+
+ROOM 33: "The Womb-Room"
+SOURCE: new
+COMMENTS: The ending room of the game, which you will only see (without cheating) when you have collected all items and gone through "Jet Set Willy! ;->" [35]. You're supposed to be a sperm fertilising an egg, but due to running out of sprite-pages I had to use a bird instead.
+
+ROOM 34: "Morning Wood"
+SOURCE: the original JSW ("Top Landing")
+COMMENTS: This room should be interpreted, err, entirely at face-value as an attractive sylvan screen! ;-)
+TIPS:
+* Mind the static nasty, which looks a lot like floor!
+* This room contains an invalid-arrow pair (pixel-row 0), which produces the red blob onto which you can jump in order to get off the bottom without having to go through "The Toilet Department" [3].
+* To collect the top-left item, walk up the ramp as high as possible, and `jump' left.
+* The two top-right items are accessible by jumping through the ILB at the bottom-right of "A Secret Elephant!" [40]. The leftmore item looks unreachable, but there is an invisible conveyor in the top-right gap.
+LEFT: 3
+RIGHT: 2
+UP: 40 (Promised Land)
+DOWN: 28
+
+ROOM 35: "Jet Set Willy! ;->"
+SOURCE: new
+COMMENTS: This room represents a large-scale entrance to a woman, guarded by a rather rude sprite which disappears when you have collected all the items. So if you don't go up from "A Secret Elephant!" [40] with fewer than 128 items (256 for the JSW128 version), or visit this room by cheating, your eyes need never be soiled! ;-)
+LEFT: 16
+RIGHT: 33
+
+ROOM 36: "Willy Meets The Taxman"
+SOURCE: the original JSW ("A bit of tree")
+COMMENTS: A tribute to Matthew Smith's abandoned sequel to Jet Set Willy, also known as _The MegaTree_ (cf. Room 2 of Part 1). Legend has it that Willy had to collect flashing pound-notes, then climb the Banyan Tree - hence the position of this room above Room 30. I leave it open to personal interpretation whether the items in this room are pound-notes or tax-vouchers. Nor is it clear where the taxman actually is (if I had a spare sprite-page, I might draw a man in a bowler hat, but I don't - so there).
+TIPS:
+* To collect the bottom-left item, go right from "Cannelloni Ned" [2] without stopping when you enter this room.
+* To collect the top-left item, stand above "il" (halfway between) on the left edge of the double floor-block, and jump left - when there's a suitable gap between the two yellow VGs of course.
+* You can reach the bottom-right by standing on the long platform above "n" with your legs apart and jumping left through the floor adjacent to the static-nasty pair.
+RIGHT: 37
+UP: 42
+DOWN: 30
+
+ROOM 37: "Tragic Kingdom"
+SOURCE: the original JSW ("Orangery")
+COMMENTS: A tribute to No Doubt's album of 1995, the graphics and colour-scheme tie in with the cover-art - particularly the oranges (they hail from Orange County, California). The yellow Kari Krisníková represents lead-singer Gwen Stefani. I call the static nasties "Richard Hallas spiders", having seen them first in _Join the Jet-Set!_, but in fact it's an unused graphic from the original "Orangery".
+TIPS:
+* I have eliminated all possible infinite-death scenarios when going down from this room (the rope below swings out to the right initially).
+* To get the central item, stand inside the wall-block on the ramp, on one leg facing left, and jump left twice.
+* To collect the leftmost item without sacrificing a life, stand just to the right of the conveyor, facing left with your legs apart. Jump straight up over Gwen Stefani (going right), and again when she is going left and above the "o" in "collected" with her legs apart. Without wasting a single time-frame, walk left behind her, jump left when you're halfway between the item and the static nasty, go right into the open, and jump straight up when you're on one leg.
+* When taking the middle-left exit, keep walking as you enter the room to the left to avoid a sudden multiple-death scenario (static nasties in column 31).
+LEFT: 36
+RIGHT: 56
+UP: 43
+DOWN: 31
+
+ROOM 38: "Father Ted"
+SOURCE: the original JSW ("Priests' Hole")
+COMMENTS: A tribute to my favourite TV comedy, _Father Ted_, about three Catholic priests who have been transferred to a remote island in Ireland called Craggy Island (I originally named this room "Father Ted's Craggy Hidey-Hole" but decided that sounded too silly). The grey priest is of course Father Ted, and the Maria sprite represents their housekeeper Mrs. Doyle. The item is the Golden Cleric award that Ted won in the Christmas Special (after Series 2) - you have to do a Todd Unctious and steal it!
+- TED: I'm not a fascist, I'm a priest. Fascists go round dressing in black and telling people what to do, whereas... priests...
+TIPS:
+* The lower-right exit is one-way. When you do take it, walk right immediately to avoid a sudden multiple-death scenario (static nasties in column 0).
+* It's safe to jump off the conveyor to collect the leftmost item (provided you avoid the bird, of course).
+* To collect the bottom item, stand in the "e" in "Father" on one leg facing left, and jump left into the wall-block adjacent to the static nasty.
+LEFT: 4 (Promised Land)
+RIGHT: 39 (one-way)
+UP: 26 (one-way)
+DOWN: 32
+
+ROOM 39: "Generator of Emergencies ;-)"
+SOURCE: the original JSW ("Emergency Generator")
+COMMENTS: Okay, my inspiration was sagging a bit, so I decided to play on the ambiguous title of the original room! ;-) The idea of an emergency is reinforced by the red-paper background and six arrows, and my technical reinterpretation makes this room much more purposeful than the original.
+TIPS:
+* Infinite death results from jumping right off the screen when you're standing above " ;" (halfway between), or from jumping right from the rightmost floor-block. It is safe to jump right off the screen from other positions.
+* The conveyor can only be crossed from left to right, and hence only when entering the room at the bottom-left. To get the bottom-right item, jump right when you're on the conveyor and below the top-right item with your legs apart.
+* Mind the invisible HG! If you look carefully, you can see a black blob as the game-engine recolours the sprite from background to the guardian's colour.
+* Remember to stand in floor-blocks to avoid the arrows!
+* To collect the bottom-left item, walk along the bottom of the generator from right to left. Stand in one character-space under the adjacent static nasty, and jump left.
+* To collect the two top items, jump into this room from the leftmost floor-block in "A Secret Elephant!" [40] - it must be from the very edge of that screen (with your legs apart), otherwise it's infinite death.
+* Then stand above "ie" (halfway between, i.e. two steps back from the edge of the pillar) and jump left to collect the top-right item. Jump for the top-left item from a likewise position (i.e. jump left from the /right/ edge of the floor-block).
+* You'll need to take the top-left exit at some point in the game, and I recommend doing it sooner rather than leaving it as a loose end to be tied up later. Although (when entering at the bottom) you can take this exit without leaving the room (by jumping into overhead wall-blocks), you should do it after collecting the two top items (to avoid either sacrificing a life or climbing the West Wall a total of three times rather than twice).
+LEFT: 38
+RIGHT: 40
+DOWN: 3
+
+ROOM 40: "A Secret Elephant!"
+SOURCE: the original JSW ("Dr Jones will never believe this")
+COMMENTS: A reinterpretation of a classic with an attractive new colour-scheme consisting mainly of magenta, blue and cyan ink on black paper. The room-name is a reference to a children's poem - by Michael Rosen IIRC - which ends with the line "And up in the attic, A SECRET ELEPHANT!" (the capitalised phrase was in mirror-writing).
+	I had to edit the tail (replacing the two floor-blocks on the diagonal with one floor-block just off the diagonal) to eliminate a nasty infinite-death scenario when attempting to jump right from this room to collect the bottom item in "Manic Attic-Bugs" [41].
+TIPS:
+* When entering at the bottom-left, wait under the wall-block by jumping and holding left.
+* To cross the room from right to left, jump off the very left edge of the floor-block to the right and one character below the elephant's rump, so as to land *inside* the wall adjacent to the rump.
+* To take the upper-left exit, jump through the overhead wall-blocks at the top-left: stand on one leg to jump through the first two, then two steps back from the left edge of the floor-block to jump through the third overhead wall-block.
+* On landing on the leftmost floor-block (at the very left edge of the screen with your legs apart), immediately jump left out of the room to clear a six-character gap - do not jump from any further back unless you're fond of infinite death!
+* To get the bottom item in "Manic Attic-Bugs" [41], jump right from the left edge of the double floor-block adjacent to the rightmost static nasty.
+* To jump through the ILB at the bottom-right, jump left from the bottom of "Manic Attic-Bugs" [41] over the "e" in "Items" with your legs apart.
+* Unlike in the original JSW, you can safely go up from this room, but you shouldn't do so until you have collected all 128 items (256 in the JSW128 version) because this leads to a series of brick-hard rooms guarding the end-rooms.
+* The highest block in the rightmost column is for reaching the end-rooms. The only way to stand on this wall-block is to go through the brick-hard series of rooms above this one.
+LEFT: 39
+RIGHT: 41
+UP: 16
+DOWN: 34 (Promised Land)
+
+ROOM 41: "Manic Attic-Bugs"
+SOURCE: the original JSW ("The Attic")
+COMMENTS: This room was going to be called "The Attic-Bug", after the invalid arrow in the original Attic that, if not fixed, overwrites part of the guardian-class table so that you die on entering certain rooms (e.g. "The Kitchen") while there are missing guardians in others (e.g. "The Chapel").
+	Then I discovered the Spectrum game _Manic Bugs_ (Andrew Davis, 1987), a BASIC game inspired by machine-code programming in which you have to collect 12 registers whilst avoiding fast bugs that home in on you, but can be dashed against interrupt-flags that look suspiciously like the unused item-graphic in "The Attic"!
+	All the block-graphics in this room (and their colour-attributes) are ripped from Manic Bugs: the floor and ramp are the interrupt-flags, the wall is the player, the static nasty is the bug, and the conveyor and item are the registers.
+	The sprite for the bug guardian appeared on Channel 4 Teletext (p.408) on 29th December 1999, in an article about the Y2K bug. I drew this sprite on paper which I kept until I finally wrote this room in 2004, although I had to remove one row of pixels (between the upper and middle legs) because the sprite on Teletext was 17 pixels tall (22 pixels with the antennae, which I didn't include). The pattern on the shell is my own work.
+TIPS:
+* See "A Secret Elephant!" [40] for how to get the lowest item, and how to jump through the ILB in that room from this.
+* Unlike in the original Attic, you cannot jump onto the top ledge from the top left (remember it's laterally inverted) of this room. Nor can you reach the very top floor-blocks directly when entering from the left. You have to cross the bottom and then go up.
+* To jump under each of the leg-segments, stand in one character-space and jump right when its legs are apart for the first time in its upward path.
+* Spot the ramp - it looks like half a floor-block. From the ramp, you can drop safely down onto the floor, jump under the bug onto the conveyor, and you can also jump onto the ramp from the isolated wall-block. None of these manoeuvres are on your critical path, however.
+* To collect the top item, jump left immediately after jumping over the bug - this manoeuvre has to be pixel- and time-frame-perfect. And jump for the item off the very left edge of the floor-block, or you will fall to your death (even from two steps back from the edge - neat quirky feature, this! :-) ).
+LEFT: 40
+RIGHT: 42
+
+ROOM 42: "Under the Womb"
+SOURCE: the original JSW ("Under the Roof")
+COMMENTS: By referring to a room that cannot be reached until the end of the game [33], the room-name should create an intriguing air of mystique! ;-) A fairly straightforward reinterpretation of the original, with a rope to provide direct access between the top and bottom of the screen. I associate this room somewhat with the classic game _Frak_ for the BBC Micro.
+TIPS:
+* Do not fall down either of the gaps of two characters in the bottom-right, or you will lose one life due to static nasties in row 0 (better that than an IDS!).
+* To cross the bottom from left to right, stand on the floor-block above the "e" in "Under" - at the very right edge of this floor-block (with your lid at a 30-degree angle to your bowl) and jump right to land *inside* the wall.
+* The two top-left items are collectable with quirky jumps from the conveyor.
+LEFT: 41
+RIGHT: 43
+DOWN: 36
+
+ROOM 43: "This game may contain an insect"
+SOURCE: the original JSW ("Conservatory Roof")
+COMMENTS: I got quite a start when I picked up a pack of Pringles and read "WARNING: This pack may contain an insect"! In fact it said "insert", but the idea was too good to waste. The insect in Party Willy is, of course, the Attic-Bug (Room 41).
+	I wanted to leave the items and static nasties exactly as they are in the unfixed original JSW, so I decided to have an arrow collect them for you. :-)
+TIPS:
+* On entering the room at the bottom, stand on the ramp above "y" facing right with your lid at a 30-degree angle to your bowl, and jump right onto the bottom floor-block of the cluster of four. Then jump right onto the rightmost floor-block in that cluster. Then either:
+	- Jump left to take the top-left exit; or
+	- Jump right to get to the bottom-right quarter of the screen (the bottom-left floor-block in this quarter is there to fool you into thinking you've reached this cluster when you can't actually reach any of the other blocks). Go down from as far right as possible to collect the item at the top-left of "Rock Steady" [56].
+LEFT: 42
+RIGHT: 5 (Promised Land)
+DOWN: 37
+
+ROOM 44: "The Dark Side of the Force"
+SOURCE: new
+COMMENTS: Maybe I should have waited until I write _JSW: Star Wars_, but this room-idea was long overdue! :-) Although not the first JSW author to write a room referring to the Force with invisible platforms, this room is undeniably the darkest Force room! ;-) There are no guardians in this room, just invisible floors, walls, ramp, conveyor, and one static nasty (at the bottom-left) as a cyanide-pill in case you get trapped.
+TIPS:
+* If you end up on the bottom row to the left of "Force", you're trapped and must commit suicide.
+* On entering at the top-left (by jumping through the ILB at the bottom-left of "The First Indoor Yacht" [59]), jump left through the ramp with your legs apart. Then fall right, and jump right onto the block above "a". This is the first in a series of five blocks with a gap of two characters between each block, hence the fifth block is above "t". Jump onto the slightly higher block above "F", then walk right until you exit the room at the bottom-right.
+* On entering at the bottom-right, jump through the ILB above the "o" in "Force". You will reappear at the top of the screen. When you drop of the conveyor, walk left up the ramp and out of the room, and keep walking left until you reach the Beach.
+RIGHT: 46
+UP: 59
+
+ROOM 45: "The Moat"
+SOURCE: JSW Editor MkII (Softricks, 1984)
+COMMENTS: A faithful copy of said room (and bl**dy difficult it was to rescue from the weird TZX file, too), with only the room-exits edited to fit it into the Party Willy map. This is the first room you see after crossing Thunder Ocean), and leads off to several subclusters of the map with three exits to the right as well as one up and - for the adroit among you - down!
+TIPS:
+* Infinite death is possible when jumping right off the rope as far right as possible.
+* See "The Castle" [15] for how to go down from this room.
+LEFT: 61
+RIGHT: 15
+UP: 50
+DOWN: 18
+
+ROOM 46: "The Vault"
+SOURCE: JSW Editor MkII (Softricks, 1984)
+COMMENTS: A copy of said room with the room-exits edited to fit it into the Party Willy map, and an item added by me to give you a reason to cross the room!
+	"Money Bags" in Jet Set Willy II was almost certainly based on this room! :-)
+TIPS:
+* Jump over the saw under the red VG - in the right-hand character-column.
+LEFT: 44
+RIGHT: 0 (Promised Land)
+
+ROOM 47: "April Showers"
+SOURCE: _Your Spectrum_ magazine (Issue 18, April 1984) - written by Dave Nichols
+COMMENTS: A copy of said room with the room-exits edited to fit it into the Party Willy map. Your Spectrum provided a type-in listing which generated this room, and ran a competition to find it (it was above "The Beach" [58]).
+TIPS:
+* You will only encounter infinite death if you fall off the bottom from a height of more than four characters.
+* A stylish way to get past the ramp and jelly is to jump from two steps back from the right edge of the pair of green blocks, and immediately jump straight up facing left in one character-space.
+* Fall right immediately after falling off the conveyor.
+* Jump left from the left edge of the green block to the right of the cyan guard.
+* To collect the item without sacrificing a life, jump right immediately after falling onto the triple of green blocks below the cyan guard.
+RIGHT: 48
+DOWN: 58
+
+ROOM 48: "Dokicland"
+SOURCE: new
+COMMENTS: A tribute to my third-favourite tennis-player, Jelena Dokic. One of her nicknames is Jelly, hence the VG sprites and the jelly-like writing! A textbook example of how screen-layouts based on writing can make for very interesting and unique challenges.
+TIPS:
+* Mind the stars! You only have to touch their character-spaces to collide with them.
+* Jump straight up over Kari Krisníková between the left and middle stars above her.
+* When going back up, on landing at the bottom-right of "N", jump up once.
+* Stand at the bottom-right of the leftmore "E", facing left with your legs apart, and jump left so as to land on the bottom of "J" and be able to jump left out of the room.
+LEFT: 47
+RIGHT: 18 (Promised Land)
+
+ROOM 49: "The Skag Cellar"
+SOURCE: the original JSW ("The Wine Cellar")
+COMMENTS: This room is my anti-drugs statement. I have strong anti-drugs principles, and I take a special stand against alcohol and nicotine, which present a much greater threat to society for the fact that they are legal and socially acceptable - only because they have been established in society for centuries. But surely many more innocent people die as a result of drunken driving and passive smoking than as a result of others' use of illegal drugs. By replacing "Wine" with "Skag" (i.e. heroin), I'm trying to make people sit up and say, "Hey! This is not acceptable!"
+	This room is not in its expected place in the map because it has to be directly adjacent to "Needles On The Beach" [58].
+TIPS:
+* To collect the lower left item, stand between it and the static nasty with your claw raised, and jump left.
+* You cannot jump onto the ledges on the right, because this room has been laterally inverted and JSW game-mechanics are asymmetrical (probably because Matthew Smith tweaked the left-movement routines to make "The Wine Cellar" work!).
+* When crossing the top of the room, once you're correctly aligned to jump the first hole, just jump three times without stopping. The blue Freddy Krueger is best jumped straight up over to the right of these three holes.
+LEFT: 19
+RIGHT: 58
+
+ROOM 50: "Tulips in Amsterdam"
+SOURCE: new
+COMMENTS: One of the rumours about Matthew Smith when he was living in Holland was that he was planting tulips in Amsterdam, hence this simple but attractive room.
+TIPS:
+* It is safe to jump into this room from the very right edge of "The Fish-Gutting Factory" [17] with your legs apart, from the floor-block in column 29 of "The Fish-Gutting Factory" (the higher block of the lower pair), or from the clouds in column 5 of "Chester J. Lampwick" [12]. Any other jumping in from the sides may be an occasion of infinite death.
+* To collect the top-right item in "The Fish-Gutting Factory", please note there is an invisible left-conveyor in column 1 adjacent to the highest tulip in column 0. To jump through the overhead wall-block, you have to jump left whilst standing in the bird-equivalent of the legs-apart position in column 1.
+* There is a time-limit in this room as the white VG gets shot in the second wave of arrows!
+LEFT: 17
+RIGHT: 12
+
+ROOM 51: "Ziggy Sawdust"
+SOURCE: the original JSW ("Tool  Shed")
+COMMENTS: An attractive room combining sharp tools and a different take on the layout of "Tool  Shed" with a glam-rock atmosphere inspired by David Bowie's Ziggy Stardust phase of 1972/3.
+	The room-name comes from a sketch in BBC Radio 1's Mark Radcliffe Show where they made up parody-names for David Bowie albums - "Ziggy Sawdust" for _Ziggy Stardust_", and "Stable To Stable" [19] for _Station To Station_.
+TIPS:
+* To cross the top from right to left, jump with the saw at its highest point to clear the static nasties. To get the item, stand on the leftmost isolated floor-block with one pixel of sawdust showing, and jump left.
+* The saw-sprite is asymmetrical, so when crossing the room from left to right you need to jump under the static nasties with two pixels of sawdust showing.
+* When descending from the top, Freddy Krueger and the Swiss-Army knife tend to team up on you, and the second opportunity (immediately after entering the room at the top) is much easier than the first.
+* Mind the sticky conveyor!
+* Hold jump as you exit this room at the bottom-right.
+* When entering at the bottom-right, stand in the floor-blocks to avoid the arrow.
+LEFT: 14 (Promised Land)
+RIGHT: 19
+UP: 53
+
+ROOM 52: "Willy's Generic Geoff Eddy Room"
+SOURCE: the original JSW ("Back Stairway")
+COMMENTS: A tribute to Geoff Eddy, this room illustrates his design-patterns in the way that it has a long ramp with several floors and HGs under it ("Back Stairway" is, of course, the original model for this, but I've made a point of putting in two extra HGs), and his tendency to give rooms fairly generic titles beginning with the word "Willy". The flashing static nasties were inspired by one of his patch-vectors in which a deadly white square moves around the screen at random.
+	I trust that other JSW-authors won't be offended at the lack of tribute-rooms to them. This wasn't a high priority for Party Willy, but the Geoff Eddy room just had to go here. I plan to write more tributes to MM/JSW-authors in some of my future games.
+TIPS:
+* When crossing the floor below the conveyor from right to left, jump over the static nasties with your legs apart, but when crossing it from left to right, jump from one character-space. You need to be especially patient with respect to the red Swiss-Army knife.
+* To cross the conveyor from right to left, jump onto the conveyor (from two characters below) when the blue drum has just started going right, with the yellow wolf one column behind.
+* You cannot cross the floor above the conveyor (with the yellow wolf). See "New Killer Star" [25] for how to get to the other side.
+LEFT: 25
+RIGHT: 53
+UP: 54
+
+ROOM 53: "A Wolf at the Door."
+SOURCE: the original JSW ("Back Door")
+COMMENTS: A tribute to the amazing closing-track of Radiohead's _Hail to the Thief._ (cut & paste dissatisfaction rapped over a tune so brilliant I used it as the title-screen tune for Part 2 - with a hauntingly beautiful chorus to boot), my interpretation is nothing if not literal! The rather bare screen-layout sits well with the saying "the wolf's at the door", and the gap in the right from which it comes creates an intriguing air of mystique since you cannot go that way yourself.
+	I keep the wolf from the door
+	But he calls me up, calls me on the phone
+	Tells me all the ways that he's gonna mess me up
+	Steal all my kids if I don't pay the ransom
+	And I'll never see them again if I squeal to the cops
+TIPS:
+* Watch out for the static nasties, which look just like floor except that they are bright.
+* To collect the bottom item, jump over the static nasty on the conveyor so as to land /inside/ the adjacent floor.
+* Enter from "Willy's Generic Geoff Eddy Room" [52], holding jump as you take the right exit underneath the wall. Then stand above " W" (halfway between), and jump right over the wolf as it arrives.
+* An invisible, non-swinging rope provides access to the top-right item and to the room above. Jump right from near the top of the ramp.
+* To collect the top-right item, stand on the top-right floor-block, out by two steps from the wall, and jump left through the overhead wall-block.
+LEFT: 52
+UP: 55
+DOWN: 51
+
+ROOM 54: "Entrance to Habsu"
+SOURCE: the original JSW ("West  Wing")
+COMMENTS: The first part of a three-room tribute to Karina Habsudová (a sadly-now-retired tennis-player), and a titular nod to "Entrance to Hades"), you play a rabbit in these rooms because her nickname was "zajo" (Slovak for "rabbit") due no doubt to the way she used to scurry around the court and hit winners from seemingly impossible positions. The item is the hácek (little v-sign) above the "s" in "Habsudová".
+TIPS:
+* To get the top-right item in "Willy is obviously Jesus! ;-)" [31], stand on the ramp under the left half of the magenta angel, and jump left twice. You can then walk back right into this room to collect the bottom-left item, which you can also collect from the bottom by jumping through the overhead wall-block.
+* Standing in floor will not save you from the arrow in this room, because floor has white ink and arrows collide with white-ink pixels.
+* To get the bottom-right item, stand on the top-left floor in "A Wolf at the Door." [53] (either by going down from "Karina Habsudova Hangout" [55] at the bottom-left, or down from this room at the bottom-right and jumping right from the top-right floor in "Willy's Generic Geoff Eddy Room" [52]), and jump left from this top-left floor so that you jump up from the top-right of "Willy's Generic Geoff Eddy Room".
+* To get the top-right item, take the top-left exit from "Karina Habsudova Hangout", holding jump as you do so.
+LEFT: 31
+RIGHT: 55
+UP: 56
+DOWN: 52
+
+ROOM 55: "Karina Habsudova Hangout"
+SOURCE: the original JSW ("West Bedroom")
+COMMENTS: The second part of a three-room tribute to Karina Habsudová, continuing the Kari and rabbit symbolism, the room-name is a titular nod to the Habsudova Hangout Excite Club (sadly all Excite Clubs were shut down at the end of 2000). It's also a companion to "Daniela Hantuchova Hangout" (Room 12 of Part 1). The static-nasty graphic is the shield on the flag of Slovakia.
+TIPS:
+* It's safe to fall right off the wall-block five characters above "H", because the rope below will catch you.
+* To get to the long ladder at the far right, jump right whilst ascending the rope in "A Wolf at the Door." in order to land on the floor-block adjacent to the rope, and jump right to land on the wall-block above "g" in this room. You can then jump over Kari and climb the ladder.
+* The bird and the pacman will eventually collide, imposing a (very liberal) time-limit on this room.
+LEFT: 54
+UP: 57
+DOWN: 53
+
+ROOM 56: "Rock Steady"
+SOURCE: the original JSW ("West Wing Roof")
+COMMENTS: A tribute to No Doubt's brilliant album of 2001, I have managed to capture the style of the artwork very effectively with the red, white and black colour-scheme! The item-graphic is a No Doubt logo (with laterally inverted "N"). The yellow Kari Krisníková represents lead-singer Gwen Stefani, and the saw represents Lady Saw, who did the rap-section on "Underneath It All" - the song which persuaded me to purchase Rock Steady, which in turn persuaded me to purchase all the No Doubt albums! :-)
+	I kinda always knew I'd end up a No Doubt fan
+	I hope I hold a special place with the rest of them
+	And you know it makes me sick to be on that list
+	But I should have thought of that before I listened!
+	[parody of "Ex-Girlfriend"]
+TIPS:
+* See "This game may contain an insect" [43] for how to collect the top-left item.
+* The two items in the lower half each require a jump through an overhead wall-block (stand on one leg facing left). In fact there used to be an item at (10,0), but I moved that to the top-right as I felt it added little to the game as a whole, and I wanted arrows in that row which would collect it for you.
+LEFT: 37
+RIGHT: 57
+DOWN: 54
+
+ROOM 57: "Over 'Dova"
+SOURCE: the original JSW ("Above the West Bedroom")
+COMMENTS: The third part of a three-room tribute to Karina Habsudová, the room-name is a titular nod to "Over Dover" in Richard Hallas's highly acclaimed _Join the Jet-Set!_ - "DOVÁ" being the writing in the room below. The white border and the whiteness of the wall are a reference to the white cliffs of Dover.
+	This was once a very bare room, but I edited it heavily in the last week of working on Part 2, adding the quirky treehouse-structure (with the priests' mouths) at the bottom-right as well as the guardians. It's now a very active room.
+TIPS:
+* To get the bottom-left item, you need to make a quirky jump into "Rock Steady" [56] because of the right-conveyor-and-wall combination at the bottom-right of that screen. Stand on the bottom-left platform of this room, on the two leftmost floor-blocks with your arms in the "twenty-to-two" position, jump left and hold left as you enter "Rock Steady" to cross the conveyor. I believe Party Willy is the second JSW game ever to use this feature. The first was Mark Jeffries's _Spectrum Computing_ game of 1984, where you can enter "Remembered-At Last!!" [19] in this way.
+* Then, on entering at the middle-right, jump through the ILB to collect the item. You can also get to the top, by jumping through the overhead wall-block at the middle-right of "Rock Steady".
+* The treehouse can be reached either from the top-left by going down the ramp and jumping under the green mouth, or by going up the top-right of "Karina Habsudova Hangout" [55].
+* To ascend the treehouse, jump right from the right edge of the third floor-block up. Go to the right wall, stand in the middle of the gap, facing left with both arms up, and jump left into the overhead wall-block.
+* To descend from the treehouse, fall down the middle gap, stand to the right and jump left so as to fall safely down onto the second floor-block up. If you wish to go down into "Karina Habsudova Hangout", walk left from the bottom floor-block - all other positions are blocked by static nasties in the top row to eliminate IDSs.
+* You can go up the ramp by jumping left from the second floor-block up (under the priest's mouth), and standing at the very right edge of the wall-block to avoid the cyan guard.
+* To get the two items in the top row, ascend the long ladder by the rightmost wall from "Karina Habsudova Hangout". There's an invisible HG on the conveyor, but if you look carefully, you can see a black blob as the game-engine recolours the sprite from background to the guardian's colour. Wait for the HG by stopping on the conveyor under the second static nasty from the right, then follow it and jump for the items. Then walk back along the conveyor, wait under the second static nasty from the right again, and follow the HG as close behind as possible (if you follow your instincts, this is easier than it looks) until you fall down.
+LEFT: 56
+RIGHT: 7 (Promised Land)
+DOWN: 55
+
+ROOM 58: "Needles On The Beach"
+SOURCE: the original JSW ("The Beach")
+COMMENTS: The title is that of an obscure Tin Machine instrumental which even I - Bowie-completist though I am - don't have a copy of (it's on a various-artists compilation called _Beyond The Beach_). Reeves Gabrels said they "kept finding used needles on the beaches", hence my decision to put "The Skag Cellar" [49] directly adjacent to this room. The blood-red background, the six simultaneous arrows and the non-swinging rope all contribute to a deathly atmosphere.
+	There used to be an item at (13,8), corresponding to the double item in the original "The Beach", but this was the item I chose to transfer to the treehouse in "Over 'Dova" [57] because to take it without sacrificing a life you have to go left, and the player is only supposed to go back left after clearing all the rooms above and to the right of the Beach.
+TIPS:
+* On entering at the top-left, wait at the right edge of the wall, and jump straight up over the column of arrows.
+* You need to take the bottom-right exit sooner or later, so I recommend sooner if you're playing seriously.
+* To take the middle-right exit, go down from the far right of "April Showers" [47]. If you jump right from the very right edge of the screen with your legs apart - any further back and it's an IDS - that's the easiest way to clear the triple of static nasties in "The First Indoor Yacht" [59].
+* An interesting feature: you cannot walk past the rope without getting picked up, but if you drop off the bottom of the rope and stand still, it waits seven time-frames to pick you up again!
+* After clearing all the rooms above and to the right of this room, walk left along the bottom to exit through "The Skag Cellar".
+LEFT: 49
+RIGHT: 59
+UP: 47
+
+ROOM 59: "The First Indoor Yacht"
+SOURCE: the original JSW ("The Yacht")
+COMMENTS: A titular nod to "The First Indoor Bridge" in Adam Britton's _The Continuing Adventures_ JSW game, this serves as a reminder of the agoraphobic nature of Willy in Part 2. A visually attractive room with its green colour-scheme, subtle flashing, Christian imagery (two Crosses) and gratuitous eye-candy.
+TIPS:
+* When entering at the bottom-left, jump through the ILB (from halfway under the lowest static nasty)
+* The room can only be crossed from left to right at the middle level, and can only be crossed from right to left at the top level.
+* The rightmore item must be taken from the right side of the Cross.
+* When crossing the room from right to left, stand on the ramp above " Y" with your legs apart and jump left over Maria. To cross the gap, jump through the overhead wall-block (standing aligned with the centre of the double-thick wall).
+LEFT: 58
+RIGHT: 60
+DOWN: 44
+
+ROOM 60: "The Bowie"
+SOURCE: the original JSW ("The Bow")
+COMMENTS: A room-name I couldn't resist, even though I pronounce "Bowie" as in "bow-tie", not as in "to bow"! David Bowie's legal name is David Robert Jones, but at the age of eighteen he took his surname from the Bowie-knife, named after Colonel Jim Bowie. Hence the item is a Bowie-knife, which I drew from the tattoo on Iman's ankle.
+TIPS:
+* The floor and static-nasty blocks look alike except that the static-nasty is shifted down by one pixel-row.
+* You cannot cross the bottom-left of the screen. To get to the middle-left, jump into the top of the wall from the very left edge of the floor-block to the right of the wall.
+* To get the rightmore item, jump right off the very right edge of the ramp, take two steps to the right and jump right through the floor-block to land on the lower floor-block.
+* To take the bottom-right exit, stand just above the foot of the ramp, facing left with your legs apart. Jump left, then jump right to get through the ramp. Follow the toilet and jump over it when you're clear of the three static nasties overhead.
+* To cross the room from right to left, jump right off the very right edge of the ramp, jump right onto the floor-block above, jump left off the left edge of that floor-block, jump left again, jump left from the left edge of the floor-block you're on to land on the floor-block to the right of the wall, and jump into the top of the wall from the very left edge of this floor-block.
+LEFT: 59
+RIGHT: 61
+
+ROOM 61: "Red Sails - Thunder Ocean!"
+SOURCE: new
+COMMENTS: The room-name is a line from "Red Sails" from David Bowie's _Lodger_ album (see also "The Hinterland" [41 in Part 1]). I wanted a room set at sea with an island in the middle of the screen; I might have left this to _Afrikaan_ (sequel to _Goodnite Luddite_), but decided to put it here instead (this room was originally just a bare conveyor and top row of static nasties).
+TIPS:
+* This room features springy platforms (background colour-attribute == ramp colour-attribute), which allow you to stop on the conveyor by holding left after a `hop'.
+* This room appears to have eight arrows, but the bottom ones are harmless ghost-arrows caused by an invalid arrow (pixel-row 7).
+* When crossing from left to right, climb the mushroom-island, and jump right from the top wall-block above "d" to land on the isolated wall-block (an ILB). Jump right onto the floor-block, and jump left through the ILB.
+* When crossing from right to left, you can just walk past the stem of the mushroom-island.
+LEFT: 60
+RIGHT: 45
+
+ROOM 62: "The Steppes of Central Asia"
+SOURCE: new
+COMMENTS: A pun referring to a piece of classical music by Alexander Borodin (not to be confused with Allan Borodin of "B O ROD  IN  SGA  P  T HE OR  EM" in _We Pretty_) called "In the Steppes of Central Asia", the green colour-scheme reinforces the concept of steppes, which are grass-covered plains. This room is next to "Iroda Tulyaganova" [63] because Iroda is Uzbek and Uzbekistan is in Central Asia.
+	The stationary guardian is a tribute to my favourite smiley, the Hearts smiley [http://www.wtaworld.com/images/smilies/hearts.gif].
+TIPS:
+* The top and middle levels of this and "Iroda Tulyaganova" are in a different cluster of rooms from the bottom levels - they cannot be reached directly from each other.
+* Mind the sticky conveyor!
+* To cross the bottom from right to left, wait above the rightmost "a" in one character space, follow the rabbit as close behind as possible, when you're in one character-space above "A", jump left twice: onto the conveyor and over the rabbit.
+* To cross the top from left to right, stand above "l" with your legs apart and jump right to land /inside/ the floor adjacent to the static nasty.
+* To get the item, enter at the middle-right (see "Iroda Tulyaganova" [63]). Wait in the wall-block, follow the egg as close behind as possible, and jump through the overhead wall-block when you're halfway under the overhead static nasty. (In fact it is possible to get the item without waiting for more than one time-frame - but only a fully-trained JSW player, with the Force as his ally, will conquer the item this way.)
+* To escape after collecting the item, wait in one character-space above the second "e" in "Steppes", follow the egg as close behind as possible, and jump onto the wall-block when you're halfway under the overhead static nasty.
+LEFT: 15
+RIGHT: 63
+UP: 13
+
+ROOM 63: "Iroda Tulyaganova"
+SOURCE: new
+COMMENTS: A tribute to tennis-player Iroda Tulyaganova, and in particular to the very sexy photo-shoot she did in pink on the beach at Knokke-Heist in 2001. ;-) The writing is "Iroda" in the Cyrillic alphabet. The writing on the cans (presumably of tennis-balls) is "IT" in Cyrillic - this sprite originates from _Goodnite Luddite_.
+* The top levels of this and "The Steppes of Central Asia" [62] are in a different cluster of rooms from the bottom levels - they cannot be reached directly from each other.
+* Mind the sticky conveyor!
+* To cross the bottom from left to right, step onto the conveyor when the rabbit is approaching its left-boundary. Jump just before you hit the static nasty. Stand in/on the block above the rightmost "a" with the right foot up and jump right - over the rabbit - to get the item. Immediately jump back left.
+* To cross the bottom from right to left, standing in/on the block above the rightmost "a", walk left & down as far as you will go, then jump left to land /inside/ the conveyor. Then there are two different ways towards the bottom-left exit - my favourite involves jumping through the overhead wall-block.
+* On entering at the top-left, cross the top from left to right in order to get down into the writing. Stand above "n" facing left with your legs apart, and when the VG starts going down, jump left so as to land in the floor-block left of the static nasty in the big "o". Walk left two steps and jump left again so as to land in the corresponding floor-block in the Cyrillic letter that looks like "p".
+* Then stand in the right vertical line in the Cyrillic letter that looks like a backwards "N". Stand above "Ir" with the left foot up, and jump left so as to land on the bottom floor-block of the left vertical line. Then jump left out of the screen to enter "The Steppes of Central Asia" at the middle-right.
+LEFT: 62

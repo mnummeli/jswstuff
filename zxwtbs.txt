@@ -1,0 +1,1757 @@
+##############################################################################
+
+ZX Willy the Bug Slayer - A JSW remake by Geoff Eddy
+====================================================
+
+Based on the original by Matthew "Jet-Set" Smith
+
+[with apologies to Joss Whedon and Andrew Broad]
+
+available at http://www.cix.co.uk/~morven/jsw
+
+##############################################################################
+
+Summary
+=======
+
+Willy's Spectrum has stopped working. Investigation reveals that it
+has become unaccountably infested with bugs of various sorts, all of
+which Willy must kill, destroy or otherwise eliminate so that his
+computer can work again. Further investigation reveals that the bugs
+emanate from an Evil Power which is trying to take over all the
+computers in the world. Willy takes it upon himself to defeat this
+Evil Power, but he can't do it alone. Help is forthcoming from a
+firendly source which bears an uncanny resemblance to a popular TV
+series, but the task of guiding Willy around to find the bugs falls to
+you, the player.
+
+##############################################################################
+
+History
+=======
+
+This is not "Willy does Buffy the Vampire Slayer", nor indeed the
+other way around; rather, it is a JSW game made up of two incomplete
+games shoehorned into one. No doubt a good coherent BtVS-inspired JSW
+game is possible - but not by me! Any takers?
+
+The idea originated, if I recall correctly, during a discussion with
+Andrew Broad in which someone mentioned a game set inside a Spectrum
+(it was called "Fat Worm Blows a Sparky"). The reason why Willy had to
+clamber inside his Spectrum didn't take too long to discover: the
+computer had stopped working because it was infested with bugs (both
+literal and metaphorical), and his task was to remove and destroy
+them. The computer setting was, of course, an excuse to indulge myself
+in the computer-related jokes which should have gone into "Willy the
+Hacker" had my head been screwed on properly at the time.
+
+[Ironically, around this time the flat I was living in itself became
+infested with bugs. These were traced to a bag of compost which Roslyn
+had bought and rather carelessly left next to the fridge.]
+
+At this point the game was called merely "ZX Willy". The "bug slaying"
+aspect emerged soon afterwards and was strenuously resisted before I
+succumbed to the inevitable sometime in 2000; along with it came the
+typically _Buffy_-esque explanation of an Evil Power as the source for
+all the bugs. The Evil Power was decided to be - aha, you'll have to
+play the game to find out. Or read the room descriptions below.
+
+This dual backdrop for the game soon caused inspiration to flow thick
+and fast, inspiring room designs of grace and beauty exquisite enough
+to put JW himself to shame. Patch vectors of devilish cunning took the
+game to a level undreamed of even by Matthew Smith himself. Throughout
+2001 ZXWtBS was fine-tuned with a relentless perfectionism to produce
+a game which would surely be remembered long after all others had been
+forgotten.
+
+Then, just before Christmas 2001, Geoff decided to record some music,
+and plugged his bass amplifier into the extension it shared with the
+computer. For some reason the amplifier had already been switched on,
+and it generated a power spike which fried the computer's power
+supply. Geoff's computer would no longer switch on.
+
+The PSU was duly replaced, but the computer would still not come to
+life. The motherboard was also replaced, with the same lack of useful
+results. Only when both were replaced would the computer switch on -
+whereupon it was discovered that there were further casualties. In
+all, one DVD-ROM drive, one CD-writer, one floppy drive, and one 10GB
+hard disk were destined for the great motherboard beyond the sky. All
+that survived was the almost-forgotten 1GB hard disk which retained
+Window$ 3.1 from many years ago "just in case".
+
+When the computer was reassembled, the omens for ZXWtBS bode
+ill. Geoff had been somewhat slack in his backup policy: not one CD
+backup had he made in all of 2001, although some important documents
+were restoreable from other sources. Alas, all that remained of ZXWtBS
+were the initial drafts of the first few rooms and some paper notes,
+including the map. This loss was so devastating that Geoff Solemnly
+Vowed never, ever, to make another JSW game again.
+
+Time passed. Mountains rose and fell, rivers changed their courses,
+but Geoff's subsequent JSW-related activity was confined to polishing
+and documenting the Geoff-Mode game engine and writing a few
+JSW-related utilities in Perl, including a program which converted
+text files into JSW games. It was not long before he started to get an
+itchy feeling that, maybe, he could resurrect ZXWtBS, in defiance of
+his Solemn Vow.
+
+This, then, is the result. Because I had kept my map of the original
+game, I was able to incorporate most of the good ideas from the
+original ZXWtBS, or at least that I could remember. The differences
+are explained in the room descriptions below.
+
+##############################################################################
+
+The Confession (Hi, Laura!)
+==============
+
+Those with whom I corresponded during the gestation of the original
+ZXWtBS will recognise that the above account is not completely
+accurate; specifically, the paragraph which ends with "forgotten" may
+correctly be described as Geoff unashamedly lying through his
+teeth. Andrew Broad's mailbox may retain the proof: I got about
+three-quarters of the way through designing the game, then suffered a
+rather nasty creative block which resulted in its development stalling
+for most of 2001. All the other stuff, including the bits about the
+computer dying, is true, though.
+
+Part of the creative block was due to the difficulty of incorporating,
+and keeping track of, patch vectors and other modifications, something
+which the text-based utility with which I redesigned the game made
+much easier. Much of the rest was due to simple JSW exhaustion, which
+had more or less disappeared when I started working on this.
+
+##############################################################################
+
+Trivia time
+===========
+
+My spies at http://tv.cream.org/arkplay.htm tell me that there used to
+be a rabbit on "Play School" called Buffy.
+
+##############################################################################
+
+Music
+=====
+
+The tune which plays behind the title screen may sound familiar; it
+is, of course, "Buffy's Theme" by Nerf Herder, arranged like the title
+music for the original JSW. The in-game music is "Electricity" by OMD,
+simply because I was listening to it at the time.
+
+##############################################################################
+
+Geography
+=========
+
+Or: "The Room Descriptions, Incorporating Sundry Additional
+Information And Humourous Anecdotes Which May Or May Not Be Relevant
+But Will Certainly Be Amusing And Most Eddyfying".
+
+What do you mean, there's no order to the room numbers? Relax, dude;
+it's the 21st century. Stay cool. All will be revealed.
+
+
+Room 0: "Dead Flesh Nightmares"
+-------------------------------
+
+Who could forget the original Speccy keyboard, a typical cost-cutting
+Sinclair ploy to make it easier to bring computing to the masses? The
+design consisted of a a rubber sheet with 40 rectangular bumps for the
+keys, which sat on top of a plastic membrane; it wasn't as
+user-violent as the flat membrane keyboards of the ZX80 or ZX81, but
+it was certainly cheap'n'nasty, despite being quiet to type on. The
+keys were grey in issue 1 Spectra and light blue thereafter.
+
+This room is more or less identical to the original, complete with the
+patch vector, except that instead of eight nasty arrows it had one
+derisory worm crawling along the bottom. Yes, really! That was the
+best I could do!
+
+
+Room 1: "Power Supply Unit (rated 2.1A)"
+----------------------------------------
+
+The ZX81 had a PSU rated 0.7A, which had to be replaced by one rated
+1.2A if you wanted to get printouts on shiny bogroll from your ZX
+Printer. I remember a letter in "ZX Computing" from circa 1982 which
+pointed out that you would then have "a redundant PSU which you will
+have paid for"; the writer told a story of how a sales assistant in WH
+Smith had tried to convince him that both power supplied were needed
+simultaneously, even though there was only one power socket in the
+ZX81. Weird.
+
+This room is an artist's impression of what might happen inside such a
+PSU, showcasing diagonal wraparound guardians. Before you ask, no, I
+haven't put in a patch to make the guardians change direction in
+mid-path; the four guardians all have the same path lengths, and their
+endpoints are carefully aligned.
+
+
+Room 2: "Hush"
+--------------
+
+A tribute to BtVS's scariest episode, and one of the finest pieces of
+TV ever created; it was episode 66, which is equal to 2 when taken
+modulo 64. As in the episode, seven hearts are needed, although here
+you have to dodge the Gentlemen and collect them yourself rather than
+be scared into letting them do it.
+
+The original room was harder and a bit better, but I couldn't remember
+everything. Still, it's a good one to separate the men from the boys:
+give yourself a pat on the back if you can get all seven hearts *and*
+exit the room without dying.
+
+
+Room 3: "Binary Coding"
+-----------------------
+
+One of four rooms inspired by some of Willow's remarks in the BtVS
+episode "I Only Have Eyes For You", in which she asks a computer class
+to read the chapters on "Binary Coding" and "Information
+Grouping". Apparently "Binary Coding" is "a hoot" and involves
+"Two-Digit Multi-Stacked Conversions" and "Primary Number
+Clusters". I've never been able to find out what these computing
+techniques actually are; this room and its buddies are attempts to
+interpret them in some meaningful way.
+
+Originally, this room had an inappropriate lambda-shaped structure
+down which slid a diagonal guardian. Inspired. The guardians went
+through three configurations: originally the cyan ones were faster and
+alternated with the yellow ones, which made the room impossible to
+do. Then the cyan ones were slowed down, with the same result. Then
+they were grouped into threes, and Geoff was happy.
+
+
+Room 4: "The Library"
+---------------------
+
+The nerve centre of BtVS operations - for the first three seasons, at
+least - and, uniquely, a school library situated above a
+Hellmouth. The room is pretty much identical to both the originals,
+although without the books, Giles's filing cabinet, or indeed many of
+the familiar props.
+
+
+Room 5: "PUSH BC: Transport of the Future"
+-------------------------------------------
+
+This room is stored at page C5, the hex opcode for the titular Z80
+instruction; as one correspondent to "Your Spectrum" remarked, this
+sounds a lot like "pushbike". This is altogether too kind a
+description of Clive Sinclair's most risible commercial venture, an
+ABS-injection-moulded electric tricycle which ran on a battery-powered
+motor similar to the "squirrel-cage" design used in washing
+machines. This revolutionary, yet rightly much-ridiculed, form of
+transport placed the driver's head on the same level as car exhaust
+pipes and moved him or her along at a speed roughly akin to that of a
+brisk walk. The necessary dose of credulity-stretching ridiculousness
+was delivered by a warning from Sinclair Research Ltd that proper
+washing-machine motors were too powerful for the C5 and would burn
+them out; history does not tell us if this ever actually happened.
+
+Thus the current room, which presents what I believe to be the first
+lift in a JSW game based on Matthew Smith's original (i.e. not
+JSWII). In its first incarnation it was much harder to get around,
+which was appropriate in a way; kindness to the player prevailed this
+time, given the room's importance.
+
+
+Room 6: "The Barrel Shifter"
+----------------------------
+
+A barrel shifter is an array of transistors which shifts bits several
+places simultaneously; despite appearances, actual barrels aren't
+involved. The original version of this room was a lot harder, with
+strategically-placed conveyors. Be thankful.
+
+
+Room 7: "The Crucifix Store"
+----------------------------
+
+One of the rooms which survived more or less intact; there aren't any
+actual vampires in this game, but the odd crucifix or two might come
+in handy anyway. The observant will also observe that it's one of the
+few rooms in which what you slay isn't actually a bug (the others are
+"Hush" and "3D PacVaders").
+
+
+Room 8: "Adaptive Gonkulation"
+------------------------------
+
+I don't know what adaptive gonkulation is, but according to the Jargon
+File it performs an important role in bogon suppression. The first
+version of this was a failed attempt to do a completely diagonal room;
+it had nothing in common with the current design beyond the diagonal
+guardians and was full of conveyor-staircases. The new version is, I
+assure you, much more satisfying.
+
+Part of the problem with Willy's computer may be due to the distance
+between this room and the Bogon Filter (room 27); for optimum
+effectiveness they really should be next to each other.
+
+
+Room 9: "The Endless Caverns of Despair"
+----------------------------------------
+
+Quite what this room is doing here I'm not sure; it seems to have
+mistaken this game for "Willy Does Dungeons And Dragons". [There's a
+game in there somehwere. Hmmm...] This was a relatively simple room to
+reproduce, although the patch vector took a bit of thought.
+
+
+Room 10: "Life And How To Live It"
+----------------------------------
+
+Who hasn't written a program to play John Horton Conway's "Game of
+Life" on their computer? I remember staying over at a friend's house
+when I was 12 or 13; at his request I took my ZX81 and some games
+tapes with me, one of which (Michael Orwin's tape #4, IIRC) had a
+"Life" implementation on it. My friend's little sister and one of her
+friends were fascinated by the ever-changing patterns it produced and
+demanded to have a go themselves. It was really endearing to watch
+them draw their names in capital 'O's, press NEWLINE, sit back, and be
+thrilled at what happened to them. Cute!
+
+The patterns of platforms are, of course, reproductions of familiar
+"Life"-forms. The room title is taken from a song by R.E.M. about a
+Southern eccentric with a split personality who wrote a book of that
+title, published several hundred copies privately, and kept the entire
+print run to himself. What this has to do with JSW, or "Life" itself,
+I'm not sure.
+
+
+Room 11: "Under Your Spell"
+---------------------------
+
+Inspired by one of the many memorable songs in the superb _Buffy_
+Musical Episode, "Once More, With Feeling", and intentionally a
+difficult room.
+
+
+Room 12: "Insect Repellent"
+---------------------------
+
+"To Spam, a can of insect repellent"; one of the gifts from the Lady
+Lavalier in "Bored of the Rings", a parody of LotR by the Harvard
+Lampoon. The room is pretty much the same as the original, but because
+the guardians are less nasty, it's a bit easier.
+
+
+Room 13: "2-Digit MultiStacked Conversions"
+-------------------------------------------
+
+See room 3. Willy goes split-level.
+
+
+Room 14: "The 'N' in Stream"
+----------------------------
+
+Those of you with the Sinclair Interface 1 will remember that the 'N'
+stream was the one with which you communicated with the network. The
+title of this room blends this with "The 'I' in Team", the title of an
+episode from _Buffy_'s fourth season; the point is that there is no
+'N' in "Stream". Oh, and 'N' is the fourteenth letter of the alphabet.
+
+The room itself is the first of a series of "network rooms" which were
+carried over in spirit from the original ZXWtBS. Their designs
+consisted of chains of "water" or "liquid" blocks snaking around, much
+like network cable; this was appropriate in terms of the room titles,
+but didn't work too well in practice. This concept was scrapped for
+the new verions and replaced by room designs inspired by a quick look
+at the map of the JSW Mass Collaboration; the room titles were
+retained because, frankly, I couldn't be bothered thinking of new
+ones.
+
+
+Room 15: "Willy's Doppelganger"
+-------------------------------
+
+If you've seen _Buffy_'s third season, you'll know instantly what this
+is about. Of course, it should really be "Buffy's" or "Willow's", but
+never mind. There was originally a room inspired by the same episode
+called "Gosh, look at those!", but it had to go. Note the simple but
+devilishly effective patch vector.
+
+
+Room 16: "The Bee Register"
+---------------------------
+
+I originally learned Z80 programming from a book called "Machine Code
+and Better Basic", published by Shiva publishing. It was illustrated
+with a series of insect-related cartoons, from one of which this title
+is taken. It is, of course, a pun on "B register", the Z80 register
+which was used for counting down to zero with the DJNZ
+instruction. The opcode for DJNZ is 10 hex, or 16 decimal.
+
+The patch vector in this room does, I'll cheerfully admit, elevate the
+difficulty level from "humdrum" into "vicious". The trick is to work
+out the pattern.
+
+
+Room 17: "ZX Bug Spectrum 2"
+----------------------------
+
+Of course, to find bugs you need a debugger. The title is taken from a
+reviewer of Spectrum debuggers in another 1982-era "ZX Computing"; one
+of the programs reviewed was a rewrite of "ZX Bug" for the ZX81, which
+- as the review pointed out - didn't seem to sure of its name, since
+each of the names "ZX Bug", "Spectrum Bug" and "ZX Bug 2" appeared
+somewhere within the documentation. Thus it was referred to with
+various different permutations of the four words in the names.
+
+This room survived intact, aside from the guardians, from the original
+ZXWtBS. It was originally called "ZXDB", after another Spectrum
+debugger (available from dk'tronics, I think), but the current title
+gives me an excuse to tell the anecdote you've just read.
+
+
+Room 18: "Primary Number Clusters"
+----------------------------------
+
+See Room 3. It is, admittedly, a bit hard to interpret some room
+titles meaningfully; I leave it to the player to decide how successful
+this room is in this respect.
+
+Note the effect of the patch vector on the conveyors!
+
+
+Room 19: "The Security System"
+------------------------------
+
+In the original ZXWtBS, this was "The Doorstep" with no guardians at
+all. This was rejected as being (1) a bit too like the original JSW
+(or even "The Hobbit"!) and (2) rather boring. In any case, with all
+the bugs hovering around, the current title is much funnier.
+
+Alasdair Swanson's suggestion for the design of this room consisted of
+a straight corridor with no obstacles, which was certainly
+appropriate, but wouldn't harmonise with the neighbouring rooms.
+
+
+Room 20: "Data Shearing Algorithms"
+-----------------------------------
+
+Inspiration was clearly flagging at this point. This is what much of
+the original ZXWtBS was turning out like in its latter stages.
+
+
+Room 21: "The Network Port"
+---------------------------
+
+This is the second "network room", and properly speaking, the title
+refers to the bit in the back of your computer into which the network
+cable is plugged. This was reflected in the original design, but it
+was rejected due to the difficulty in placing guardians.
+
+
+Room 22: "I think this rom's mostly filler"
+-------------------------------------------
+
+The title is the only half-way decent way of fitting Alyson Hannigan's
+only sung line in "One More, With Feeling" into 32 characters. The
+line is appropriate both in its original context and as the title of
+the room.
+
+
+Room 23: "Gone Fishing"
+-----------------------
+
+A reference to the BtVS episode "Go Fish", in which the school
+swimming team are turned into fish-like creatures to improve their
+chances of winning. There was supposed to be a patch vector which made
+an impossible jump possible, as in the episode, but this proved
+impossible to implement.
+
+
+Room 24: "Data Calibration Devices"
+-----------------------------------
+
+Obviously, once you've got your data, you have to calibrate it to
+match the theory. As with room 20, this betrays a lack of inspiration
+in the latter stages of the game's design.
+
+
+Room 25: "You Gotta Have Faith!"
+--------------------------------
+
+A rather oblique homage to one of _Buffy_'s most memorable characters,
+played brilliantly by the not-at-all-unattractive Eliza Dushku. Her
+catchphrase was "five by five", thus the guardians and the room
+number.
+
+What do you mean, you "can't see the platforms"? You aren't supposed
+to! That would be far too easy! What do you think I am, a charity?
+This "invisible" design continues a tradition going all the way back
+to a room called "The Head Head's Head" from the JSW redesign Alasdair
+and I did in 1988 and continued in "Starless and Bible Black" in its
+(still unreleased) followup. The original ZXWtBS had two rooms like
+this: this room's predecessor, and one called "The Dark Angel" which
+had to go.
+
+
+Room 26: "The Long Stair"
+-------------------------
+
+Andrew Broad once remarked that this room design was something of a
+Geoff trademark; actually, the prototype was JSW's "Back
+Stairway". Here it is again, with room 44, on a bigger scale.
+
+Those are supposed to be barn owls, btw. Don't ask why.
+
+
+Room 27: "The Bogon Filter"
+---------------------------
+
+The bogon is the elementary particle of bogosity, and bogons are
+believed to be important components of bugs; they're emitted by people
+in suits, for example. Thus the bogon filter, which is related to
+bogons and computers in much the same way as firewalls are to spam and
+networks. This room is a bit more interesting than its original, which
+was just a jump across a gap on a rope. I'm sure I've seen that
+before...
+
+
+Room 28: "The Compleat Bastard"
+-------------------------------
+
+A room which was reproduced more or less intact from the original room
+10 as a diagonal variation on a standard room design. Fun.
+
+
+Room 29: "Queen C's rm w/out a vu"
+----------------------------------
+
+Two rooms from the original - "Queen C" and "Rm w/out a vu" - are here
+merged into one. Queen C is, of course, Cordelia Chase; the rest of
+the title is a reference to the fifth episode of _Angel_ and thus not
+specifically BtVS. So sue me.
+
+Why the dogs? Dunno.
+
+
+Room 30: "The Sewers"
+---------------------
+
+_Buffy_'s Underground Transit System! Nothing to do with the room of
+the same name in JSWII.
+
+
+Room 31: "Out of sight but not out of mind"
+-------------------------------------------
+
+A reference to an episode from _Buffy_'s first season. Originally this
+was a return to normality after the BtVS section; now it's half that
+and half an annex.
+
+
+Room 32: "Feeping Creatureism"
+------------------------------
+
+To quote the Jargon File again: "A deliberate spoonerism for _creeping
+featurism_, meant to imply that the system or program in question has
+become a misshapen creature of hacks. This term isn't really well
+defined, but it sounds so neat that most hackers have said or heard
+it. It is probably reinforced by an image of terminals prowling about
+in the dark making their customary noises." The original was a very
+effective three-colour design which this one attempts to reproduce.
+
+
+Room 33: "The Computron Attractor"
+----------------------------------
+
+The computron is, presumably, the antiparticle of the bogon (see room
+27), and a computron attractor is thus desirable to keep bugs away.
+Judging by the state of his computer, Willy's seems to have broken
+down.
+
+
+Room 34: "Now Leaving Sunnydale"
+--------------------------------
+
+A room in which you can't actually do anything. This is an attempt to
+reproduce the memorable final scenes of "Becoming" at the end of
+BtVS's second season. OK, so there are some differences due to lack of
+budget and the limitations of the medium, but surely that shouldn't
+matter to the discerning player.
+
+I had planned to put a patch vector in this room which drew a sun
+travelling across the top half, changing the background colour
+appropriately, but this never worked.
+
+
+Room 35: "Bill'$ lair"
+----------------------
+
+The $ource of all the bug$. It turn$ out that Bill get$ hi$ revenge in
+a particularly na$ty way; be warned.
+
+
+Room 36: "Channel 36"
+---------------------
+
+Channel 36 was the channel you had to tune your TV to in order to see
+the pictures your Speccy was emitting. It was also used by VCRs and
+eventually by Channel 5, prompting a spate of VCR retunings by trained
+Channel 5 operators. I retuned my VCR myself with a humble
+screwdriver.
+
+The colour scheme is vaguely inspired by the QL, with added yellow.
+
+
+Room 37: "we think, therefore she is"
+-------------------------------------
+
+The characteristically Zen thought of Oz's which Buffy overheard in
+the classic episode "Earshot". The room itself, which is identical to
+its counterpart in the original, is an exercise in Zen minimalism
+which the lazy player may use as a shortcut.
+
+
+Room 38: "Crush"
+----------------
+
+There has to be a red-and-white Spike room somewhere; this takes its
+title from the fifth-season episode in which he's confronted with his
+three girlfriends.
+
+
+Room 39: "The Den of the Zeppo"
+-------------------------------
+
+"The Zeppo" is, for the purposes of the eponymous episode in BtVS's
+third season, Xander Harris; the name was given to him by Cordelia in
+honour of the fourth Marx Brother whom everyone forgets. In the fourth
+season, Xander ended up in his parents' basement; this inspired some
+aspects of the design of this room, such as the mirrorball.
+
+
+Room 40: "Ramtop"
+-----------------
+
+Ramtop (or, more correctly, RAMTOP) was the system variable which
+pointed at the highest available location in RAM which was available
+to the BASIC system. One would typically lower RAMTOP to make room for
+machine code programs or data one didn't want to lose after CLEAR or
+NEW.
+
+
+Room 41: "Information Grouping"
+-------------------------------
+
+See room 3. A more successful interpretation of its title than some
+other rooms from the same source.
+
+
+Room 42: "Oh no, this is no good at all!"
+-----------------------------------------
+
+Just what *is* wrong with some gratuitous sadism, then? The last words
+of the underused vampire Mr. Trick, who was staked by Faith (see room
+25) in the season three episode "Consequences". Mind your feet.
+
+
+Room 43: "Longer Life Milk Coolant"
+-----------------------------------
+
+I never owned a ZX80, but I often read that they got very hot a short
+while after being turned on; for humans, of course, these things
+happen simultaneously. Heat is the enemy of all electronic circuits;
+it causes electrons to move about more and forget both where they are
+and the information they're supposed to be carrying. The solution is
+to place the offending equipment in a computron beam; but since they
+didn't have readily-available computron beams in 1980, the author of
+one ZX80 programming text kept his computer cool with a procession of
+Longer Life milk cartons on top of it.
+
+This room survives in spirit from the original, although it's somewhat
+different in form.
+
+
+Room 44: "The Bottom of the Long Stair"
+---------------------------------------
+
+See room 26.
+
+
+Room 45: "Low-resolution Devices"
+---------------------------------
+
+In terms of computer graphics, "resolution" refers to the number of
+pixels which make up a display; or, equivalently, the size of the
+actual pixels. Those of us with ZX81's remember having to create
+low-resolution works of art with huge blocks one-quarter the size of a
+character square and graduating to the higher-resolution Spectrum with
+some relief. One feature of both character sets was the group of
+chunky block graphic characters, including two pieces of checkerboard
+which resembled Battenberg cake. Tasty.
+
+
+Room 46: "1000 Gbits and counting"
+----------------------------------
+
+Willy's obviously acquired some serious technical skills if he's been
+able to get his Spectrum to work with such a fast network connection;
+the bits would come in faster than the Speccy could process
+them. Another network room, divided into four.
+
+
+Room 47: "[^H The Microdrives"
+------------------------------
+
+The official Sinclair fast mass-storage medium, and another classic
+Sinclair compromise between cost and reliability. There was much talk
+of the microdrive cartridges resembling those fancy "floppy disks"
+which proper "business computers" stored their data on, but they
+turned out to use an endless loop of tape which was dragged through
+the drives at terrifying speeds. Some more thought could have been
+given to the syntax: SAVE *"m";1;"foo" was a bit too user-violent,
+although the QL managed to be even worse. A similar hardware design
+was used by the Rotronics Wafadrive, which was slower but more durable
+and had a less nasty syntax: SAVE *"a:foo".
+
+A relic of the original "network room" designs can be seen in the
+platforms at the right-hand edge.
+
+
+Room 48: "Come Back Soon!"
+--------------------------
+
+This room is related in concept to room 34 and in design - you go
+downwards - to its now lost forerunner.
+
+
+Room 49: "Raiding an Englishman's Fridge"
+-----------------------------------------
+
+"... is like dating a nun; you're never going to get the good stuff."
+Classic Whedon dialogue, uttered by Whistler in the second part of
+"Becoming" [see room 34]. This room and its neighbours above and below
+are interlinked in a way which tries to reproduce the same idea from
+the original ZXWtBS.
+
+
+Room 50: "Ping (1)"
+-------------------
+
+"ping" is the Unix command which checks if a host is online. When I
+typed in the room name I thought it was in section 1 of the Linux
+manual, however I was wrong: "ping (8) - send ICMP ECHO_REQUEST
+packets to network hosts". Oops.
+
+
+Room 51: "Mother Bored"
+-----------------------
+
+Every so often, a computer magazine prints a humorous
+re-interpretation of some items of computer vocabulary. One such
+appeared in an early "Computer and Video Games" in connection with a
+puzzle which involved correctly arranging a set of specially-printed
+cards; the entries I remember were:
+
+INPUT first cup of coffee and pack of cigarettes
+POKE cat for mixing up cards thinking I wanted to play with him
+OUTPUT cat into garden
+PEEK at next-door neighbour getting undressed with curtains open
+RUN indoors pretty quick when spotted by husband
+hARRAY - I've done it!
+
+An issue of "ZX Computing" from around 1984 had something similar,
+supposedly submitted by a confused parent. Thus "NOT - used to tie two
+STRINGs together"; and "Mother bored: parent's reaction to children
+describing latest performance in _3D PacVaders_".
+
+Note: two ropes! Geoff Mode allows you to do this without an
+intervening dummy guardian.
+
+
+Room 52: "The Cemetery"
+-----------------------
+
+Sarah Michelle Gellar - don't ask, you know who she is - has a morbid
+fear of real cemeteries, and the BtVS set designers had to build one
+for BtVS's second season. This room retains much the same design as
+its original, except that the bats didn't descend all at once at the
+beginning. It's a really cool effect, no?
+
+
+Room 53: "Emptying the Bit Bucket"
+----------------------------------
+
+See room 63. According to the Jargon File: "A qualified computer
+technician can empty a full bit bucket as part of scheduled
+maintenance". Exactly what this consists of has long been shrouded in
+mystery; now it can be revealed.
+
+
+Room 54: "ZX Net"
+-----------------
+
+Another network room. You can probably tell this was one of the last
+rooms I designed for the game.
+
+
+Room 55: "City Hall"
+--------------------
+
+A reference to the second half of BtVS's third season, and another
+fully diagonal room, like its original. Note the two conveyor-stairs;
+this is possible now that the Block Graphics Bug is fixed.
+
+
+Room 56: "VAL and LEN"
+----------------------
+
+"The married couple who live around the corner", from the same source
+as the title of room 51. VAL and LEN were, of course, BASIC functions
+which operated on strings and returned numbers. Amusingly, the company
+for which I currently work also employs a Val, and there used to be a
+Len on the board; they are both married, but not to each other.
+
+Excuse the ghastly suburban decoration and focus instead on the
+circumstances which result in there being two of each partner.
+
+
+Room 57: "Under the Cemetery"
+-----------------------------
+
+So called because it's the room which is situated directly underneath
+the cemetery. I really don't know why I bother with these descriptions
+sometimes. Maybe I should get out more.
+
+
+Room 58: "The Data Bus"
+-----------------------
+
+The data bus is the path along which data (not addresses) moves around
+a computer system. All devices may read from a data bus, but only one
+may write to it at any one time. The data bus in the Spectrum was 8
+bits wide; technical limitations mean that only three can be shown
+here.
+
+
+Room 59: "Salix Hanniganii x Reganii"
+-------------------------------------
+
+Everyone knows that Alyson Hannigan plays Willow in BtVS. Not everyone
+knows, however, that "salix" is Latin for "willow", and even fewer
+people are aware that the role of Willow in the _Buffy_ pilot was
+played by Riff Regan. No, I hadn't heard of her before either. Why
+does Willow get twice as many rooms as the other BtVS characters? You
+decide - she used to have three.
+
+
+Room 60: "Hexagonic Key Patterns"
+---------------------------------
+
+In "Primeval", the penultimate episode of BtVS's fourth season, Willow
+mentions that some important computer disks are encoded with one of
+these. Remarkably, since no cryptographer I've spoken to has even
+heard of them, she knew how to decrypt the disks.
+
+Some design inspiration comes from the room "Seven Suns" in Andrew
+Broad's "We Pretty". The rest represents the fruits of a struggle to
+draw a decent-looking hexagon in an 8x8-pixel square.
+
+
+Room 61: "3D PacVaders"
+-----------------------
+
+I must admit, I'd never heard of this game either. I suppose it would
+look something like this.
+
+
+Room 62: "Y  O    U        U    GL       Y"
+-------------------------------------------
+
+I mean, even Andrew Broad will never believe this! While designing my
+share of rooms for J4 away back in 1990, I came up with a pastiche of
+Alasdair's rooms called "Alasdair's room". The original ZXWtBS had a
+room called "You Ugly", which was a reference to Andrew Broad's "We
+Pretty" in title only. This room unites the best bits of both ideas,
+and is yet another excuse to show off diagonal guardians.
+
+I assure you, it *is* possible to get out of here after you've cleaned
+up the Data Bus [room 58] - I've done it myself. The solution is not
+obvious, but neither is it imaginary.
+
+
+Room 63: "The Great Bit Bucket"
+-------------------------------
+
+The Bit Bucket is where all unwanted data ultimately ends up; synonyms
+include "/dev/null", "NUL:", "the circular file", "the round file" and
+so on. It's also where the bits which get lost when a value is shifted
+left or right in a barrel shifter (room 6) go. This room is based on
+an artist's impression of this mysterious entity.
+
+
+##############################################################################
+
+Modifications
+=============
+
+; The end-of-game routine.
+
+86A5 3E01     LD   A, #01     ; blue border
+86A7 D3FE     OUT  (#FE), A
+86A9 210040   LD   HL, #4000  ; clear screen
+86AC 110140   LD   DE, #4001
+86AF 01FF17   LD   BC, #17FF
+86B2 3600     LD   (HL), #00
+86B4 EDB0     LDIR 
+86B6 23       INC  HL
+86B7 13       INC  DE
+86B8 01FF02   LD   BC, #02FF  ; set everything to white on blue
+86BB 360F     LD   (HL), #0F  ; a la BSOD
+86BD EDB0     LDIR 
+86BF 0E01     LD   C, #01     ; print a "Bill $prite"
+86C1 1100AD   LD   DE, #AD00
+86C4 212140   LD   HL, #4021
+86C7 CD5694   CALL #9456
+86CA 1120AD   LD   DE, #AD20
+86CD 212340   LD   HL, #4023
+86D0 CD5694   CALL #9456
+86D3 1140AD   LD   DE, #AD40
+86D6 216140   LD   HL, #4061
+86D9 CD5694   CALL #9456
+86DC 1160AD   LD   DE, #AD60
+86DF 216340   LD   HL, #4063
+86E2 CD5694   CALL #9456
+86E5 210098   LD   HL, #9800  ; start of text data [see below]
+86E8 7E       LD   A, (HL)    ; get length byte
+86E9 B7       OR   A
+86EA 2811     JR   Z, #86FD   ; finish if zero
+86EC 4F       LD   C, A
+86ED 23       INC  HL         ; get screen address into DE
+86EE 5E       LD   E, (HL)
+86EF 23       INC  HL
+86F0 56       LD   D, (HL)
+86F1 23       INC  HL
+86F2 E5       PUSH HL
+86F3 DDE1     POP  IX
+86F5 CD8096   CALL #9680      ; print the string
+86F8 DDE5     PUSH IX
+86FA E1       POP  HL
+86FB 18EB     JR   #86E8
+86FD 18FE     JR   #86FD      ; and lock up
+
+; The text data for the end screen
+; This is stored as <length> <screen address> <text>
+
+9800 0D6A4053 DEFB #0D,#6A,#40,#53
+9804 59535445 DEFB #59,#53,#54,#45
+9808 4D204552 DEFB #4D,#20,#45,#52
+980C 524F5221 DEFB #52,#4F,#52,#21
+9810 1D024843 DEFB #1D,#02,#48,#43
+9814 6F6D7065 DEFB #6F,#6D,#70,#65
+9818 7469746F DEFB #74,#69,#74,#6F
+981C 7220246F DEFB #72,#20,#24,#6F
+9820 66747761 DEFB #66,#74,#77,#61
+9824 72652064 DEFB #72,#65,#20,#64
+9828 65746563 DEFB #65,#74,#65,#63
+982C 74656421 DEFB #74,#65,#64,#21
+9830 1E614852 DEFB #1E,#61,#48,#52
+9834 65706C61 DEFB #65,#70,#6C,#61
+9838 6365206E DEFB #63,#65,#20,#6E
+983C 6F6E2D4D DEFB #6F,#6E,#2D,#4D
+9840 6963726F DEFB #69,#63,#72,#6F
+9844 246F6674 DEFB #24,#6F,#66,#74
+9848 20246F66 DEFB #20,#24,#6F,#66
+984C 74776172 DEFB #74,#77,#61,#72
+9850 65178548 DEFB #65,#17,#85,#48
+9854 77697468 DEFB #77,#69,#74,#68
+9858 204D6963 DEFB #20,#4D,#69,#63
+985C 726F246F DEFB #72,#6F,#24,#6F
+9860 66742024 DEFB #66,#74,#20,#24
+9864 6F667477 DEFB #6F,#66,#74,#77
+9868 6172651C DEFB #61,#72,#65,#1C
+986C A2486F72 DEFB #A2,#48,#6F,#72
+9870 20796F75 DEFB #20,#79,#6F,#75
+9874 72207379 DEFB #72,#20,#73,#79
+9878 7374656D DEFB #73,#74,#65,#6D
+987C 2077696C DEFB #20,#77,#69,#6C
+9880 6C206E6F DEFB #6C,#20,#6E,#6F
+9884 74207275 DEFB #74,#20,#72,#75
+9888 6E2E1605 DEFB #6E,#2E,#16,#05
+988C 50526524 DEFB #50,#52,#65,#24
+9890 69247461 DEFB #69,#24,#74,#61
+9894 6E636520 DEFB #6E,#63,#65,#20
+9898 69242075 DEFB #69,#24,#20,#75
+989C 24656C65 DEFB #24,#65,#6C,#65
+98A0 24242E18 DEFB #24,#24,#2E,#18
+98A4 4450596F DEFB #44,#50,#59,#6F
+98A8 75207769 DEFB #75,#20,#77,#69
+98AC 6C6C2062 DEFB #6C,#6C,#20,#62
+98B0 65206124 DEFB #65,#20,#61,#24
+98B4 24696D69 DEFB #24,#69,#6D,#69
+98B8 6C617465 DEFB #6C,#61,#74,#65
+98BC 642E0000 DEFB #64,#2E,#00,#00
+
+; print a character
+; its data is stored in 2 bytes at (HL)
+; in the format <yccccccc> <yyyxxxxx>
+
+8700 7E       LD   A, (HL) ; zero signifies "End of data"
+8701 A7       AND  A
+8702 C8       RET  Z
+8703 23       INC  HL
+8704 5E       LD   E, (HL) ; this byte needs no conversion
+8705 23       INC  HL
+8706 47       LD   B, A    ; this one does
+8707 0F       RRCA 
+8708 0F       RRCA 
+8709 0F       RRCA 
+870A 0F       RRCA 
+870B E608     AND  #08
+870D C660     ADD  #60
+870F 57       LD   D, A
+8710 78       LD   A, B    ; character code
+8711 E67F     AND  #7F
+8713 E5       PUSH HL
+8714 D5       PUSH DE
+8715 CD9196   CALL #9691   ; print it
+8718 D1       POP  DE
+8719 E1       POP  HL
+871A 18E4     JR   #8700   ; do more
+
+; title screen
+; this divides the screen into 24 rows of 32 squares, each of which is
+; in turn divided into 4 4-pixel-square blocks.
+; Each data byte specifies two adjacent such squares, i.e.
+; 8 blocks in all; thus #99 #99 gives four "Battenberg" squares.
+
+8841 DD2100B7 LD   IX, #B700    ; start of data
+8845 210040   LD   HL, #4000    ; you know where this is
+8848 DD5E00   LD   E, (IX+#00)  ; get data byte
+884B 7B       LD   A, E         ; do first square
+884C 07       RLCA
+884D 07       RLCA
+884E 07       RLCA
+884F 07       RLCA
+8850 CD2997   CALL #9729
+8853 7B       LD   A, E         ; do second square
+8854 2C       INC  L
+8855 CD2997   CALL #9729
+8858 DD23     INC  IX
+885A 2C       INC  L
+885B 20EB     JR   NZ, #8848    ; done one-third
+885D 7C       LD   A, H         ; move HL to start of second third
+885E C608     ADD  #08
+8860 67       LD   H, A
+8861 FE50     CP   #50
+8863 20E3     JR   NZ, #8848    ; don't do the bottom third
+
+8865 210058   LD   HL, #5800    ; now set the attributes
+8868 54       LD   D, H
+8869 5D       LD   E, L
+886A 13       INC  DE           ; DE = HL + 1
+886B 011F00   LD   BC, #001F    ; prepare for LDIR
+886E 7D       LD   A, L
+886F CB44     BIT  0, H
+8871 2001     JR   NZ, #8874
+8873 2F       CPL
+8874 E6E0     AND  #E0          ; A = distance from edges of area
+8876 07       RLCA              ; in which to set the attributes
+8877 07       RLCA
+8878 07       RLCA              ; from 0 to 7
+8879 3C       INC  A            ; now form 1 to 8
+887A FE01     CP   #01          ; change 1 to 2 so that middle is red
+887C 2002     JR   NZ, #8880    ; and not blue
+887E 3E02     LD   A, #02       
+8880 FE08     CP   #08          ; make top and bottom bright white
+8882 2002     JR   NZ, #8886
+8884 3E47     LD   A, #47
+8886 77       LD   (HL), A      ; sling
+8887 EDB0     LDIR
+8889 13       INC  DE
+888A 23       INC  HL
+888B 7C       LD   A, H
+888C FE5A     CP   #5A
+888E 20DB     JR   NZ, #886B
+8890 FE5A     CP   #5A          ; this seems to have been left over from
+8892 C24488   JP   NZ, #8844    ; somewhere; never mind
+
+; print a single 2x2 group of blocks from the lower 4 bits in A
+
+9729 E60F     AND  #0F
+972B 4F       LD   C, A
+972C E5       PUSH HL
+972D CD3997   CALL #9739 ; do top half [below]
+9730 CB01     RLC  C     ; move bottom 2 bits up
+9732 CB01     RLC  C
+9734 CD3997   CALL #9739 ; do bottom half [below]
+9737 E1       POP  HL
+9738 C9       RET
+
+; convert bits 3 and 2 of C into the appropriate bit pattern
+; e.g. xxxx01xx -> 00001111 and move it onto the screen
+; this is pretty straightforward
+
+9739 AF       XOR  A
+973A 0604     LD   B, #04
+973C CB59     BIT  3, C
+973E 2802     JR   Z, #9742
+9740 F6F0     OR   #F0
+9742 CB51     BIT  2, C
+9744 2802     JR   Z, #9748
+9746 F60F     OR   #0F
+9748 77       LD   (HL), A
+9749 24       INC  H
+974A 10FC     DJNZ #9748
+974C C9       RET
+
+##############################################################################
+
+Patch Vectors
+=============
+
+WARNING: some spoliers here!
+
+--------------------------------------------------------------
+
+; room 0 [Dead Flesh Nightmares]
+
+9723 212087   LD   HL, #8720  ; start of data [below]
+9726 C30087   JP   #8700      ; print it as characters
+
+; keyboard letters (see code at #8700)
+
+8720 31613264 DEFB #31,#61,#32,#64 ; '1', '2'
+8724 3367346A DEFB #33,#67,#34,#6A ; '3', '4'
+8728 356D3670 DEFB #35,#6D,#36,#70 ; and so on
+872C 37733876 DEFB #37,#73,#38,#76
+8730 3979307C DEFB #39,#79,#30,#7C
+8734 51C257C5 DEFB #51,#C2,#57,#C5
+8738 45C852CB DEFB #45,#C8,#52,#CB
+873C 54CE59D1 DEFB #54,#CE,#59,#D1
+8740 55D449D7 DEFB #55,#D4,#49,#D7
+8744 4FDA50DD DEFB #4F,#DA,#50,#DD
+8748 C123D326 DEFB #C1,#23,#D3,#26
+874C C429C62C DEFB #C4,#29,#C6,#2C
+8750 C72FC832 DEFB #C7,#2F,#C8,#32
+8754 CA35CB38 DEFB #CA,#35,#CB,#38
+8758 CC3BDA84 DEFB #CC,#3B,#DA,#84
+875C D887C38A DEFB #D8,#87,#C3,#8A
+8760 D68DC290 DEFB #D6,#8D,#C2,#90
+8764 CE93CD96 DEFB #CE,#93,#CD,#96
+8768 E53EEE3F DEFB #E5,#3E,#EE,#3F
+876C E380F381 DEFB #E3,#80,#F3,#81
+8770 F399F39A DEFB #F3,#99,#F3,#9A
+8774 F39CF09D DEFB #F3,#9C,#F0,#9D
+
+--------------------------------------------------------------
+
+; This is probably the most efficient way to implement a lift.
+; You need two subroutines; the first must be called from every
+; adjacent room so that if you walk into the lift and walk back
+; out, you return to the correct room. Thus:
+
+; rooms 12, 16, 20, 24, 28, 32
+
+9700 3A2084   LD   A, (#8420) ; current room
+9703 32EAC5   LD   (#C5EA), A ; "right exit" from room 5
+9706 C9       RET
+
+
+; room 5 [PUSH BC]
+
+9708 21E585   LD   HL, #85E5  ; digit data [below]
+970B CD0087   CALL #8700      ; print the lift digits
+970E 3ACF85   LD   A, (#85CF) ; get Willy's pixel y-coordinate
+9711 FE18     CP   #18        ; exit if he hasn't hit one of the digits
+9713 D0       RET  NC
+9714 3AD385   LD   A, (#85D3) ; work out which one if he has
+9717 E61C     AND  #1C
+9719 EE1C     XOR  #1C        ; '6' is top floor!
+971B C608     ADD  #08        ; convert to room number
+971D 32EA80   LD   (#80EA), A ; set room exit
+9720 C3EF8B   JP   #8BEF      ; exit to "fuzzy border"
+
+; lift digits (see code at #8700)
+
+85E5 31253229 DEFB #31,#25,#32,#29
+85E9 332D3431 DEFB #33,#2D,#34,#31
+85ED 35353639 DEFB #35,#35,#36,#39
+
+--------------------------------------------------------------
+
+; data byte for room 9
+; this is equal to one more than the number of times the player will
+; have to exit the room to the right:
+
+97E9 00       NOP
+
+; it is set to 1 by the two rooms from which the player can enter room
+; 9:
+
+; rooms 25 [Faith], 55 [City Hall]
+
+97F4 21E997   LD   HL, #97E9
+97F7 3601     LD   (HL), #01
+97F9 C9       RET
+
+; room 9 [Caverns]
+; obviously, you can cheat by walking left 256 times instead of
+; walking right, but I devoutly hope nobody's going to be that
+; stupid. Remember "Jet Set Loony" in YS issue 7?
+
+9900 ED4BD285 LD   BC, (#85D2) ; B = Buffy x, C = Buffy phase
+9904 11D085   LD   DE, #85D0   ; Buffy move state
+9907 21E997   LD   HL, #97E9   ; that data byte
+990A 78       LD   A, B
+990B E61F     AND  #1F
+990D 200A     JR   NZ, #9919   ; jump forward unless at left edge
+990F 1A       LD   A, (DE)     ; must be "moving left"
+9910 FE03     CP   #03
+9912 C0       RET  NZ
+9913 79       LD   A, C        ; and about to leave the room
+9914 E603     AND  #03
+9916 C0       RET  NZ          ; otherwise exit
+9917 34       INC  (HL)        ; increment counter
+9918 C9       RET              ; and exit
+9919 FE1E     CP   #1E         ; exit if not at right edge
+991B C0       RET  NZ
+991C 1A       LD   A, (DE)     ; must be "moving right"
+991D FE02     CP   #02
+991F C0       RET  NZ
+9920 79       LD   A, C        ; and about to leave the room
+9921 E603     AND  #03
+9923 FE03     CP   #03
+9925 C0       RET  NZ          ; otherwise exit again
+9926 35       DEC  (HL)        ; see if we're about to leave the Caverns
+9927 2004     JR   NZ, #992D
+9929 3E37     LD   A, #37      ; exit to City Hall if so
+992B 1802     JR   #992F
+992D 3E09     LD   A, #09      ; otherwise remain in Caverns
+992F 32EA80   LD   (#80EA), A
+9932 C9       RET              ; and exit
+
+--------------------------------------------------------------
+
+; room 11 patch vector data, in the format:
+; <top byte of attributes>
+; <attribute byte>
+; <top byte of screen>
+; <bottom address byte>
+
+9945 5C0160A5 DEFB #5C,#01,#60,#A5
+9949 5D02682B DEFB #5D,#02,#68,#2B
+994D 5C0360B1 DEFB #5C,#03,#60,#B1
+9951 5D046837 DEFB #5D,#04,#68,#37
+9955 5D056825 DEFB #5D,#05,#68,#25
+9959 5C0660AB DEFB #5C,#06,#60,#AB
+995D 5D076831 DEFB #5D,#07,#68,#31
+9961 5C4760B7 DEFB #5C,#47,#60,#B7
+
+; room 11 [Under Your Spell]
+; first part: print the wandering "magic sprite"
+; at least that's what I think it is
+
+9965 3ACB85   LD   A, (#85CB) ; timer (Laura's cat)
+9968 0F       RRCA
+9969 0F       RRCA
+996A 0F       RRCA
+996B E61C     AND  #1C
+996D C645     ADD  #45
+996F 6F       LD   L, A
+9970 2699     LD   H, #99     ; HL holds address of data bytes
+9972 56       LD   D, (HL)
+9973 23       INC  HL         ; D = attribute address top
+9974 5E       LD   E, (HL)
+9975 23       INC  HL         ; E = attribute data
+9976 46       LD   B, (HL)
+9977 23       INC  HL         ; B = screen address top
+9978 6E       LD   L, (HL)    ; L = address bottom
+9979 62       LD   H, D       ; HL = address of attributes
+997A C5       PUSH BC
+997B E5       PUSH HL
+997C 7B       LD   A, E
+997D 011F00   LD   BC, #001F  ; offset to next row
+9980 77       LD   (HL), A    ; set the attributes
+9981 23       INC  HL
+9982 77       LD   (HL), A
+9983 09       ADD  HL, BC
+9984 77       LD   (HL), A
+9985 23       INC  HL
+9986 77       LD   (HL), A
+9987 E1       POP  HL
+9988 C1       POP  BC
+9989 60       LD   H, B
+998A 11E0B4   LD   DE, #B4E0  ; address of sprite data
+998D 0E01     LD   C, #01     ; signify "die if touched"
+998F CD5694   CALL #9456      ; print it
+9992 C2B790   JP   NZ, #90B7  ; die if it hits something, i.e Buffy
+
+; second part: twiddle the attributes around the edge
+; hey, it's pretty, don't knock it
+
+9995 3ACB85   LD   A, (#85CB) ; timer again
+9998 E603     AND  #03
+999A 4F       LD   C, A       ; A and C = 0 1 2 or 3
+999B 110400   LD   DE, #0004  ; 4 bytes between squares
+999E 0608     LD   B, #08     ; 8 of them
+99A0 CDBC99   CALL #99BC      ; do the twiddling
+99A3 3E04     LD   A, #04
+99A5 91       SUB  C
+99A6 E603     AND  #03        ; A = 3 2 1 0
+99A8 0F       RRCA
+99A9 0F       RRCA
+99AA 0F       RRCA            ; A = #60 #40 #20 #00
+99AB 0604     LD   B, #04     ; only 4 squares to twiddle
+99AD 1E80     LD   E, #80     ; #they're 80 bytes apart
+99AF CDBC99   CALL #99BC      ; twiddle them
+99B2 79       LD   A, C
+99B3 0F       RRCA
+99B4 0F       RRCA
+99B5 0F       RRCA
+99B6 C61F     ADD  #1F
+99B8 E67F     AND  #7F        ; A = #1F #3F #5F #7F
+99BA 0604     LD   B, #04     ; 4 to twiddle again
+
+99BC 265C     LD   H, #5C
+99BE 6F       LD   L, A       ; HL = first square to twiddle
+99BF 3E04     LD   A, #04     ; set to green on black
+99C1 77       LD   (HL), A
+99C2 19       ADD  HL, DE     ; move to next one
+99C3 10FC     DJNZ #99C1      ; are there more?
+99C5 C9       RET             ; no; exit.
+
+--------------------------------------------------------------
+
+; room 15 [Doppelganger]
+
+9784 1E80     LD   E, #80     ; signify other half of screen
+9786 0E01     LD   C, #01     ; "die if we touch something"
+9788 CD3B96   CALL #963B      ; print doppelganger
+978B C2B790   JP   NZ, #90B7  ; die if somethingh is touched
+978E C9       RET             ; otherwise exit
+
+; rewritten "draw Willy" code so that this works
+
+9637 1E00     LD   E, #00
+9639 0E00     LD   C, #00
+963B 3ACF85   LD   A, (#85CF)
+963E 80       ADD  B
+963F AB       XOR  E
+9640 2682     LD   H, #82
+9642 6F       LD   L, A
+9643 23       INC  HL
+9644 7E       LD   A, (HL)
+9645 2B       DEC  HL
+9646 6E       LD   L, (HL)
+9647 67       LD   H, A
+9648 3AD385   LD   A, (#85D3)
+964B E61F     AND  #1F
+964D 85       ADD  L
+964E 6F       LD   L, A
+964F 3AD285   LD   A, (#85D2)
+9652 E603     AND  #03
+9654 0F       RRCA
+9655 0F       RRCA
+9656 5F       LD   E, A
+9657 3ADE80   LD   A, (#80DE)
+965A 47       LD   B, A
+965B 3AD085   LD   A, (#85D0)
+965E CB10     RL   B
+9660 3804     JR   C, #9666
+9662 CB10     RL   B
+9664 1807     JR   #966D
+9666 CB10     RL   B
+9668 3802     JR   C, #966C
+966A EE01     XOR  #01
+966C 1F       RRA
+966D CB1B     RR   E
+966F 3AED80   LD   A, (#80ED)
+9672 57       LD   D, A
+9673 C35694   JP   #9456
+
+--------------------------------------------------------------
+
+; room 16 [Bee Register]
+
+97A4 CD0097   CALL #9700       ; lift security
+97A7 3ACB85   LD   A, (#85CB)  ; timer
+97AA E61F     AND  #1F         ; only do something every 32 ticks
+97AC C0       RET  NZ          ; otherwise it's impossible
+97AD 3ACB85   LD   A, (#85CB)  ; timer again
+97B0 E660     AND  #60         ; A = #60 #40 #20 #00
+97B2 0F       RRCA             ; A = #30 #20 #10 #00
+97B3 0F       RRCA             ; A = #18 #10 #08 #00
+97B4 F602     OR   #02         ; A = #1A #12 #0A #02
+97B6 6F       LD   L, A        ; L = low byte of first x-coord to swap
+97B7 C608     ADD  #08         ; A = #22 #1A #12 #0A
+97B9 E61F     AND  #1F         ; A = #02 #1A #12 #0A
+97BB 5F       LD   E, A        ; E = low byte of second x-coord to swap
+97BC 1681     LD   D, #81      ; page with guardian data
+97BE 62       LD   H, D        ; ditto
+97BF 4E       LD   C, (HL)     ; swap the bytes
+97C0 1A       LD   A, (DE)
+97C1 EB       EX   DE, HL
+97C2 12       LD   (DE), A
+97C3 71       LD   (HL), C
+97C4 C9       RET
+
+--------------------------------------------------------------
+
+; room 18 [Primary Number Clusters]
+
+97D0 21D680   LD   HL, #80D6   ; conveyor direction
+97D3 3ACF85   LD   A, (#85CF)  ; Willy's y-coord
+97D6 FED0     CP   #D0         ; bottom of screen?
+97D8 300C     JR   NC, #97E6   ; move conveyors right if so
+97DA 3AD385   LD   A, (#85D3)  ; Willy's x-coord
+97DD E61F     AND  #1F
+97DF FE13     CP   #13         ; on rightmost layer of conveyors?
+97E1 3803     JR   C, #97E6    ; move right if not
+97E3 3600     LD   (HL), #00   ; otherwise move left
+97E5 C9       RET
+97E6 3601     LD   (HL), #01
+97E8 C9       RET
+
+--------------------------------------------------------------
+
+; room 21 [Network Port]
+
+9933 21DA80   LD   HL, #80DA   ; stair direction
+9936 3AD385   LD   A, (#85D3)  ; Willy-s x-coord
+9939 E61F     AND  #1F
+993B FE10     CP   #10         ; in right-hand half?
+993D 3003     JR   NC, #9942   ; stairs go left if so
+993F 3601     LD   (HL), #01   ; otherwise right
+9941 C9       RET
+9942 3600     LD   (HL), #00
+9944 C9       RET
+
+--------------------------------------------------------------
+
+; room 31 [OSBNOM]
+
+99C6 C45E     DEFW #5EC4       ; address of falling block
+99C8 3AD385   LD   A, (#85D3)  ; x-coord
+99CB E61F     AND  #1F         ; are we in the right-hand half?
+99CD FE10     CP   #10
+99CF 3804     JR   C, #99D5    ; jump forward if not
+99D1 3EA4     LD   A, #A4      ; "Buffy" sprite
+99D3 1802     JR   #99D7
+99D5 3EB5     LD   A, #B5      ; "Willy sprite"
+99D7 32E080   LD   (#80E0), A  ; set lives counter and on-screen
+99DA 32ED80   LD   (#80ED), A  ; sprites appropriately
+99DD 3ACB85   LD   A, (#85CB)  ; timer
+99E0 E607     AND  #07         ; do something every 8 ticks
+99E2 C0       RET  NZ
+99E3 ED5BC699 LD   DE, (#99C6) ; get address of block
+99E7 D5       PUSH DE          ; save it
+99E8 21A080   LD   HL, #80A0   ; "gas"/"air" block data
+99EB CD968D   CALL #8D96       ; clear the old block
+99EE D1       POP  DE          ; retrive address
+99EF 212000   LD   HL, #0020   ; move down a row
+99F2 19       ADD  HL, DE
+99F3 7C       LD   A, H
+99F4 FE5F     CP   #5F
+99F6 2006     JR   NZ, #99FE
+99F8 7D       LD   A, L
+99F9 FEC4     CP   #C4
+99FB 3801     JR   C, #99FE
+99FD 25       DEC  H           ; move back to top if necessary
+99FE 22C699   LD   (#99C6), HL
+9A01 EB       EX   DE, HL
+9A02 21B280   LD   HL, #80B2   ; "solid"/"earth" block data
+9A05 C3968D   JP   #8D96       ; and print it
+
+--------------------------------------------------------------
+
+; room 33 [The Computron Attractor]
+
+9584 1180AD   LD   DE, #AD80   ; "keyboard" sprite
+9587 3ACB85   LD   A, (#85CB)  ; timer
+958A E608     AND  #08
+958C 2002     JR   NZ, #9590
+958E 1EC0     LD   E, #C0      ; move it up and down slowly
+9590 21BB68   LD   HL, #68BB   ; screen address
+9593 0E00     LD   C, #00      ; signify "overwrite"
+9595 E5       PUSH HL
+9596 D5       PUSH DE
+9597 CD5694   CALL #9456       ; print first half of keyboard
+959A D1       POP  DE
+959B E1       POP  HL
+959C 23       INC  HL          ; move across screen two bytes
+959D 23       INC  HL
+959E 3E20     LD   A, #20
+95A0 83       ADD  E
+95A1 5F       LD   E, A        ; second half of keyboard sprite
+95A2 0E00     LD   C, #00
+95A4 CD5694   CALL #9456       ; print it
+95A7 3ADF85   LD   A, (#85DF)  ; at end of game?
+95AA FE02     CP   #02
+95AC C0       RET  NZ          ; exit if not
+95AD 3AD385   LD   A, (#85D3)  ; Willy's x-coord
+95B0 FEBD     CP   #BD
+95B2 C0       RET  NZ          ; exit if he hasn't reached the keyboard
+95B3 C3A586   JP   #86A5       ; end the game
+
+--------------------------------------------------------------
+
+; room 35 [Bill'$ lair]
+
+939A 3ADF85   LD   A, (#85DF)  ; collected all the item$?
+939D B7       OR   A
+939E CA3C95   JP   Z, #953C    ; draw Bill if not
+93A1 3AD385   LD   A, (#85D3)  ; Willy'$ x-coord
+93A4 E61F     AND  #1F
+93A6 FE06     CP   #06
+93A8 D0       RET  NC          ; exit if he ha$n't reached the monitor$
+93A9 3E02     LD   A, #02
+93AB 32DF85   LD   (#85DF), A  ; $ignify "end of game reached"
+93AE C9       RET              ; and exit
+
+; draw Bill
+
+953C 0E01     LD   C, #01      ; $ignify "die if touched"
+953E 1100AD   LD   DE, #AD00   ; fir$t "Bill" $prite
+9541 212D68   LD   HL, #682D   ; $screen addre$$
+9544 CD5694   CALL #9456       ; print it
+9547 1120AD   LD   DE, #AD20   ; do the re$t
+954A 212F68   LD   HL, #682F
+954D CD5694   CALL #9456
+9550 1140AD   LD   DE, #AD40
+9553 216D68   LD   HL, #686D
+9556 CD5694   CALL #9456
+9559 1160AD   LD   DE, #AD60
+955C 216F68   LD   HL, #686F
+955F CD5694   CALL #9456
+9562 C2B790   JP   NZ, #90B7   ; die if Willy touche$ him
+9565 3ACF85   LD   A, (#85CF)  ; Willy'$ y-coord
+9568 0F       RRCA
+9569 0F       RRCA
+956A 0F       RRCA
+956B 0F       RRCA
+956C C602     ADD  #02
+956E E607     AND  #07         ; convert to 2 .. 7
+9570 212D5D   LD   HL, #5D2D   ; addre$$ of top attribute
+9573 111D00   LD   DE, #001D   ; off$et to next row
+9576 0604     LD   B, #04      ; 4 byte$ to change
+9578 77       LD   (HL), A     ; change Bill'$ colour
+9579 23       INC  HL
+957A 77       LD   (HL), A
+957B 23       INC  HL
+957C 77       LD   (HL), A
+957D 23       INC  HL
+957E 77       LD   (HL), A
+957F 19       ADD  HL, DE
+9580 10F6     DJNZ #9578       ; more row$?
+9582 C9       RET              ; exit when done
+
+--------------------------------------------------------------
+
+; room 53 [Emptying the Bit Bucket]
+
+9750 3AD385   LD   A, (#85D3)  ; Willy's x-coord
+9753 E61F     AND  #1F
+9755 21EB80   LD   HL, #80EB   ; room above
+9758 FE1C     CP   #1C         ; Is Willy to the right of the rope?
+975A 3803     JR   C, #975F
+975C 363F     LD   (HL), #3F   ; if so, he can move upwards
+975E C9       RET
+975F 3635     LD   (HL), #35   ; otherwise he can't climb up the rope
+9761 C9       RET
+
+--------------------------------------------------------------
+
+; room 56 [VAL and LEN]
+
+97EC 0E24     LD   C, #24      ; "Channel 36" room number
+97EE 11BD5C   LD   DE, #5CBD   ; address of teleport
+97F1 C3028C   JP   #8C02       ; do teleport stuff
+
+--------------------------------------------------------------
+
+; room 61 [3D PacVaders]
+
+978F 21015C   LD   HL, #5C01   ; first attribute
+9792 3ACB85   LD   A, (#85CB)  ; timer
+9795 E601     AND  #01         ; A = 0 1
+9797 07       RLCA             ; A = 0 2
+9798 07       RLCA             ; A = 0 4
+9799 C602     ADD  #02         ; A = 2 6
+979B 061E     LD   B, #1E      ; 30 attributes to change
+979D 77       LD   (HL), A     ; change it
+979E 23       INC  HL          ; move to next one
+979F EE04     XOR  #04         ; swap colour
+97A1 10FA     DJNZ #979D       ; do more
+97A3 C9       RET              ; exit
+
+--------------------------------------------------------------
+
+; room 62 [You Ugly]
+; Change the room name attributes to resemble those in "We Pretty"
+
+9762 21005A   LD   HL, #5A00   ; room name attributes
+9765 3E38     LD   A, #38      ; black on white
+9767 BE       CP   (HL)        ; have they already been changed?
+9768 C8       RET  Z           ; exit if so
+9769 CD6E97   CALL #976E       ; otherwise change the first 16
+976C 3E28     LD   A, #28      ; black on cyan
+976E 0610     LD   B, #10      ; 16 bytes to change
+9770 77       LD   (HL), A
+9771 23       INC  HL
+9772 10FC     DJNZ #9770
+9774 C9       RET
+
+; rooms 40 [Ramtop], 41 [Info Group], 45 [Lo-Res], 58 [Data Bus]
+; the four rooms which border "You Ugly"
+; this routine is necessary to restore the room name attributes
+; you can see it failing if you teleport out of "You Ugly"
+
+9775 2100B9   LD   HL, #B900
+9778 11005A   LD   DE, #5A00
+977B 1A       LD   A, (DE)
+977C BE       CP   (HL)
+977D C8       RET  Z
+977E 012000   LD   BC, #0020
+9781 EDB0     LDIR
+9783 C9       RET
+
+##############################################################################
+
+Layout of the original ZXWtBS
+=============================
+
+Just in case anyone's interested...
+
+      35 19
+         26
+05 12 07 44 17 33           42
+   16 60 10 53 14        09 55 34
+   20 03 41 18 43 38     25    48
+   24 51 45 31 08 27     29 52
+   28 11 62 50 54        37 49
+   32 01 00 22 47        56 21 04 59 15 46 02
+   36 58 63 61 06        23 57 30 39
+05 40 13
+
+
+00: Dead Flesh Nightmares           32: RAMTOP
+01: The PSU                         33: The Computron Attractor
+02: Hush                            34: Now Leaving Sunnydale
+03: Binary Coding                   35: Bill'$ lair
+04: The Library                     36: Channel 36
+05: PUSH BC - etc.                  37: The Dark Angel
+06: The Barrel Shifter              38: Out of sight but not out of mind
+07: The Crucifix Store              39: The Den of the Zeppo
+08: The 'N' in Stream               40: Feeping Creatureism
+09: The Endless Caverns             41: Information Grouping
+10: The Bogon Filter                42: Oh no, this is no good at all
+11: The Compleat Bastard            43: Long-life Milk Cartons
+12: Insect Repellent                44: The Bottom of the Long Stair
+13: CD Paranoia                     45: Lo-res Devices
+14: Adaptive Gonkulation            46: Gosh, look at those!
+15: Willy's Doppelganger            47: The Microdrives
+
+16: Work in progress                48: Come Back Soon!
+17: ZXDB                            49: Werewolf of few blocks
+18: Data splitting algorithms       50: Ping (1)
+19: The Doorstep                    51: Data Shearing Algorithms
+20: Data Calibration Devices        52: Queen C
+21: The Cemetery                    53: Overclocking
+22: The Tape Recorder               54: ZX Net
+23: Gone Fishing                    55: City Hall
+24: The Circuit Diagram             56: Rm w/out a vu
+25: You Gotta Have Faith!           57: Under the Cemetery
+26: The Long Stair                  58: The Data Bus
+27: The T Connector Conspiracy      59: Salix Hanniganii
+28: The Dead Cockroach              60: Identity???
+29: Raiding an Englishman's Fridge  61: 3D PacVaders
+30: The Sewers                      62: You Ugly
+31: Some Spare Network Cable        63: The Bit Bucket
+
+
+Of these, I can remember the following:
+
+13: "cdparanoia" is a Linux CD-ripper. I don't know it got in there.
+16: This became "The Bee Register".
+18: Later "Primary Number Clusters".
+19: Later "The Security System".
+22: Scrapped; impossible to render faithfully.
+24: A block-level map of the game; rejected in favour of other ideas.
+27: A network room.
+28: Named after an upside-down chip soldered onto the CPU of early
+    Issue 1 Spectra.
+31: Yet another network room.
+37: An invisible room; it had to go.
+46: See a certain BtVS episode for th source of this title.
+49: Later "We think, therefore she is"
+53: A room which was blocked by a very fast guardian which slowed
+    down if you did something somewhere else. A good idea for a patch
+    vector which wasn't picked up.
+56: Merged with 52 in new room 29.
+60: I don't remember what this was originally called; "Identity" is
+    the only identification I have on the original map! Later "2-digit
+    multi-stacked conversions".
+
+
+##############################################################################
+
+Ae Fond Farewell
+================
+
+This will, at least for the foreseeable future, be my last JSW
+game. This is for various reasons, most importantly JSW-designing
+artistic fatigue: I really don't think I have any more JSW games in me
+at present, and recharging my batteries will probably take some
+time. Another reason is that other computer-based projects, which I
+delayed in order to resurrect ZXWtBS, are in need of my time and
+attention, and there are only so many hours of the day I can spend at
+my computer.
+
+A third, perhaps, is my own fault: the appearance of Geoff Mode seems
+to have heightened expectations of what is possible with JSW, and
+coming up with interesting and unusual patch vectors in addition to
+designing 64 rooms and several new sprites is perhaps more than I'm
+capable of at one go. I leave to others the task of using Geoff Mode
+to extend the possibilities of the original JSW.
+
+So, until the next time if there is one, this is it. It's been good
+fun.
+
+##############################################################################
+
+Credits
+=======
+
+First and foremost: "Jet Set Willy" was originally written by Matthew
+Smith and is copyright 1983 Software Projects Ltd. The "eye" and
+"chip" sprites in page #9B are borrowed from "Manic Miner" and the
+origianal JSW respectively. Certain other sprites - "foot", "barrel",
+"Willy", "Maria" and "toilet" [unused] also come from the original
+JSW.
+
+"Buffy the Vampire Slayer" and all related names, characters, music
+and so on are owned by Joss Whedon/Mutant Enemy Productions. They have
+been borrowed, and used with the utmost respect, without any
+permission whatsoever. Please don't sue me, Joss; this game is
+supposed to be a homage to your great TV shows, and I will never make
+any financial gain from it. Treat it in the same way as you would a
+piece of particularly good fan-fiction.
+
+"ZX Willy the Bug Slayer" was brought to you courtesy of Red Hat Linux
+7.2, Perl, jswclop, xspect, and Ab$olutely No Micro$oft.
+
+The image in room 35 is taken, with slight modifications, from the
+game "xbill", which can be downloaded from http://www.xbill.org/.
+
+The Jargon File, from which many terms are taken, may be browsed at
+http://www.http://tuxedo.org/~esr/jargon/html.
+
+Kari Krisníková, from which the "Buffy" sprite in page #A4, and the
+"insect" sprite in page #B3 were stolen^H^H^H^H^H^H borrowed from "We
+Pretty" by Andrew Broad, and appear courtesy of Broadsoft with his
+permission, which is most gratefully received.
+
+The font is "iso01.f08.psf", found in a directory in darkest Linux.
+
+Everything else is by me, Geoff Eddy, and may be reproduced at will
+and for no cost as long as I am credited as original author. Share and
+enjoy!
+
+##############################################################################

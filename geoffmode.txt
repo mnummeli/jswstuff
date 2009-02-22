@@ -1,0 +1,2574 @@
+; Disassembly of Geoff Mode engine
+
+; Some comments are shamelessly stolen from John Elliot's disassembly,
+; which may be found at http://www.seasip.demon.co.uk/Jsw/jsw.mac
+
+; Most (but not all) Geoff Mode changes are marked @@@.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Memory map up to #8000, for completeness :-)
+
+0000          DEFS #4000; Speccy ROM, of course
+4000          DEFS #1800; Display file
+5800          DEFS #0300; Attributes
+5B00          DEFS #0100; Stack (takes over printer buffer)
+
+; The room is built up here and copied to #4000-5bff with LDIR
+
+5C00          DEFS #0200; Temporary attribute buffer
+5E00          DEFS #0200; Room attribute buffer
+
+; These buffers are set up with the block data when a room is
+; entered. The data is LDIR'ed to the above buffers once each tick.
+
+6000          DEFS #1000; Temporary display buffer
+7000          DEFS #1000; Room display buffer
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; JSW data proper starts here
+
+8000          DEFS #0100; data for current room
+8100          DEFS #0048; sprites in room
+8148          DEFS #00B8; blank
+8200          DEFS #0100; screen coord lookup table
+                        ; (#8200 + 2y) contains address of line y (of 128).
+8300          DEFS #0080; x-offsets between successive dots in a rope.
+                        ; All bytes are 0-6, thus:
+                        ; 00000000000000000000000000000000
+                        ; 11111111111122222222222222222222
+                        ; 22122112112232323333330000000000
+                        ; 00000000000000000000000000000000
+8380          DEFS #0080; y-offsets, similarly
+                        ; 66666666666666666666666666666666
+                        ; 66666666666666664664646464446444
+                        ; 44444444444444444444440000000000
+                        ; 00000000000000000000000000000000
+
+8400          DEFS #0020; attributes of the "Press Enter" message
+                        ; on the title screen. @@@
+8420 21       DEFB #21  ; current room number
+8421 00010001 DEFS 4    ; Willy state transition table
+8425 01030103 DEFS 4
+8429 02000200 DEFS 4
+842D 00010203 DEFS 4
+
+8431          DEFS #20  ; UDGs for title screen
+8451 FF       DEFB #FF  ; total number of items @@@ (was at #A3FF)
+8452 6F6F     DEFM "oo"  ; spare bytes
+8454          DEFS #0100 ; scrolling message on title screen
+8554          DEFS #20  ; "Items collected" "time left" string
+8574          DEFM "Game Over00099999999999999"
+858D          DEFS #3E   ; zeros
+
+85CB          DEFS #1A   ; timer; just counts from 0 to ff
+85CC 10       DEFB #10   ; number of lives @@@ (was 7)
+85CD 00       DEFB #00   ; counter
+85CE 00       DEFB #00   ; Kempston flag
+
+; These variables are set up when a room is entered and copied to the
+; set at 85D7-DD. They are copied back when a life is lost.
+
+85CF D0       DEFB #D0   ; willy y
+85D0 00       DEFB #00   ; Willy's move state
+85D1 00       DEFB #00   ; some flags
+85D2 00       DEFB #00   ; Willy's phase
+85D3 B45D     DEFW #5DB4 ; Willy's position
+85D5 00       DEFB #00   ; jump counter
+
+85D6 00       DEFB #00   ; distance fallen
+85D7          DEFS 7     ; temporary variables
+
+85DE 00       DEFB #00   ; number of items collected
+85DF 00       DEFB #00   ; number of items to collect
+85E0 00       DEFB #00   ; pause counter
+85E1 00       DEFB #00   ; tune counter
+85E2 00       DEFB #00   ; a tune flag of some sort
+
+85E5          DEFS #16   ; zeros
+85FA          DEFS #63   ; title screen tune
+865F          DEFS #40   ; in-game tune
+869F          DEFS #0126 ; zeros
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; NEW ENTRY POINT (34758). @@@
+
+87C6 F3       DI
+87C7 31FF5B   LD   SP, #5BFF
+
+; We start here
+
+; Set up the variables.
+
+87CA AF       XOR  A
+87CB 32CE85   LD   (#85CE), A; Kempston flag
+87CE 32E185   LD   (#85E1), A; tune counter
+87D1 32CD85   LD   (#85CD), A; counter
+87D4 32D185   LD   (#85D1), A; flags
+87D7 32CB85   LD   (#85CB), A; timer
+87DA 32E085   LD   (#85E0), A; pause counter
+87DD 32DF85   LD   (#85DF), A; objects
+87E0 3E10     LD   A, #10
+87E2 32CC85   LD   (#85CC), A; lives
+87E5 3ED0     LD   A, #D0
+87E7 32CF85   LD   (#85CF), A; Willy y
+87EA 3E1F     LD   A, #1F
+87EC 322084   LD   (#8420), A; start room
+87EF 21B45D   LD   HL, #5DB4
+87F2 22D385   LD   (#85D3), HL; Willy's position
+87F5 217C85   LD   HL, #857C
+87F8 3630     LD   (HL), #30
+87FA 23       INC  HL
+87FB 3630     LD   (HL), #30
+87FD 23       INC  HL
+87FE 3630     LD   (HL), #30; object count
+
+; Mark all items as uncollected.
+
+8800 26BA     LD   H, #BA     ; start of item table @@@ (was #A4)
+8802 3A5184   LD   A, (#8451) ; item counter @@@ (was #A3FF)
+8805 6F       LD   L, A       ; HL points at first item in table
+8806 32DE85   LD   (#85DE), A ; mark "no items collected yet"
+8809 CBF6     SET  6, (HL)    ; set this item as collected
+880B 2C       INC  L
+880C 20FB     JR   NZ, #8809
+
+; initialise the tune flag
+
+880E 21E285   LD   HL, #85E2
+8811 CBC6     SET  0, (HL)
+
+; clear the screen
+
+8813 210040   LD   HL, #4000
+8816 110140   LD   DE, #4001
+8819 01FF17   LD   BC, #17FF
+881C 3600     LD   (HL), #00
+881E EDB0     LDIR
+
+; copy attributes for title screen
+; which are now in pages #B7, #B8 and #B9 @@@
+
+8820 2100B7   LD   HL, #B700
+8823 010003   LD   BC, #0300
+8826 EDB0     LDIR
+
+; copy attributes for scrolling message from #8400-1F @@@
+
+8828 210084   LD   HL, #8400
+882B 11605A   LD   DE, #5A60
+882E 012000   LD   BC, #0020
+8831 00       NOP
+8832 00       NOP
+8833 EDB0     LDIR
+
+; print "Press Enter to Start" message
+
+8835 DD215484 LD   IX, #8454
+8839 116050   LD   DE, #5060
+883C 0E20     LD   C, #20
+883E CD8096   CALL #9680
+
+; draw Software Projects logo
+; this looks at each attribute square in turn
+; and prints the appropriate UDG.
+
+8841 110058   LD   DE, #5800
+8844 1A       LD   A, (DE)
+8845 B7       OR   A
+8846 2846     JR   Z, #888E
+8848 FE80     CP   #80
+884A 3042     JR   NC, #888E
+884C FE09     CP   #09
+884E 283E     JR   Z, #888E
+8850 FE2D     CP   #2D
+8852 283A     JR   Z, #888E
+8854 FE24     CP   #24
+8856 2836     JR   Z, #888E
+8858 0E00     LD   C, #00
+885A FE08     CP   #08
+885C 2813     JR   Z, #8871
+885E FE29     CP   #29
+8860 280F     JR   Z, #8871
+8862 FE2C     CP   #2C
+8864 2808     JR   Z, #886E
+8866 FE05     CP   #05
+8868 2807     JR   Z, #8871
+886A 0E10     LD   C, #10
+886C 1803     JR   #8871
+886E 3E25     LD   A, #25
+8870 12       LD   (DE), A
+8871 7B       LD   A, E
+8872 E601     AND  #01
+8874 07       RLCA
+8875 07       RLCA
+8876 07       RLCA
+8877 B1       OR   C
+8878 4F       LD   C, A
+8879 0600     LD   B, #00
+887B 213184   LD   HL, #8431
+887E 09       ADD  HL, BC
+887F D5       PUSH DE
+8880 CB42     BIT  0, D
+8882 1640     LD   D, #40
+8884 2802     JR   Z, #8888
+8886 1648     LD   D, #48
+8888 0608     LD   B, #08
+888A CD9B96   CALL #969B
+888D D1       POP  DE
+888E 13       INC  DE
+888F 7A       LD   A, D
+8890 FE5A     CP   #5A
+8892 C24488   JP   NZ, #8844
+
+; play tune and twiddle attributes
+; until ENTER is pressed
+
+8895 011F00   LD   BC, #001F
+8898 F3       DI
+8899 AF       XOR  A
+889A ED58     IN   E, (C)
+889C B3       OR   E
+889D 10FB     DJNZ  #889A
+889F E620     AND  #20
+88A1 2005     JR   NZ, #88A8
+88A3 3E01     LD   A, #01
+88A5 32CE85   LD   (#85CE), A
+88A8 21FB85   LD   HL, #85FB
+88AB CDA296   CALL #96A2
+88AE C2FC88   JP   NZ, #88FC
+88B1 AF       XOR  A
+88B2 32E485   LD   (#85E4), A
+88B5 CDEB8A   CALL #8AEB       ; twiddle colours as with a pause @@@
+88B8 210084   LD   HL, #8400   ; preserve attributes for message @@@
+88BB 11605A   LD   DE, #5A60
+88BE 012000   LD   BC, #0020
+88C1 00       NOP
+88C2 00       NOP
+88C3 EDB0     LDIR
+88C5 3AE485   LD   A, (#85E4)
+88C8 DD215484 LD   IX, #8454
+88CC 5F       LD   E, A
+88CD 1600     LD   D, #00
+88CF DD19     ADD  IX, DE
+88D1 116050   LD   DE, #5060
+88D4 0E20     LD   C, #20
+88D6 CD8096   CALL #9680
+88D9 3AE485   LD   A, (#85E4)
+88DC E61F     AND  #1F
+88DE C632     ADD  #32
+88E0 CDDE96   CALL #96DE       ; play note
+88E3 01FEAF   LD   BC, #AFFE
+88E6 ED78     IN   A, (C)
+88E8 E601     AND  #01
+88EA FE01     CP   #01
+88EC 200E     JR   NZ, #88FC   ; exit if ENTER pressed
+88EE 3AE485   LD   A, (#85E4)
+88F1 3C       INC  A
+88F2 FEE0     CP   #E0
+88F4 32E485   LD   (#85E4), A
+88F7 20BC     JR   NZ, #88B5
+88F9 C31388   JP   #8813
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; copy time string
+
+88FC 218685   LD   HL, #8586
+88FF 117F85   LD   DE, #857F
+8902 010700   LD   BC, #0007
+8905 EDB0     LDIR
+
+; copy attributes for lower third of screen
+
+8907 2100B9   LD   HL, #B900 ; @@@ was #9A00
+890A 11005A   LD   DE, #5A00
+890D 010001   LD   BC, #0100
+8910 EDB0     LDIR
+
+; New Room entry point
+; copy the room data to #8000
+
+8912 3A2084   LD   A, (#8420) ; number of current room
+8915 C6C0     ADD  #C0        ; set top 2 bits so that HL can
+8917 67       LD   H, A       ; point to the room data
+8918 2E00     LD   L, #00
+891A 110080   LD   DE, #8000
+891D 010001   LD   BC, #0100
+8920 EDB0     LDIR            ; wheee!
+
+; set up the guardian data in #8100
+; NOTE: this assumes that class 7F is unused
+
+8922 DD21F080 LD   IX, #80F0   ; start of guardian data
+8926 110081   LD   DE, #8100
+8929 3E08     LD   A, #08
+892B DD6E00   LD   L, (IX+#00)
+892E CBFD     SET  7, L        ; so the data comes from #BC00
+8930 2617     LD   H, #17      ; + 8 * A @@@
+8932 29       ADD  HL, HL
+8933 29       ADD  HL, HL
+8934 29       ADD  HL, HL
+8935 010200   LD   BC, #0002   ; copy first two bytes
+8938 EDB0     LDIR
+893A DD4E01   LD   C, (IX+#01) ; get start byte
+893D 71       LD   (HL), C     ; and copy it
+893E 0E06     LD   C, #06      ; rest of data
+8940 EDB0     LDIR
+8942 DD23     INC  IX
+8944 DD23     INC  IX
+8946 3D       DEC  A
+8947 20E2     JR   NZ, #892B   ; do another one
+
+; add terminating #FF; Matthew forgot this! @@@
+
+8949 3EFF     LD   A, #FF
+894B 12       LD   (DE), A
+
+; initialise arrow counters @@@
+
+894C CDC28B   CALL #8BC2
+
+; store start-of-room variables
+; @@@ HL is already loaded with #85CF
+
+894F 11D785   LD   DE, #85D7
+8952 010700   LD   BC, #0007
+8955 EDB0     LDIR
+
+; print the room
+
+8957 CD338D   CALL #8D33
+
+; blank lower third of screen
+
+895A 210050   LD   HL, #5000
+895D 110150   LD   DE, #5001
+8960 01FF07   LD   BC, #07FF
+8963 3600     LD   (HL), #00
+8965 EDB0     LDIR
+
+; print room name
+
+8967 DD218080 LD   IX, #8080
+896B 0E20     LD   C, #20
+896D 110050   LD   DE, #5000
+8970 CD8096   CALL #9680
+
+; print object count and time
+
+8973 DD215485 LD   IX, #8554
+8977 116050   LD   DE, #5060
+897A 0E20     LD   C, #20
+897C CD8096   CALL #9680
+
+; set border colour
+
+897F 3ADE80   LD   A, (#80DE)
+8982 D3FE     OUT  (#FE), A
+
+; zero fall distance
+
+8984 AF       XOR  A
+8985 32D685   LD   (#85D6), A
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Main game loop.
+
+; print remaining lives
+
+8988 3ACC85   LD   A, (#85CC)  ; get number of lives
+898B B7       OR   A
+898C 2829     JR   Z, #89B7    ; jump if there aren't any
+898E 21A050   LD   HL, #50A0   ; where to put them on screen
+8991 47       LD   B, A
+8992 E5       PUSH HL
+8993 C5       PUSH BC
+8994 3AE185   LD   A, (#85E1)  ; show each life in a different phase @@@
+8997 07       RLCA
+8998 07       RLCA
+8999 07       RLCA
+899A E660     AND  #60
+899C 57       LD   D, A
+899D 78       LD   A, B
+899E E607     AND  #07
+89A0 0F       RRCA
+89A1 0F       RRCA
+89A2 0F       RRCA
+89A3 82       ADD  D
+89A4 E67F     AND  #7F         ; A now has the required phase
+89A6 ED5BDF80 LD   DE, (#80DF) ; find out which sprites are
+89AA 83       ADD  E           ; used to show Willy in this room
+89AB 5F       LD   E, A
+89AC 0E02     LD   C, #02      ; print the sprite with overwrite
+89AE CD5694   CALL #9456
+89B1 C1       POP  BC
+89B2 E1       POP  HL
+89B3 23       INC  HL          ; move along two blocks
+89B4 23       INC  HL
+89B5 10DB     DJNZ  #8992
+
+; copy room buffers to temporary buffers
+
+89B7 00       NOP
+89B8 21005E   LD   HL, #5E00
+89BB 11005C   LD   DE, #5C00
+89BE 010002   LD   BC, #0200
+89C1 EDB0     LDIR
+89C3 210070   LD   HL, #7000
+89C6 110060   LD   DE, #6000
+89C9 010010   LD   BC, #1000
+89CC EDB0     LDIR
+
+; move the sprites
+
+89CE CDC090   CALL #90C0
+
+; move and print Willy unless object count = 3,
+; which signals the end of the game
+
+89D1 3ADF85   LD   A, (#85DF)
+89D4 FE03     CP   #03
+89D6 C4D38D   CALL NZ, #8DD3; move Willy
+
+89D9 3ACF85   LD   A, (#85CF)
+89DC FEE1     CP   #E1
+89DE D4B094   CALL NC, #94B0; move up room
+
+89E1 3ADF85   LD   A, (#85DF)
+89E4 FE03     CP   #03
+89E6 C4C895   CALL NZ, #95C8; print Willy
+
+89E9 CDBE91   CALL #91BE ; print sprites
+89EC CDF994   CALL #94F9 ; twiddle conveyors
+89EF CDD193   CALL #93D1 ; print objects
+89F2 CD3495   CALL #9534 ; call patch vector @@@
+
+; copy buffer to the screen
+
+89F5 210060   LD   HL, #6000
+89F8 110040   LD   DE, #4000
+89FB 010010   LD   BC, #1000
+89FE EDB0     LDIR
+
+; something to with manual control
+; don't worry about it
+
+8A00 3ADF85   LD   A, (#85DF)
+8A03 E602     AND  #02
+8A05 0F       RRCA
+8A06 21D285   LD   HL, #85D2
+8A09 B6       OR   (HL)
+8A0A 77       LD   (HL), A
+8A0B 3ACD85   LD   A, (#85CD)
+8A0E B7       OR   A
+8A0F 2815     JR   Z, #8A26
+8A11 3D       DEC  A
+8A12 32CD85   LD   (#85CD), A
+8A15 07       RLCA
+8A16 07       RLCA
+8A17 07       RLCA
+8A18 E638     AND  #38
+8A1A 21005C   LD   HL, #5C00
+8A1D 11015C   LD   DE, #5C01
+8A20 01FF01   LD   BC, #01FF
+8A23 77       LD   (HL), A
+8A24 EDB0     LDIR
+
+; copy attribute buffer to screen
+
+8A26 21005C   LD   HL, #5C00
+8A29 110058   LD   DE, #5800
+8A2C 010002   LD   BC, #0200
+8A2F EDB0     LDIR
+
+; print time string
+
+8A31 DD217F85 LD   IX, #857F
+8A35 117950   LD   DE, #5079
+8A38 0E07     LD   C, #07
+8A3A CD8096   CALL #9680
+
+; print item count
+
+8A3D DD217C85 LD   IX, #857C
+8A41 116950   LD   DE, #5069
+8A44 0E03     LD   C, #03
+8A46 CD8096   CALL #9680
+
+; increment counter
+
+8A49 3ACB85   LD   A, (#85CB)
+8A4C 3C       INC  A
+8A4D 32CB85   LD   (#85CB), A
+
+; update time string; now just a number, not a time @@@
+
+8A50 1E07     LD   E, #07    ; seven bytes of timer data
+8A52 018585   LD   BC, #8585 ; start of it
+8A55 0A       LD   A, (BC)
+8A56 3D       DEC  A
+8A57 FE2F     CP   #2F       ; an '0' will be changed
+8A59 2009     JR   NZ, #8A64
+8A5B 3E39     LD   A, #39    ; to '9'
+8A5D 02       LD   (BC), A
+8A5E 0B       DEC  BC
+8A5F 1D       DEC  E
+8A60 20F3     JR   NZ, #8A55
+8A62 1801     JR   #8A65
+8A64 02       LD   (BC), A
+
+; has symbol shift + T been pressed? @@@
+
+8A65 01FEFB   LD   BC, #FBFE
+8A68 ED78     IN   A, (C)
+8A6A CB67     BIT  4, A
+8A6C 203D     JR   NZ, #8AAB
+8A6E 01FE7F   LD   BC, #7FFE
+8A71 ED78     IN   A, (C)
+8A73 CB4F     BIT  1, A
+8A75 2034     JR   NZ, #8AAB
+
+; if so, get the room number and jump. @@@
+
+8A77 CD8E8A   CALL #8A8E
+8A7A F5       PUSH AF
+8A7B CD8E8A   CALL #8A8E
+8A7E C1       POP  BC
+8A7F 4F       LD   C, A
+8A80 78       LD   A, B
+8A81 87       ADD  A
+8A82 87       ADD  A
+8A83 80       ADD  B
+8A84 87       ADD  A
+8A85 81       ADD  C
+8A86 E63F     AND  #3F
+8A88 322084   LD   (#8420), A
+8A8B C31289   JP   #8912
+
+; get a digit from the keyboard @@@
+
+8A8E CD8E02   CALL #028E
+8A91 CD1F03   CALL #031F
+8A94 38F8     JR   C, #8A8E
+8A96 CD8E02   CALL #028E
+8A99 CD1F03   CALL #031F
+8A9C 30F8     JR   NC, #8A96
+8A9E D630     SUB  #30
+8AA0 FE0A     CP   #0A
+8AA2 30EA     JR   NC, #8A8E
+8AA4 C9       RET
+
+; 6 spare bytes
+
+8AA5 00       NOP
+8AA6 00       NOP
+8AA7 00       NOP
+8AA8 00       NOP
+8AA9 00       NOP
+8AAA 00       NOP
+
+; exit if BREAK pressed
+
+8AAB 01FEFE   LD   BC, #FEFE
+8AAE ED78     IN   A, (C)
+8AB0 5F       LD   E, A
+8AB1 067F     LD   B, #7F
+8AB3 ED78     IN   A, (C)
+8AB5 B3       OR   E
+8AB6 E601     AND  #01
+8AB8 CACA87   JP   Z, #87CA
+
+; do we need to pause?
+
+8ABB 3AE085   LD   A, (#85E0)
+8ABE 3C       INC  A
+8ABF 32E085   LD   (#85E0), A
+8AC2 280D     JR   Z, #8AD1
+8AC4 06FD     LD   B, #FD
+8AC6 ED78     IN   A, (C)
+8AC8 E61F     AND  #1F
+8ACA FE1F     CP   #1F
+8ACC 2849     JR   Z, #8B17
+8ACE 110000   LD   DE, #0000
+8AD1 0602     LD   B, #02
+8AD3 ED78     IN   A, (C)
+8AD5 E61F     AND  #1F
+8AD7 FE1F     CP   #1F
+8AD9 202C     JR   NZ, #8B07
+8ADB 1C       INC  E
+8ADC 20F3     JR   NZ, #8AD1
+8ADE 14       INC  D
+8ADF 20F0     JR   NZ, #8AD1
+8AE1 3AE385   LD   A, (#85E3)
+8AE4 FE0A     CP   #0A
+8AE6 CDEB8A   CALL #8AEB
+8AE9 18E6     JR   #8AD1
+
+; pause twiddle @@@
+
+8AEB 210058   LD   HL, #5800 ; start of attributes
+8AEE 7E       LD   A, (HL)
+8AEF E607     AND  #07
+8AF1 D3FE     OUT  (#FE), A
+8AF3 7E       LD   A, (HL)   ; update the ink
+8AF4 C601     ADD  #01       ; set to #03 for a nicer effect
+8AF6 E607     AND  #07       ; save the new ink
+8AF8 57       LD   D, A
+8AF9 7E       LD   A, (HL)   ; update the paper
+8AFA C608     ADD  #08       ; set to #18 for a nicer effect
+8AFC E6B8     AND  #B8       ; keep it
+8AFE B2       OR   D         ; replace ink
+8AFF 77       LD   (HL), A   ; store it
+8B00 23       INC  HL
+8B01 7C       LD   A, H
+8B02 FE5B     CP   #5B
+8B04 20ED     JR   NZ, #8AF3 ; go round again unless we've done the lot
+8B06 C9       RET
+
+; restore screen after pause twiddle
+
+; copy atributes for lower third
+
+8B07 2100B9   LD   HL, #B900
+8B0A 11005A   LD   DE, #5A00
+8B0D 010001   LD   BC, #0100
+8B10 EDB0     LDIR
+
+; set border colour
+
+8B12 3ADE80   LD   A, (#80DE)
+8B15 D3FE     OUT  (#FE), A
+
+; are we ready to die yet?
+
+8B17 3AD185   LD   A, (#85D1)
+8B1A FEFF     CP   #FF
+8B1C CA178C   JP   Z, #8C17
+
+; tune on/off
+
+8B1F 06BF     LD   B, #BF
+8B21 21E285   LD   HL, #85E2
+8B24 ED78     IN   A, (C)
+8B26 E61F     AND  #1F
+8B28 FE1F     CP   #1F
+8B2A 280A     JR   Z, #8B36
+8B2C CB46     BIT  0, (HL)
+8B2E 2008     JR   NZ, #8B38
+8B30 7E       LD   A, (HL)
+8B31 EE03     XOR  #03
+8B33 77       LD   (HL), A
+8B34 1802     JR   #8B38
+8B36 CB86     RES  0, (HL)
+8B38 CB4E     BIT  1, (HL)
+8B3A 2034     JR   NZ, #8B70
+8B3C AF       XOR  A
+8B3D 32E085   LD   (#85E0), A
+8B40 3AE185   LD   A, (#85E1)
+8B43 3C       INC  A
+8B44 32E185   LD   (#85E1), A
+8B47 E67E     AND  #7E
+8B49 0F       RRCA
+8B4A 5F       LD   E, A
+8B4B 1600     LD   D, #00
+8B4D 215F86   LD   HL, #865F
+8B50 19       ADD  HL, DE
+8B51 3A2084   LD   A, (#8420) ; note depends on room @@@
+8B54 E61C     AND  #1C
+8B56 00       NOP
+8B57 00       NOP
+8B58 00       NOP
+8B59 00       NOP
+8B5A 86       ADD  (HL)       ; get the current note
+8B5B 57       LD   D, A
+8B5C 3ADE80   LD   A, (#80DE) ; current border
+8B5F 5A       LD   E, D       ; play the note
+8B60 010300   LD   BC, #0003
+8B63 D3FE     OUT  (#FE), A
+8B65 1D       DEC  E
+8B66 2003     JR   NZ, #8B6B
+8B68 5A       LD   E, D
+8B69 EE18     XOR  #18
+8B6B 10F6     DJNZ  #8B63
+8B6D 0D       DEC  C
+8B6E 20F3     JR   NZ, #8B63
+8B70 C38889   JP   #8988
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; update y-coordinate of diagonal guardians @@@
+
+8B73 0E02     LD   C, #02      ; amount to change y-coordinate by
+8B75 FE10     CP   #10         ; if diag type is 2,
+8B77 2007     JR   NZ, #8B80
+8B79 DDCB0646 BIT  0, (IX+#06) ; y is updated every other tick
+8B7D C8       RET  Z
+8B7E 1806     JR   #8B86
+8B80 FE08     CP   #08         ; if diag type is 1
+8B82 2802     JR   Z, #8B86
+8B84 0E04     LD   C, #04      ; double dy
+8B86 79       LD   A, C
+8B87 CDB18D   CALL #8DB1       ; get A = -A x B
+8B8A DDCB0166 BIT  4, (IX+#01) ; negate A if necessary
+8B8E 2002     JR   NZ, #8B92   ; I can't remember what "necessary" is
+8B90 ED44     NEG              ; in this context!
+8B92 DD8603   ADD  (IX+#03)    ; work out new y
+8B95 DD7703   LD   (IX+#03), A ; and store it
+8B98 C9       RET
+
+; adjust y-coordinate of wraparound diagonal guardians @@@
+
+8B99 7E       LD   A, (HL)
+8B9A E618     AND  #18
+8B9C C8       RET  Z           ; forget this is we're not diagonal
+8B9D DD7E07   LD   A, (IX+#07) ; number of ticks
+8BA0 CB66     BIT  4, (HL)     ; work out the change in y-coordinate
+8BA2 2809     JR   Z, #8BAD    ; depending on the diag type
+8BA4 CB5E     BIT  3, (HL)
+8BA6 2004     JR   NZ, #8BAC
+8BA8 E6FE     AND  #FE
+8BAA 1802     JR   #8BAE
+8BAC 07       RLCA
+8BAD 07       RLCA
+8BAE ED44     NEG  
+8BB0 18D5     JR   #8B87       ; and change y
+
+; @@@ A useful routine which moves HL up a row on the screen.
+
+8BB2 25       DEC  H
+8BB3 7C       LD   A, H
+8BB4 3C       INC  A
+8BB5 E607     AND  #07
+8BB7 C0       RET  NZ
+8BB8 7D       LD   A, L
+8BB9 D620     SUB  #20
+8BBB 6F       LD   L, A
+8BBC D8       RET  C
+8BBD 7C       LD   A, H
+8BBE C608     ADD  #08
+8BC0 67       LD   H, A
+8BC1 C9       RET  
+
+; initialise arrow timing values @@@
+
+8BC2 DD210081 LD   IX, #8100   ; start of local guardian data
+8BC6 110800   LD   DE, #0008   ; 8 bytes per guardian
+8BC9 0608     LD   B, #08      ; amd 8 guardians
+8BCB DD7E00   LD   A, (IX+#00) ; get the sprite type
+8BCE E607     AND  #07
+8BD0 FE04     CP   #04
+8BD2 2013     JR   NZ, #8BE7   ; we're only interested in arrows
+8BD4 DD4E02   LD   C, (IX+#02) ; get start byte
+8BD7 79       LD   A, C        
+8BD8 E6F0     AND  #F0
+8BDA DD7702   LD   (IX+#02), A ; store only the y-coordinate
+8BDD A9       XOR  C           ; pick up the start time
+8BDE 07       RLCA
+8BDF 07       RLCA
+8BE0 07       RLCA             ; multiply it by 8
+8BE1 DD8604   ADD  (IX+#04)    ; add it to the start timer
+8BE4 DD7704   LD   (IX+#04), A ; and store this
+8BE7 DD19     ADD  IX, DE
+8BE9 10E0     DJNZ  #8BCB      ; next guardian
+8BEB 21CF85   LD   HL, #85CF   ; need this
+8BEE C9       RET
+
+; Make a nice fuzzy border effect @@@
+
+8BEF 0EFF     LD   C, #FF
+8BF1 0680     LD   B, #80
+8BF3 10FE     DJNZ  #8BF3
+8BF5 D3FE     OUT  (#FE), A
+8BF7 C603     ADD  #03
+8BF9 0D       DEC  C
+8BFA 20F5     JR   NZ, #8BF1
+8BFC 3ADE80   LD   A, (#80DE)
+8BFF D3FE     OUT  (#FE), A
+8C01 C9       RET
+
+; The teleporter. Jumps to room in C if Willy is at DE. @@@
+
+8C02 2AD385   LD   HL, (#85D3) ; get Willy's position
+8C05 AF       XOR  A           ; need to reset carry
+8C06 ED52     SBC  HL, DE      ; if we're not there
+8C08 C0       RET  NZ          ; exit
+8C09 79       LD   A, C        ; room to jump to
+8C0A 322084   LD   (#8420), A  ; store it
+8C0D 3E02     LD   A, #02      ; make the fuzz
+8C0F CDEF8B   CALL #8BEF
+8C12 C39A94   JP   #949A       ; pop stack and move to new room
+
+; Possible space for a minimal patch vector :-)
+
+8C15 00       NOP
+8C16 00       NOP
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; The end-of-life routine
+
+; twiddle attributes @@@
+
+8C17 110708   LD   DE, #0807 ; useful values
+8C1A 210058   LD   HL, #5800 ; start of attributes
+8C1D 010002   LD   BC, #0200 ; number of attributes
+8C20 7E       LD   A, (HL)   ; get current attribute
+8C21 A3       AND  E         ; if ink is black
+8C22 2801     JR   Z, #8C25  ; no nothing
+8C24 3D       DEC  A         ; otherwise change it
+8C25 77       LD   (HL), A   ; and restore
+8C26 23       INC  HL
+8C27 0B       DEC  BC
+8C28 78       LD   A, B
+8C29 B1       OR   C
+8C2A 20F4     JR   NZ, #8C20 ; move to next
+8C2C 15       DEC  D
+8C2D FB       EI             ; wait 1 second
+8C2E 76       HALT
+8C2F 76       HALT
+8C30 F3       DI
+8C31 20E7     JR   NZ, #8C1A ; do all that 8 times so it all turns black
+
+; decrement lives counter
+
+8C33 21CC85   LD   HL, #85CC
+8C36 7E       LD   A, (HL)
+8C37 B7       OR   A
+8C38 CA4A8C   JP   Z, #8C4A
+8C3B 35       DEC  (HL)      ; this is address 35899
+
+; restore variables from start-of-room set
+
+8C3C 21D785   LD   HL, #85D7
+8C3F 11CF85   LD   DE, #85CF
+8C42 010700   LD   BC, #0007
+8C45 EDB0     LDIR
+8C47 C31289   JP   #8912
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; End of game routine.
+
+; blank screen
+
+8C4A 210040   LD   HL, #4000
+8C4D 110140   LD   DE, #4001
+8C50 01FF0F   LD   BC, #0FFF
+8C53 3600     LD   (HL), #00
+8C55 EDB0     LDIR
+
+; zero counter
+
+8C57 AF       XOR  A
+8C58 32E485   LD   (#85E4), A
+
+; print Willy
+
+8C5B 1140B5   LD   DE, #B540
+8C5E 218F48   LD   HL, #488F
+8C61 0E00     LD   C, #00
+8C63 CD5694   CALL #9456
+
+; print barrel
+
+8C66 1160B4   LD   DE, #B460
+8C69 21CF48   LD   HL, #48CF
+8C6C 0E00     LD   C, #00
+8C6E CD5694   CALL #9456
+
+; print descending foot
+
+8C71 3AE485   LD   A, (#85E4)
+8C74 4F       LD   C, A
+8C75 0682     LD   B, #82
+8C77 0A       LD   A, (BC)
+8C78 F60F     OR   #0F
+8C7A 6F       LD   L, A
+8C7B 03       INC  BC
+8C7C 0A       LD   A, (BC)
+8C7D D620     SUB  #20
+8C7F 67       LD   H, A
+8C80 1140B4   LD   DE, #B440
+8C83 0E02     LD   C, #02
+8C85 CD5694   CALL #9456
+
+; make noise
+
+8C88 3AE485   LD   A, (#85E4)
+8C8B 2F       CPL
+8C8C 5F       LD   E, A
+8C8D AF       XOR  A
+8C8E 014000   LD   BC, #0040
+8C91 D3FE     OUT  (#FE), A
+8C93 EE18     XOR  #18
+8C95 43       LD   B, E
+8C96 10FE     DJNZ  #8C96
+8C98 0D       DEC  C
+8C99 20F6     JR   NZ, #8C91
+
+; twiddle attributes
+
+8C9B 210058   LD   HL, #5800
+8C9E 110158   LD   DE, #5801
+8CA1 01FF01   LD   BC, #01FF
+8CA4 3AE485   LD   A, (#85E4)
+8CA7 E60C     AND  #0C
+8CA9 07       RLCA
+8CAA F647     OR   #47
+8CAC 77       LD   (HL), A
+8CAD EDB0     LDIR
+8CAF E6FA     AND  #FA
+8CB1 F602     OR   #02
+8CB3 32CF59   LD   (#59CF), A
+8CB6 32D059   LD   (#59D0), A
+8CB9 32EF59   LD   (#59EF), A
+8CBC 32F059   LD   (#59F0), A
+8CBF 3AE485   LD   A, (#85E4)
+8CC2 C604     ADD  #04
+8CC4 32E485   LD   (#85E4), A
+8CC7 FEC4     CP   #C4
+8CC9 20A6     JR   NZ, #8C71
+
+; print "Game" "Over"
+
+8CCB DD217485 LD   IX, #8574
+8CCF 0E04     LD   C, #04
+8CD1 11CA40   LD   DE, #40CA
+8CD4 CD8096   CALL #9680
+8CD7 DD217885 LD   IX, #8578
+8CDB 0E04     LD   C, #04
+8CDD 11D240   LD   DE, #40D2
+8CE0 CD8096   CALL #9680
+
+; twiddle letters
+
+8CE3 010000   LD   BC, #0000
+8CE6 1606     LD   D, #06
+8CE8 10FE     DJNZ  #8CE8
+8CEA 79       LD   A, C
+8CEB E607     AND  #07
+8CED F640     OR   #40
+8CEF 32CA58   LD   (#58CA), A
+8CF2 3C       INC  A
+8CF3 E607     AND  #07
+8CF5 F640     OR   #40
+8CF7 32CB58   LD   (#58CB), A
+8CFA 3C       INC  A
+8CFB E607     AND  #07
+8CFD F640     OR   #40
+8CFF 32CC58   LD   (#58CC), A
+8D02 3C       INC  A
+8D03 E607     AND  #07
+8D05 F640     OR   #40
+8D07 32CD58   LD   (#58CD), A
+8D0A 3C       INC  A
+8D0B E607     AND  #07
+8D0D F640     OR   #40
+8D0F 32D258   LD   (#58D2), A
+8D12 3C       INC  A
+8D13 E607     AND  #07
+8D15 F640     OR   #40
+8D17 32D358   LD   (#58D3), A
+8D1A 3C       INC  A
+8D1B E607     AND  #07
+8D1D F640     OR   #40
+8D1F 32D458   LD   (#58D4), A
+8D22 3C       INC  A
+8D23 E607     AND  #07
+8D25 F640     OR   #40
+8D27 32D558   LD   (#58D5), A
+8D2A 0D       DEC  C
+8D2B 20BB     JR   NZ, #8CE8
+8D2D 15       DEC  D
+8D2E 20B8     JR   NZ, #8CE8
+8D30 C3CA87   JP   #87CA
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Print the room; this has been rewritten to eliminate
+; the Block Graphics Bug @@@
+; (http://www.cs.man.ac.uk/~broada/spectrum/willy/bugs.html).
+
+; print basic platform blocks
+
+8D33 210080   LD   HL, #8000; source
+8D36 11005E   LD   DE, #5E00; destination
+8D39 0604     LD   B, #04   ; 4 blocks in each byte
+8D3B 4E       LD   C, (HL)  ; get group of 4 blocks
+8D3C E5       PUSH HL
+8D3D CB01     RLC  C
+8D3F CB01     RLC  C
+8D41 79       LD   A, C
+8D42 E603     AND  #03      ; A = block number
+8D44 67       LD   H, A
+8D45 07       RLCA
+8D46 07       RLCA
+8D47 07       RLCA
+8D48 84       ADD  H
+8D49 C6A0     ADD  #A0
+8D4B 6F       LD   L, A
+8D4C 2680     LD   H, #80   ; HL points to the block data   
+8D4E CD968D   CALL #8D96    ; print the block
+8D51 13       INC  DE
+8D52 10E9     DJNZ  #8D3D   ; do all 4 blocks in the group
+8D54 E1       POP  HL
+8D55 23       INC  HL
+8D56 7D       LD   A, L     ; there are #80 groups altogether
+8D57 FE80     CP   #80
+8D59 38DE     JR   C, #8D39 ; do more until all done
+
+; print conveyors
+
+8D5B 3AD980   LD   A, (#80D9)  ; length
+8D5E B7       OR   A
+8D5F 280E     JR   Z, #8D6F    ; jump if there isn't one
+8D61 ED5BD780 LD   DE, (#80D7) ; start address
+8D65 21CD80   LD   HL, #80CD   ; block data
+8D68 47       LD   B, A
+8D69 CD968D   CALL #8D96       ; print block
+8D6C 13       INC  DE
+8D6D 10FA     DJNZ  #8D69      ; do the rest
+
+; print stairs
+
+8D6F 3ADD80   LD   A, (#80DD)  ; length
+8D72 B7       OR   A
+8D73 2820     JR   Z, #8D95    ; jump if there isn't one
+8D75 ED5BDB80 LD   DE, (#80DB) ; start address
+8D79 21C480   LD   HL, #80C4   ; block data
+8D7C 3ADA80   LD   A, (#80DA)  ; direction
+8D7F E601     AND  #01
+8D81 07       RLCA
+8D82 C6DF     ADD  #DF
+8D84 4F       LD   C, A
+8D85 06FF     LD   B, #FF      ; BC = #FFDF \ or #FFE1 /
+8D87 3ADD80   LD   A, (#80DD)  ; length again
+8D8A 08       EX   AF, AF'
+8D8B CD968D   CALL #8D96       ; print block
+8D8E EB       EX   DE, HL
+8D8F 09       ADD  HL, BC      ; move up and left or right
+8D90 EB       EX   DE, HL
+8D91 08       EX   AF, AF'
+8D92 3D       DEC  A
+8D93 20F5     JR   NZ, #8D8A   ; repeat
+8D95 C9       RET
+
+; print a single platform block pointed to by HL
+; at DE in attributes
+
+8D96 E5       PUSH HL
+8D97 D5       PUSH DE
+8D98 C5       PUSH BC
+8D99 7E       LD   A, (HL)
+8D9A 12       LD   (DE), A ; attribute
+8D9B 23       INC  HL
+8D9C 7A       LD   A, D
+8D9D D65C     SUB  #5C
+8D9F 07       RLCA
+8DA0 07       RLCA
+8DA1 07       RLCA
+8DA2 C660     ADD  #60
+8DA4 57       LD   D, A    ; now DE holds display address
+8DA5 0608     LD   B, #08
+8DA7 7E       LD   A, (HL)
+8DA8 12       LD   (DE), A
+8DA9 14       INC  D
+8DAA 23       INC  HL
+8DAB 10FA     DJNZ  #8DA7
+8DAD C1       POP  BC
+8DAE D1       POP  DE
+8DAF E1       POP  HL
+8DB0 C9       RET
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; A = - A x B. Used for diagonal sprites. @@@
+
+8DB1 C5       PUSH BC
+8DB2 48       LD   C, B
+8DB3 47       LD   B, A
+8DB4 AF       XOR  A
+8DB5 81       ADD  C
+8DB6 10FD     DJNZ  #8DB5
+8DB8 ED44     NEG
+8DBA C1       POP  BC
+8DBB C9       RET
+
+; minor sprite patch
+
+8DBC DD8603   ADD  (IX+#03)    ; add current y
+8DBF DD7703   LD   (IX+#03), A ; and store new y
+8DC2 C9       RET  
+
+; 16 spare bytes
+
+8DC3 00       NOP
+8DC4 00       NOP
+8DC5 00       NOP
+8DC6 00       NOP
+8DC7 00       NOP
+8DC8 00       NOP
+8DC9 00       NOP
+8DCA 00       NOP
+8DCB 00       NOP
+8DCC 00       NOP
+8DCD 00       NOP
+8DCE 00       NOP
+8DCF 00       NOP
+8DD0 00       NOP
+8DD1 00       NOP
+8DD2 00       NOP
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Willy-moving routines, which I can't be bothered annotating.
+; Comments are taken from John Elliot's disassembly instead.
+
+8DD3 3AD685   LD   A, (#85D6)
+8DD6 3D       DEC  A
+8DD7 CB7F     BIT  7, A
+8DD9 CAD48E   JP   Z, #8ED4
+8DDC 3AD185   LD   A, (#85D1)
+8DDF FE01     CP   #01
+8DE1 2053     JR   NZ, #8E36   ; jumping?
+8DE3 3AD585   LD   A, (#85D5)
+8DE6 E6FE     AND  #FE
+8DE8 D608     SUB  #08         ; A = modified y
+8DEA 21CF85   LD   HL, #85CF   ; height
+8DED 86       ADD  (HL)
+8DEE 77       LD   (HL), A
+8DEF FEF0     CP   #F0
+8DF1 D2B094   JP   NC, #94B0   ; jumped into room above
+8DF4 CD9C8E   CALL #8E9C       ; set high bytes of x from y
+8DF7 3AB280   LD   A, (#80B2)  ; has Willy hit earth / solid?
+8DFA BE       CP   (HL)
+8DFB CABC8E   JP   Z, #8EBC    ; stop him if he has
+8DFE 23       INC  HL
+8DFF BE       CP   (HL)
+8E00 CABC8E   JP   Z, #8EBC    ; stop him if he has
+8E03 3AD585   LD   A, (#85D5)
+8E06 3C       INC  A
+8E07 32D585   LD   (#85D5), A  ; next stage of jump
+8E0A D608     SUB  #08
+8E0C F2118E   JP   P, #8E11
+
+8E0F ED44     NEG
+8E11 3C       INC  A
+8E12 07       RLCA
+8E13 07       RLCA
+8E14 07       RLCA
+8E15 57       LD   D, A
+8E16 0E20     LD   C, #20
+8E18 3ADE80   LD   A, (#80DE)
+8E1B D3FE     OUT  (#FE), A
+8E1D EE18     XOR  #18
+8E1F 42       LD   B, D
+8E20 10FE     DJNZ  #8E20      ; make jumping noise
+
+8E22 0D       DEC  C
+8E23 20F6     JR   NZ, #8E1B
+8E25 3AD585   LD   A, (#85D5)  ; start falling if jumped too far
+8E28 FE12     CP   #12
+8E2A CAB08E   JP   Z, #8EB0
+8E2D FE10     CP   #10
+8E2F 2805     JR   Z, #8E36
+8E31 FE0D     CP   #0D
+8E33 C2BC8F   JP   NZ, #8FBC
+8E36 3ACF85   LD   A, (#85CF)
+8E39 E60E     AND  #0E
+8E3B 2025     JR   NZ, #8E62
+8E3D 2AD385   LD   HL, (#85D3)
+8E40 114000   LD   DE, #0040
+8E43 19       ADD  HL, DE
+8E44 CB4C     BIT  1, H
+8E46 C2D294   JP   NZ, #94D2   ; move down
+
+8E49 3ABB80   LD   A, (#80BB)  ; jump if hit fire / plasma
+8E4C BE       CP   (HL)
+8E4D 2813     JR   Z, #8E62
+8E4F 23       INC  HL
+8E50 3ABB80   LD   A, (#80BB)
+8E53 BE       CP   (HL)
+8E54 280C     JR   Z, #8E62
+
+8E56 3AA080   LD   A, (#80A0)  ; carry on if not hit air / gas
+8E59 BE       CP   (HL)
+8E5A 2B       DEC  HL
+8E5B C2D48E   JP   NZ, #8ED4
+8E5E BE       CP   (HL)
+8E5F C2D48E   JP   NZ, #8ED4
+
+; There is no ground below Willy; why?
+
+8E62 3AD185   LD   A, (#85D1)
+8E65 FE01     CP   #01
+8E67 CABC8F   JP   Z, #8FBC   ; he is jumping
+8E6A 21D085   LD   HL, #85D0
+8E6D CB8E     RES  1, (HL)
+8E6F 3AD185   LD   A, (#85D1)
+8E72 B7       OR   A
+8E73 CAB68E   JP   Z, #8EB6   ; he has just started to fall
+8E76 3C       INC  A
+8E77 FE10     CP   #10        ; he is falling
+8E79 2002     JR   NZ, #8E7D
+
+8E7B 3E0C     LD   A, #0C
+8E7D 32D185   LD   (#85D1), A
+8E80 07       RLCA
+8E81 07       RLCA
+8E82 07       RLCA
+8E83 07       RLCA
+8E84 57       LD   D, A
+8E85 0E20     LD   C, #20
+8E87 3ADE80   LD   A, (#80DE)
+8E8A D3FE     OUT  (#FE), A
+8E8C EE18     XOR  #18
+8E8E 42       LD   B, D
+8E8F 10FE     DJNZ  #8E8F
+8E91 0D       DEC  C
+8E92 20F6     JR   NZ, #8E8A  ; play falling sound
+
+8E94 3ACF85   LD   A, (#85CF)
+8E97 C608     ADD  #08
+8E99 32CF85   LD   (#85CF), A ; move Willy down
+8E9C E6F0     AND  #F0
+8E9E 6F       LD   L, A
+8E9F AF       XOR  A
+8EA0 CB15     RL   L
+8EA2 CE5C     ADC  #5C
+8EA4 67       LD   H, A
+8EA5 3AD385   LD   A, (#85D3)
+8EA8 E61F     AND  #1F
+8EAA B5       OR   L
+8EAB 6F       LD   L, A
+8EAC 22D385   LD   (#85D3), HL
+8EAF C9       RET
+
+;
+
+8EB0 3E06     LD   A, #06
+8EB2 32D185   LD   (#85D1), A
+8EB5 C9       RET
+
+;
+
+8EB6 3E02     LD   A, #02
+8EB8 32D185   LD   (#85D1), A
+8EBB C9       RET
+
+; Willy has hit something while jumping.
+
+8EBC 3ACF85   LD   A, (#85CF)
+8EBF C610     ADD  #10
+8EC1 E6F0     AND  #F0
+8EC3 32CF85   LD   (#85CF), A
+8EC6 CD9C8E   CALL #8E9C
+8EC9 3E02     LD   A, #02
+8ECB 32D185   LD   (#85D1), A
+8ECE 21D085   LD   HL, #85D0
+8ED1 CB8E     RES  1, (HL)
+8ED3 C9       RET
+
+; Willy has landed on something while falling.
+
+8ED4 1EFF     LD   E, #FF
+8ED6 3AD685   LD   A, (#85D6)
+8ED9 3D       DEC  A
+8EDA CB7F     BIT  7, A
+8EDC 281C     JR   Z, #8EFA
+8EDE 3AD185   LD   A, (#85D1)
+8EE1 FE0C     CP   #0C
+8EE3 D2B790   JP   NC, #90B7
+8EE6 AF       XOR  A
+8EE7 32D185   LD   (#85D1), A
+8EEA 3ACD80   LD   A, (#80CD)
+8EED BE       CP   (HL)
+8EEE 2804     JR   Z, #8EF4
+8EF0 23       INC  HL
+8EF1 BE       CP   (HL)
+8EF2 2006     JR   NZ, #8EFA
+
+; Move Willy according to the keypress
+
+8EF4 3AD680   LD   A, (#80D6)
+8EF7 D603     SUB  #03
+8EF9 5F       LD   E, A
+8EFA 01FEDF   LD   BC, #DFFE ; YUIOP
+8EFD ED78     IN   A, (C)
+8EFF E61F     AND  #1F
+8F01 F620     OR   #20
+8F03 A3       AND  E
+8F04 5F       LD   E, A
+8F05 3ADF85   LD   A, (#85DF) ; is manual control allowed?
+8F08 E602     AND  #02
+8F0A 0F       RRCA
+8F0B AB       XOR  E
+8F0C 5F       LD   E, A
+8F0D 01FEFB   LD   BC, #FBFE ; 
+8F10 ED78     IN   A, (C)
+8F12 E61F     AND  #1F
+8F14 CB07     RLC  A
+8F16 F601     OR   #01
+8F18 A3       AND  E
+8F19 5F       LD   E, A
+8F1A 06EF     LD   B, #EF
+8F1C ED78     IN   A, (C)
+8F1E 0F       RRCA
+8F1F F6F7     OR   #F7
+8F21 A3       AND  E
+8F22 5F       LD   E, A
+8F23 06EF     LD   B, #EF
+8F25 ED78     IN   A, (C)
+8F27 F6FB     OR   #FB
+8F29 A3       AND  E
+8F2A 5F       LD   E, A
+8F2B ED78     IN   A, (C)
+8F2D 0F       RRCA
+8F2E F6FB     OR   #FB
+8F30 A3       AND  E
+8F31 5F       LD   E, A
+8F32 3ACE85   LD   A, (#85CE)
+8F35 B7       OR   A
+8F36 280A     JR   Z, #8F42
+8F38 011F00   LD   BC, #001F
+8F3B ED78     IN   A, (C)
+8F3D E603     AND  #03
+8F3F 2F       CPL
+8F40 A3       AND  E
+8F41 5F       LD   E, A
+8F42 0E00     LD   C, #00
+8F44 7B       LD   A, E
+8F45 E62A     AND  #2A
+8F47 FE2A     CP   #2A
+8F49 2806     JR   Z, #8F51
+8F4B 0E04     LD   C, #04
+8F4D AF       XOR  A
+8F4E 32E085   LD   (#85E0), A
+8F51 7B       LD   A, E
+8F52 E615     AND  #15
+8F54 FE15     CP   #15
+8F56 2806     JR   Z, #8F5E
+8F58 CBD9     SET  3, C
+8F5A 8F       ADC  A
+8F5B 32E085   LD   (#85E0), A
+8F5E 3AD085   LD   A, (#85D0)
+8F61 81       ADD  C
+8F62 4F       LD   C, A
+8F63 0600     LD   B, #00
+8F65 212184   LD   HL, #8421
+8F68 09       ADD  HL, BC
+8F69 7E       LD   A, (HL)
+8F6A 32D085   LD   (#85D0), A
+8F6D 01FE7E   LD   BC, #7EFE
+8F70 ED78     IN   A, (C)
+8F72 E61F     AND  #1F
+8F74 FE1F     CP   #1F
+8F76 2017     JR   NZ, #8F8F
+8F78 06EF     LD   B, #EF
+8F7A ED78     IN   A, (C)
+8F7C CB47     BIT  0, A
+8F7E 280F     JR   Z, #8F8F
+8F80 3ACE85   LD   A, (#85CE)
+8F83 B7       OR   A
+8F84 2836     JR   Z, #8FBC
+8F86 011F00   LD   BC, #001F
+8F89 ED78     IN   A, (C)
+8F8B CB67     BIT  4, A
+8F8D 282D     JR   Z, #8FBC
+8F8F 3ADF85   LD   A, (#85DF)
+8F92 CB4F     BIT  1, A
+8F94 2026     JR   NZ, #8FBC
+8F96 AF       XOR  A
+8F97 32D585   LD   (#85D5), A
+8F9A 32E085   LD   (#85E0), A
+8F9D 3C       INC  A
+8F9E 32D185   LD   (#85D1), A
+8FA1 3AD685   LD   A, (#85D6)
+8FA4 3D       DEC  A
+8FA5 CB7F     BIT  7, A
+8FA7 2013     JR   NZ, #8FBC
+8FA9 3EF0     LD   A, #F0
+8FAB 32D685   LD   (#85D6), A
+8FAE 3ACF85   LD   A, (#85CF)
+8FB1 E6F0     AND  #F0
+8FB3 32CF85   LD   (#85CF), A
+8FB6 21D085   LD   HL, #85D0
+8FB9 CBCE     SET  1, (HL)
+8FBB C9       RET
+
+;
+
+8FBC 3AD085   LD   A, (#85D0)
+8FBF E602     AND  #02
+8FC1 C8       RET  Z
+8FC2 3AD685   LD   A, (#85D6)
+8FC5 3D       DEC  A
+8FC6 CB7F     BIT  7, A
+8FC8 C8       RET  Z
+8FC9 3AD085   LD   A, (#85D0)
+8FCC E601     AND  #01
+8FCE CA4290   JP   Z, #9042
+8FD1 3AD285   LD   A, (#85D2)
+8FD4 B7       OR   A
+8FD5 2805     JR   Z, #8FDC
+8FD7 3D       DEC  A
+8FD8 32D285   LD   (#85D2), A
+8FDB C9       RET
+
+; move Willy right
+
+8FDC 3AD185   LD   A, (#85D1)
+8FDF 010000   LD   BC, #0000
+8FE2 FE00     CP   #00
+8FE4 2024     JR   NZ, #900A
+8FE6 2AD385   LD   HL, (#85D3)
+8FE9 010000   LD   BC, #0000
+8FEC 3ADA80   LD   A, (#80DA)
+8FEF 3D       DEC  A
+8FF0 F6A1     OR   #A1
+8FF2 EEE0     XOR  #E0
+8FF4 5F       LD   E, A
+8FF5 1600     LD   D, #00
+8FF7 19       ADD  HL, DE
+8FF8 3AC480   LD   A, (#80C4)
+8FFB BE       CP   (HL)
+8FFC 200C     JR   NZ, #900A
+8FFE 012000   LD   BC, #0020
+9001 3ADA80   LD   A, (#80DA)
+9004 B7       OR   A
+9005 2003     JR   NZ, #900A
+9007 01E0FF   LD   BC, #FFE0
+900A 2AD385   LD   HL, (#85D3)
+900D 7D       LD   A, L
+900E E61F     AND  #1F
+9010 CA8A94   JP   Z, #948A
+9013 09       ADD  HL, BC
+9014 2B       DEC  HL
+9015 112000   LD   DE, #0020
+9018 19       ADD  HL, DE
+9019 3AB280   LD   A, (#80B2)
+901C BE       CP   (HL)
+901D C8       RET  Z
+901E 3ACF85   LD   A, (#85CF)
+9021 CB29     SRA  C
+9023 81       ADD  C
+9024 47       LD   B, A
+9025 E60F     AND  #0F
+9027 2809     JR   Z, #9032
+9029 3AB280   LD   A, (#80B2)
+902C 19       ADD  HL, DE
+902D BE       CP   (HL)
+902E C8       RET  Z
+902F B7       OR   A
+9030 ED52     SBC  HL, DE
+9032 B7       OR   A
+9033 ED52     SBC  HL, DE
+9035 22D385   LD   (#85D3), HL
+9038 78       LD   A, B
+9039 32CF85   LD   (#85CF), A
+903C 3E03     LD   A, #03
+903E 32D285   LD   (#85D2), A
+9041 C9       RET
+
+; move Willy left
+
+9042 3AD285   LD   A, (#85D2)
+9045 FE03     CP   #03
+9047 2805     JR   Z, #904E
+9049 3C       INC  A
+904A 32D285   LD   (#85D2), A
+904D C9       RET
+904E 3AD185   LD   A, (#85D1)
+9051 010000   LD   BC, #0000
+9054 B7       OR   A
+9055 2021     JR   NZ, #9078
+9057 2AD385   LD   HL, (#85D3)
+905A 3ADA80   LD   A, (#80DA)
+905D 3D       DEC  A
+905E F69D     OR   #9D
+9060 EEBF     XOR  #BF
+9062 5F       LD   E, A
+9063 1600     LD   D, #00
+9065 19       ADD  HL, DE
+9066 3AC480   LD   A, (#80C4)
+9069 BE       CP   (HL)
+906A 200C     JR   NZ, #9078
+906C 012000   LD   BC, #0020
+906F 3ADA80   LD   A, (#80DA)
+9072 B7       OR   A
+9073 2803     JR   Z, #9078
+9075 01E0FF   LD   BC, #FFE0
+9078 2AD385   LD   HL, (#85D3)
+907B 09       ADD  HL, BC
+907C 23       INC  HL
+907D 23       INC  HL
+907E 7D       LD   A, L
+907F E61F     AND  #1F
+9081 CA9E94   JP   Z, #949E
+9084 112000   LD   DE, #0020
+9087 3AB280   LD   A, (#80B2)
+908A 19       ADD  HL, DE
+908B BE       CP   (HL)
+908C C8       RET  Z
+908D 3ACF85   LD   A, (#85CF)
+9090 CB29     SRA  C
+9092 81       ADD  C
+9093 47       LD   B, A
+9094 E60F     AND  #0F
+9096 2809     JR   Z, #90A1
+9098 3AB280   LD   A, (#80B2)
+909B 19       ADD  HL, DE
+909C BE       CP   (HL)
+909D C8       RET  Z
+909E B7       OR   A
+909F ED52     SBC  HL, DE
+90A1 3AB280   LD   A, (#80B2)
+90A4 B7       OR   A
+90A5 ED52     SBC  HL, DE
+90A7 BE       CP   (HL)
+90A8 C8       RET  Z
+90A9 2B       DEC  HL
+90AA 22D385   LD   (#85D3), HL
+90AD AF       XOR  A
+90AE 32D285   LD   (#85D2), A
+90B1 78       LD   A, B
+90B2 32CF85   LD   (#85CF), A
+90B5 C9       RET
+
+; not sure
+
+90B6 E1       POP  HL
+90B7 E1       POP  HL
+90B8 3EFF     LD   A, #FF
+90BA 32D185   LD   (#85D1), A
+90BD C3F589   JP   #89F5
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Main guardian loop. @@@
+
+90C0 DD210081 LD   IX, #8100   ; start of local guardian data
+90C4 DD7E00   LD   A, (IX+#00) ; get type
+90C7 FEFF     CP   #FF
+90C9 C8       RET  Z           ; exit if no more
+90CA E603     AND  #03
+90CC 285F     JR   Z, #912D    ; ignore arrows
+90CE FE03     CP   #03
+90D0 2805     JR   Z, #90D7    ; jump forward if rope
+90D2 CD3491   CALL #9134       ; horizontal/vertical
+90D5 1856     JR   #912D       ; move to next one
+
+; this is only done for ropes
+; @@@ It's been rewritten for compactness; the constants are now
+; stored in BCDE
+
+90D7 DD7E01   LD   A, (IX+#01)
+90DA DDCB007E BIT  7, (IX+#00) ; depending on the direction
+90DE 280C     JR   Z, #90EC
+90E0 018094   LD   BC, #9480   ; we need different constants
+90E3 111200   LD   DE, #0012
+90E6 CB7F     BIT  7, A
+90E8 2819     JR   Z, #9103
+90EA 180A     JR   #90F6
+
+90EC 010014   LD   BC, #1400
+90EF 119280   LD   DE, #8092
+90F2 CB7F     BIT  7, A
+90F4 200D     JR   NZ, #9103  ; jump if moving right
+90F6 D602     SUB  #02
+90F8 B8       CP   B
+90F9 300F     JR   NC, #910A
+90FB D602     SUB  #02
+90FD B9       CP   C
+90FE 200A     JR   NZ, #910A
+9100 7A       LD   A, D
+9101 1807     JR   #910A
+
+9103 C602     ADD  #02
+9105 BB       CP   E
+9106 3002     JR   NC, #910A
+9108 C602     ADD  #02
+910A DD7701   LD   (IX+#01), A
+910D E67F     AND  #7F
+910F DDBE07   CP   (IX+#07)    ; have we reached the end of the swing?
+9112 2019     JR   NZ, #912D
+9114 DD7E00   LD   A, (IX+#00) ; change direction if so
+9117 EE80     XOR  #80
+9119 DD7700   LD   (IX+#00), A
+911C 180F     JR   #912D
+
+911E 00       NOP  
+911F 00       NOP  
+9120 00       NOP  
+9121 00       NOP  
+9122 00       NOP  
+9123 00       NOP  
+9124 00       NOP  
+9125 00       NOP  
+9126 00       NOP  
+9127 00       NOP  
+9128 00       NOP  
+9129 00       NOP  
+912A 00       NOP  
+912B 00       NOP  
+912C 00       NOP  
+
+; move to next guardian
+
+912D 110800   LD   DE, #0008
+9130 DD19     ADD  IX, DE
+9132 1890     JR   #90C4
+
+; horizontal/vertical common entry point @@@
+
+9134 DDE5     PUSH IX
+9136 E1       POP  HL          ; so we get the flags in (HL)
+9137 DD4604   LD   B, (IX+#04) ; speed (v)
+913A FE01     CP   #01
+913C 282F     JR   Z, #916D    ; jump if horizontal
+
+; vertical sprites @@@
+
+913E DD7E03   LD   A, (IX+#03)
+9141 80       ADD  B
+9142 DD7703   LD   (IX+#03), A ; increment y by v
+9145 7E       LD   A, (HL)
+9146 CB78     BIT  7, B
+9148 2804     JR   Z, #914E
+914A D620     SUB  #20
+914C 1802     JR   #9150
+914E C620     ADD  #20
+9150 77       LD   (HL), A     ; change sprite image
+9151 DD3506   DEC  (IX+#06)
+9154 C0       RET  NZ          ; return if end not hit
+9155 DD7E07   LD   A, (IX+#07)
+9158 DD7706   LD   (IX+#06), A ; restore counter
+915B CB56     BIT  2, (HL)
+915D 2007     JR   NZ, #9166   ; jump if wraparound
+915F 78       LD   A, B
+9160 ED44     NEG
+9162 DD7704   LD   (IX+#04), A ; negate speed
+9165 C9       RET
+
+; adjust y for wraparound sprites @@@
+
+9166 CDB18D   CALL #8DB1       ; get A = -A x B
+9169 DD8603   JP   #8DBC       ; adjust and store y
+916C C9       RET
+
+; horizontal sprites @@@
+
+916D DD4E02   LD   C, (IX+#02) ; start x
+9170 7E       LD   A, (HL)
+9171 07       RLCA
+9172 07       RLCA
+9173 CB11     RL   C
+9175 07       RLCA
+9176 CB11     RL   C           ; C = x * 4 + image
+9178 79       LD   A, C
+9179 80       ADD  B
+917A 5F       LD   E, A        ; E = C + v
+917B 7E       LD   A, (HL)
+917C E618     AND  #18         ; is this a diagonal?
+917E C4738B   CALL NZ, #8B73   ; adjust y if so
+9181 DD3506   DEC  (IX+#06)    
+9184 2021     JR   NZ, #91A7   ; jump if not at end
+
+9186 00       NOP              ; older CALL removed
+9187 00       NOP
+9188 00       NOP
+9189 DD7E07   LD   A, (IX+#07)
+918C DD7706   LD   (IX+#06), A ; reset counter
+918F CB56     BIT  2, (HL)
+9191 200C     JR   NZ, #919F   ; jump if wraparound
+9193 78       LD   A, B
+9194 ED44     NEG
+9196 DD7704   LD   (IX+#04), A ; x = x - v * length
+9199 7E       LD   A, (HL)
+919A EE80     XOR  #80
+919C 77       LD   (HL), A     ; change direction
+919D 1808     JR   #91A7
+
+; adjust limits of wraparound sprites
+
+919F CDB18D   CALL #8DB1
+91A2 83       ADD  E
+91A3 5F       LD   E, A
+91A4 CD998B   CALL #8B99       ; E = E - v * length
+
+; update values
+
+91A7 7B       LD   A, E
+91A8 0F       RRCA
+91A9 0F       RRCA
+91AA 5F       LD   E, A
+91AB 0F       RRCA
+91AC AE       XOR  (HL)
+91AD E660     AND  #60
+91AF AE       XOR  (HL)
+91B0 77       LD   (HL), A
+91B1 7B       LD   A, E
+91B2 DDAE02   XOR  (IX+#02)
+91B5 E61F     AND  #1F
+91B7 DDAE02   XOR  (IX+#02)
+91BA DD7702   LD   (IX+#02), A   ; restore x and image
+91BD C9       RET
+
+; print the guardians
+
+91BE DD210081 LD   IX, #8100
+91C2 DD7E00   LD   A, (IX+#00)
+91C5 FEFF     CP   #FF
+91C7 C8       RET  Z
+91C8 E607     AND  #07
+91CA CAB393   JP   Z, #93B3
+91CD FE03     CP   #03
+91CF CAA492   JP   Z, #92A4
+91D2 FE04     CP   #04
+91D4 2861     JR   Z, #9237
+91D6 DD5E03   LD   E, (IX+#03)
+91D9 1682     LD   D, #82
+91DB 1A       LD   A, (DE)
+91DC 6F       LD   L, A
+91DD DD7E02   LD   A, (IX+#02)
+91E0 E61F     AND  #1F
+91E2 85       ADD  L
+91E3 6F       LD   L, A
+91E4 7B       LD   A, E
+91E5 07       RLCA
+91E6 E601     AND  #01
+91E8 F65C     OR   #5C
+91EA 67       LD   H, A
+91EB 111F00   LD   DE, #001F
+91EE DD7E01   LD   A, (IX+#01)
+91F1 E60F     AND  #0F
+91F3 C638     ADD  #38
+91F5 E647     AND  #47
+91F7 4F       LD   C, A
+91F8 7E       LD   A, (HL)
+91F9 E638     AND  #38
+91FB A9       XOR  C
+91FC 4F       LD   C, A
+91FD 71       LD   (HL), C
+91FE 23       INC  HL
+91FF 71       LD   (HL), C
+9200 19       ADD  HL, DE
+9201 71       LD   (HL), C
+9202 23       INC  HL
+9203 71       LD   (HL), C
+9204 DD7E03   LD   A, (IX+#03)
+9207 E60E     AND  #0E
+9209 2804     JR   Z, #920F
+920B 19       ADD  HL, DE
+920C 71       LD   (HL), C
+920D 23       INC  HL
+920E 71       LD   (HL), C
+920F 0E01     LD   C, #01
+9211 DD7E01   LD   A, (IX+#01)
+9214 DDA600   AND  (IX+#00)
+9217 DDB602   OR   (IX+#02)
+921A E6E0     AND  #E0
+921C 5F       LD   E, A
+921D DD5605   LD   D, (IX+#05)
+9220 2682     LD   H, #82
+9222 DD6E03   LD   L, (IX+#03)
+9225 DD7E02   LD   A, (IX+#02)
+9228 E61F     AND  #1F
+922A B6       OR   (HL)
+922B 23       INC  HL
+922C 66       LD   H, (HL)
+922D 6F       LD   L, A
+922E CD5694   CALL #9456
+9231 C2B790   JP   NZ, #90B7
+9234 C3B393   JP   #93B3
+
+; Main arrow loop
+
+9237 DDCB007E BIT  7, (IX+#00)   ; jump if moving right
+923B 2007     JR   NZ, #9244
+
+923D DD3504   DEC  (IX+#04)      ; decrement timer
+9240 0E22     LD   C, #22        ; 2 columns to right of screen
+9242 1805     JR   #9249
+
+9244 DD3404   INC  (IX+#04)      ; increment timer
+9247 0E7D     LD   C, #7D        ; 2 columns to left of screen
+9249 DD7E04   LD   A, (IX+#04)   ; get timer
+924C E67F     AND  #7F
+924E B9       CP   C
+924F 2006     JR   NZ, #9257     ; if we've hit column C,
+9251 CDEF8B   CALL #8BEF         ; make a fuzz
+9254 C3B393   JP   #93B3         ; and move to the next guardian
+
+9257 FE20     CP   #20           ; if the arrow isn't on the screen
+9259 D2B393   JP   NC, #93B3     ; don't do anything else
+925C E61F     AND  #1F           ; this looks unnecessary!
+925E 6F       LD   L, A          ; L = column number
+925F DD7E02   LD   A, (IX+#02)   ; y-coord
+9262 CB27     SLA  A
+9264 262E     LD   H, #2E        ; not sure why I didn't just
+9266 CB14     RL   H             ; do "LD H, #5C"!
+9268 E6E0     AND  #E0
+926A B5       OR   L
+926B 6F       LD   L, A          ; HL now points to attribute address
+926C 7E       LD   A, (HL)
+926D DD3605FF LD   (IX+#05), #FF ; signify "Willy possibly hit"
+9271 3C       INC  A
+9272 E607     AND  #07
+9274 2808     JR   Z, #927E      ; jump if arrow has hit something white
+9276 DD360500 LD   (IX+#05), #00 ; signify "Willy not hit after all"
+927A 7E       LD   A, (HL)
+927B F607     OR   #07
+927D 77       LD   (HL), A       ; make arrow white
+927E DD7E02   LD   A, (IX+#02)
+9281 17       RLA
+9282 5F       LD   E, A
+9283 3E60     LD   A, #60
+9285 3002     JR   NC, #9289
+9287 F608     OR   #08
+9289 67       LD   H, A
+928A 7D       LD   A, L
+928B E61F     AND  #1F
+928D B3       OR   E
+928E 6F       LD   L, A          ; HL now points to dfile address
+928F 24       INC  H
+9290 24       INC  H             ; arrow goes on rows 2-4 in block
+9291 DD4E06   LD   C, (IX+#06)   ; top of arrow
+9294 71       LD   (HL), C
+9295 24       INC  H
+9296 7E       LD   A, (HL)
+9297 DDA605   AND  (IX+#05)      ; kill Willy if the arrow hits something
+929A C2B790   JP   NZ, #90B7
+929D 367E     LD   (HL), #7E     ; middle of arrow
+929F 24       INC  H
+92A0 71       LD   (HL), C       ; bottom of arrow
+92A1 C3B393   JP   #93B3
+
+; ropes
+
+92A4 FD210082 LD   IY, #8200     ; row-to-screen table
+92A8 1E00     LD   E, #00        ; number of dot
+92AA DD5602   LD   D, (IX+#02)   ; start x
+92AD DD360580 LD   (IX+#05), #80 ; dot
+92B1 FD7E00   LD   A, (IY+#00)
+92B4 82       ADD  D
+92B5 6F       LD   L, A
+92B6 FD6601   LD   H, (IY+#01)   ; HL points to dot location if rope straight
+92B9 3AD685   LD   A, (#85D6)    ; if Willy is not on the rope
+92BC B7       OR   A
+92BD 200E     JR   NZ, #92CD
+92BF DD7E05   LD   A, (IX+#05)
+92C2 A6       AND  (HL)          ; and touches it
+92C3 283A     JR   Z, #92FF
+92C5 7B       LD   A, E          ; put him on it
+92C6 32D685   LD   (#85D6), A
+92C9 DDCB03C6 SET  0, (IX+#03)
+92CD BB       CP   E             ; if Willy is on the rope at this height
+92CE 202F     JR   NZ, #92FF
+92D0 DDCB0346 BIT  0, (IX+#03)
+92D4 2829     JR   Z, #92FF      ; skip if he just got on
+
+92D6 42       LD   B, D
+92D7 DD7E05   LD   A, (IX+#05)
+92DA 0E01     LD   C, #01
+92DC FE04     CP   #04
+92DE 380F     JR   C, #92EF
+92E0 0E00     LD   C, #00
+92E2 FE10     CP   #10
+92E4 3809     JR   C, #92EF
+92E6 05       DEC  B
+92E7 0E03     LD   C, #03
+92E9 FE40     CP   #40
+92EB 3802     JR   C, #92EF
+92ED 0E02     LD   C, #02
+92EF ED43D285 LD   (85D2), BC    ; set Willy's x and move state
+92F3 FD7D     LD   A, IYL
+92F5 D610     SUB  #10
+92F7 32CF85   LD   (#85CF), A
+92FA E5       PUSH HL
+92FB CD9C8E   CALL #8E9C         ; store Willy's position
+92FE E1       POP  HL
+
+92FF DD7E05   LD   A, (IX+#05)   ; get current dot
+9302 B6       OR   (HL)
+9303 77       LD   (HL), A       ; and plot it
+9304 7B       LD   A, E
+9305 DD8601   ADD  (IX+#01)
+9308 6F       LD   L, A
+9309 CBFD     SET  7, L
+930B 2683     LD   H, #83
+930D 4E       LD   C, (HL)       ; get y-offset to next dot
+930E 0600     LD   B, #00        ; @@@ this used to use DE
+9310 FD09     ADD  IY, BC
+9312 CBBD     RES  7, L
+9314 7E       LD   A, (HL)       ; get x-offset to next dot
+9315 B7       OR   A
+9316 2823     JR   Z, #933B      ; don't worry if it's zero
+9318 47       LD   B, A
+9319 DDCB017E BIT  7, (IX+#01)
+931D 280F     JR   Z, #932E      ; jump if moving right
+
+931F DDCB0506 RLC  (IX+#05)      ; move the dot to the correct position
+9323 DDCB0546 BIT  0, (IX+#05)
+9327 2801     JR   Z, #932A
+9329 15       DEC  D             ; moving left a byte if necessary
+932A 10F3     DJNZ #931F
+932C 180D     JR   #933B
+
+932E DDCB050E RRC  (IX+#05)      ; the same, but in the other direction
+9332 DDCB057E BIT  7, (IX+#05)
+9336 2801     JR   Z, #9339
+9338 14       INC  D
+9339 10F3     DJNZ #932E
+
+933B 7B       LD   A, E          ; exit if we've run out of rope to draw
+933C DDBE04   CP   (IX+#04)
+933F 2804     JR   Z, #9345
+9341 1C       INC  E
+9342 C3B192   JP   #92B1         ; otherwise jump back
+
+9345 3AD685   LD   A, (#85D6)
+9348 CB7F     BIT  7, A
+934A 280A     JR   Z, #9356
+934C 3C       INC  A
+934D 32D685   LD   (#85D6), A
+9350 DDCB0386 RES  0, (IX+#03)
+9354 185D     JR   #93B3
+
+9356 DDCB0346 BIT  0, (IX+#03)
+935A 2857     JR   Z, #93B3
+935C 3AD085   LD   A, (#85D0)
+935F CB4F     BIT  1, A
+9361 2850     JR   Z, #93B3
+9363 0F       RRCA 
+9364 DDAE00   XOR  (IX+#00)
+9367 07       RLCA 
+9368 07       RLCA 
+9369 E602     AND  #02
+936B 3D       DEC  A
+936C 21D685   LD   HL, #85D6
+936F 86       ADD  (HL)
+9370 77       LD   (HL), A
+
+9371 3AEB80   LD   A, (#80EB)    ; if room above
+9374 4F       LD   C, A
+9375 3A2084   LD   A, (#8420)    ; == current room
+9378 B9       CP   C
+9379 2007     JR   NZ, #9382
+937B 7E       LD   A, (HL)       ; Willy can't go all the way up
+937C FE0C     CP   #0C
+937E 3002     JR   NC, #9382
+9380 360C     LD   (HL), #0C
+
+9382 7E       LD   A, (HL)       ; change direction if necessary
+9383 DDBE04   CP   (IX+#04)
+9386 382B     JR   C, #93B3
+9388 2829     JR   Z, #93B3
+938A 36F0     LD   (HL), #F0
+938C 3ACF85   LD   A, (#85CF)
+938F E6F8     AND  #F8
+9391 32CF85   LD   (#85CF), A
+9394 AF       XOR  A
+9395 32D185   LD   (#85D1), A
+9398 1819     JR   #93B3
+
+939A 00       NOP  
+939B 00       NOP  
+939C 00       NOP  
+939D 00       NOP  
+939E 00       NOP  
+939F 00       NOP  
+93A0 00       NOP  
+93A1 00       NOP  
+93A2 00       NOP  
+93A3 00       NOP  
+93A4 00       NOP  
+93A5 00       NOP  
+93A6 00       NOP  
+93A7 00       NOP  
+93A8 00       NOP  
+93A9 00       NOP  
+93AA 00       NOP  
+93AB 00       NOP  
+93AC 00       NOP  
+93AD 00       NOP  
+93AE 00       NOP  
+93AF 00       NOP  
+93B0 00       NOP  
+93B1 00       NOP  
+93B2 00       NOP  
+
+93B3 110800   LD   DE, #0008        ; move to next sprite
+93B6 DD19     ADD  IX, DE
+93B8 C3C291   JP   #91C2
+
+; set the attributes for a sprite
+
+93BB 77       LD   (HL), A
+93BC 3AA080   LD   A, (#80A0)
+93BF E6F8     AND  #F8
+93C1 B6       OR   (HL)
+93C2 77       LD   (HL), A
+93C3 111F00   LD   DE, #001F
+93C6 23       INC  HL
+93C7 77       LD   (HL), A
+93C8 19       ADD  HL, DE
+93C9 77       LD   (HL), A
+93CA 23       INC  HL
+93CB 77       LD   (HL), A
+93CC 19       ADD  HL, DE
+93CD 77       LD   (HL), A
+93CE 23       INC  HL
+93CF 77       LD   (HL), A
+93D0 C9       RET
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; print the items; animates by 8 colour as in JSWII @@@
+
+93D1 26BA     LD   H, #BA         ; item table
+93D3 3A5184   LD   A, (#8451)
+93D6 6F       LD   L, A           ; HL points to first item
+93D7 4E       LD   C, (HL)
+93D8 CBB9     RES  7, C           ; C gets room number
+93DA 3A2084   LD   A, (#8420)
+93DD F640     OR   #40
+93DF B9       CP   C
+93E0 2070     JR   NZ, #9452      ; jump if item not in this room
+93E2 7E       LD   A, (HL)
+93E3 07       RLCA
+93E4 E601     AND  #01
+93E6 C65C     ADD  #5C
+93E8 57       LD   D, A
+93E9 24       INC  H
+93EA 5E       LD   E, (HL)
+93EB 25       DEC  H
+93EC 1A       LD   A, (DE)        ; DE points to attribute address
+93ED E607     AND  #07            ; is there something white there?
+93EF FE07     CP   #07
+93F1 203D     JR   NZ, #9430      ; jump if not
+
+93F3 DD217C85 LD   IX, #857C      ; item count text
+93F7 DD3402   INC  (IX+#02)       ; add one on
+93FA DD7E02   LD   A, (IX+#02)
+93FD FE3A     CP   #3A
+93FF 2008     JR   NZ, #9409      ; next item
+9401 DD360230 LD   (IX+#02), #30
+9405 DD2B     DEC  IX
+9407 18EE     JR   #93F7
+
+9409 3ADE80   LD   A, (#80DE)     ; make a noise
+940C 0E80     LD   C, #80
+940E D3FE     OUT  (#FE), A
+9410 C61F     ADD  #1F
+9412 5F       LD   E, A
+9413 3E90     LD   A, #90
+9415 91       SUB  C
+9416 47       LD   B, A
+9417 7B       LD   A, E
+9418 10FE     DJNZ  #9418
+941A 0D       DEC  C
+941B 0D       DEC  C
+941C 20F0     JR   NZ, #940E
+
+941E 3ADE85   LD   A, (#85DE)     ; incrememt count
+9421 3C       INC  A
+9422 32DE85   LD   (#85DE), A
+9425 2005     JR   NZ, #942C
+9427 3E01     LD   A, #01
+9429 32DF85   LD   (#85DF), A
+942C CBB6     RES  6, (HL)        ; mark as collected
+942E 1822     JR   #9452
+
+9430 3ACB85   LD   A, (#85CB)     ; timer
+9433 85       ADD  L              ; item number
+9434 C607     ADD  #07
+9436 E607     AND  #07
+9438 4F       LD   C, A           ; ink
+9439 1A       LD   A, (DE)
+943A E6F8     AND  #F8
+943C B1       OR   C
+943D 12       LD   (DE), A        ; set ink
+943E 7E       LD   A, (HL)
+943F 07       RLCA
+9440 07       RLCA
+9441 07       RLCA
+9442 07       RLCA
+9443 E608     AND  #08
+9445 C660     ADD  #60
+9447 57       LD   D, A           ; DE points to dfile address
+9448 E5       PUSH HL
+9449 21E180   LD   HL, #80E1
+944C 0608     LD   B, #08
+944E CD9B96   CALL #969B          ; print the item
+9451 E1       POP  HL
+9452 2C       INC  L
+9453 2082     JR   NZ, #93D7      ; do another one
+9455 C9       RET
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Print sprites: rewritten for flexibility.
+; It's actually slightly slower.
+
+; Print a sprite at (HL), with data at (DE).
+; C = 0 to OR, 1 to print and die if it overlaps,
+; 2 to overwrite.
+
+9456 0610     LD   B, #10         ; 16 rows
+9458 CD6B94   CALL #946B
+945B C0       RET  NZ
+945C 23       INC  HL
+945D 13       INC  DE
+945E CD6B94   CALL #946B
+9461 C0       RET  NZ
+9462 2B       DEC  HL
+9463 13       INC  DE
+9464 CD7B94   CALL #947B
+9467 10EF     DJNZ  #9458
+9469 AF       XOR  A
+946A C9       RET
+
+; print two adjacent bytes
+
+946B 1A       LD   A, (DE)
+946C CB49     BIT  1, C
+946E 2008     JR   NZ, #9478
+9470 CB41     BIT  0, C
+9472 2802     JR   Z, #9476
+9474 A6       AND  (HL)
+9475 C0       RET  NZ
+9476 1A       LD   A, (DE)
+9477 B6       OR   (HL)
+9478 77       LD   (HL), A
+9479 AF       XOR  A
+947A C9       RET
+
+; move down a pixel row on the screen
+
+947B 24       INC  H
+947C 7C       LD   A, H
+947D E607     AND  #07
+947F C0       RET  NZ
+9480 7D       LD   A, L
+9481 C620     ADD  #20
+9483 6F       LD   L, A
+9484 D8       RET  C
+9485 7C       LD   A, H
+9486 D608     SUB  #08
+9488 67       LD   H, A
+9489 C9       RET
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Leave room by various exits...
+
+; left
+
+948A 3AE980   LD   A, (#80E9)
+948D 322084   LD   (#8420), A
+9490 3AD385   LD   A, (#85D3)
+9493 F61F     OR   #1F
+9495 E6FE     AND  #FE
+9497 32D385   LD   (#85D3), A
+949A E1       POP  HL
+949B C31289   JP   #8912
+
+; right
+
+949E 3AEA80   LD   A, (#80EA)
+94A1 322084   LD   (#8420), A
+94A4 3AD385   LD   A, (#85D3)
+94A7 E6E0     AND  #E0
+94A9 32D385   LD   (#85D3), A
+94AC E1       POP  HL
+94AD C31289   JP   #8912
+
+; up
+
+94B0 3AEB80   LD   A, (#80EB)
+94B3 322084   LD   (#8420), A
+94B6 3AD385   LD   A, (#85D3)
+94B9 E61F     AND  #1F
+94BB C6A0     ADD  #A0
+94BD 32D385   LD   (#85D3), A
+94C0 3E5D     LD   A, #5D
+94C2 32D485   LD   (#85D4), A
+94C5 3ED0     LD   A, #D0
+94C7 32CF85   LD   (#85CF), A
+94CA AF       XOR  A
+94CB 32D185   LD   (#85D1), A
+94CE E1       POP  HL
+94CF C31289   JP   #8912
+
+; down
+
+94D2 3AEC80   LD   A, (#80EC)
+94D5 322084   LD   (#8420), A
+94D8 AF       XOR  A
+94D9 32CF85   LD   (#85CF), A
+94DC 3AD185   LD   A, (#85D1)
+94DF FE0B     CP   #0B
+94E1 3005     JR   NC, #94E8
+94E3 3E02     LD   A, #02
+94E5 32D185   LD   (#85D1), A
+94E8 3AD385   LD   A, (#85D3)
+94EB E61F     AND  #1F
+94ED 32D385   LD   (#85D3), A
+94F0 3E5C     LD   A, #5C
+94F2 32D485   LD   (#85D4), A
+94F5 E1       POP  HL
+94F6 C31289   JP   #8912
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; twiddle conveyor belts
+
+94F9 2AD780   LD   HL, (#80D7)
+94FC 7C       LD   A, H
+94FD E601     AND  #01
+94FF 07       RLCA
+9500 07       RLCA
+9501 07       RLCA
+9502 C670     ADD  #70
+9504 67       LD   H, A
+9505 5D       LD   E, L
+9506 54       LD   D, H
+9507 3AD980   LD   A, (#80D9)
+950A B7       OR   A
+950B C8       RET  Z
+950C 47       LD   B, A
+950D 3AD680   LD   A, (#80D6)
+9510 B7       OR   A
+9511 2013     JR   NZ, #9526
+9513 7E       LD   A, (HL)
+9514 CB07     RLC  A
+9516 CB07     RLC  A
+9518 24       INC  H
+9519 24       INC  H
+951A 4E       LD   C, (HL)
+951B CB09     RRC  C
+951D CB09     RRC  C
+951F 12       LD   (DE), A
+9520 71       LD   (HL), C
+9521 2C       INC  L
+9522 1C       INC  E
+9523 10FA     DJNZ  #951F
+9525 C9       RET
+9526 7E       LD   A, (HL)
+9527 CB0F     RRC  A
+9529 CB0F     RRC  A
+952B 24       INC  H
+952C 24       INC  H
+952D 4E       LD   C, (HL)
+952E CB01     RLC  C
+9530 CB01     RLC  C
+9532 18EB     JR   #951F
+
+; call patch vector
+
+9534 2AEE80   LD   HL, (#80EE)
+9537 E9       JP   (HL)
+9538 C9       RET
+
+9539 00       NOP
+953A 00       NOP
+
+; room 35 (Master Bedroom) patch
+
+953B 3ADF85   LD   A, (#85DF)
+953E B7       OR   A
+953F 2035     JR   NZ, #9576
+9541 3ACB85   LD   A, (#85CB)
+9544 E602     AND  #02
+9546 0F       RRCA
+9547 0F       RRCA
+9548 0F       RRCA
+9549 0F       RRCA
+954A F680     OR   #80
+954C 5F       LD   E, A
+954D 3ACF85   LD   A, (#85CF)
+9550 FED0     CP   #D0
+9552 2808     JR   Z, #955C
+9554 1EC0     LD   E, #C0
+9556 FEC0     CP   #C0
+9558 3002     JR   NC, #955C
+955A 1EE0     LD   E, #E0
+955C 16B6     LD   D, #B6       ; top byte of Maria
+955E 216E68   LD   HL, #686E
+9561 0E01     LD   C, #01
+9563 CD5694   CALL #9456
+9566 C2B790   JP   NZ, #90B7
+9569 214545   LD   HL, #4545
+956C 226E5D   LD   (#5D6E), HL
+956F 210707   LD   HL, #0707
+9572 228E5D   LD   (#5D8E), HL
+9575 C9       RET
+9576 3AD385   LD   A, (#85D3)
+9579 E61F     AND  #1F
+957B FE06     CP   #06
+957D D0       RET  NC
+957E 3E02     LD   A, #02
+9580 32DF85   LD   (#85DF), A
+9583 C9       RET
+
+; room 33 (Bathroom) patch
+
+9584 3ADF85   LD   A, (#85DF)
+9587 FE02     CP   #02
+9589 2010     JR   NZ, #959B
+958B 3AD385   LD   A, (#85D3)
+958E FEBC     CP   #BC
+9590 2009     JR   NZ, #959B
+9592 AF       XOR  A
+9593 32CB85   LD   (#85CB), A
+9596 3E03     LD   A, #03
+9598 32DF85   LD   (#85DF), A
+959B 00       NOP
+959C 00       NOP
+959D 00       NOP
+959E 00       NOP
+959F 00       NOP
+95A0 3ACB85   LD   A, (#85CB)
+95A3 E601     AND  #01
+95A5 0F       RRCA
+95A6 0F       RRCA
+95A7 0F       RRCA
+95A8 5F       LD   E, A
+95A9 3ADF85   LD   A, (#85DF)
+95AC FE03     CP   #03
+95AE 2002     JR   NZ, #95B2
+95B0 CBF3     SET  6, E
+95B2 16B6     LD   D, #B6      ; top byte of toilet
+95B4 210707   LD   HL, #0707   ; white
+95B7 22BC5D   LD   (#5DBC), HL
+95BA 22DC5D   LD   (#5DDC), HL
+95BD 21BC68   LD   HL, #68BC
+95C0 0E00     LD   C, #00
+95C2 C35694   JP   #9456
+
+; 3 spare bytes
+
+95C5 00       NOP
+95C6 00       NOP
+95C7 00       NOP
+
+; set Willy's attributes
+
+95C8 2AD385   LD   HL, (#85D3)
+95CB 0600     LD   B, #00
+95CD 3ADA80   LD   A, (#80DA)
+95D0 E601     AND  #01
+95D2 C640     ADD  #40
+95D4 5F       LD   E, A
+95D5 1600     LD   D, #00
+95D7 19       ADD  HL, DE
+95D8 3AC480   LD   A, (#80C4)
+95DB BE       CP   (HL)
+95DC 201A     JR   NZ, #95F8
+95DE 3AD185   LD   A, (#85D1)
+95E1 B7       OR   A
+95E2 2014     JR   NZ, #95F8
+95E4 3AD285   LD   A, (#85D2)
+95E7 E603     AND  #03
+95E9 07       RLCA
+95EA 07       RLCA
+95EB 47       LD   B, A
+95EC 3ADA80   LD   A, (#80DA)
+95EF E601     AND  #01
+95F1 3D       DEC  A
+95F2 EE0C     XOR  #0C
+95F4 A8       XOR  B
+95F5 E60C     AND  #0C
+95F7 47       LD   B, A
+95F8 2AD385   LD   HL, (#85D3)
+95FB 111F00   LD   DE, #001F
+95FE 0E0F     LD   C, #0F
+9600 CD1E96   CALL #961E
+9603 23       INC  HL
+9604 CD1E96   CALL #961E
+9607 19       ADD  HL, DE
+9608 CD1E96   CALL #961E
+960B 23       INC  HL
+960C CD1E96   CALL #961E
+960F 3ACF85   LD   A, (#85CF)
+9612 80       ADD  B
+9613 4F       LD   C, A
+9614 19       ADD  HL, DE
+9615 CD1E96   CALL #961E
+9618 23       INC  HL
+9619 CD1E96   CALL #961E
+961C 1819     JR   #9637
+961E 3AA080   LD   A, (#80A0)
+9621 BE       CP   (HL)
+9622 200B     JR   NZ, #962F
+9624 79       LD   A, C
+9625 E60F     AND  #0F
+9627 2806     JR   Z, #962F
+9629 3AA080   LD   A, (#80A0)
+962C F607     OR   #07
+962E 77       LD   (HL), A
+962F 3ABB80   LD   A, (#80BB)
+9632 BE       CP   (HL)
+9633 CAB690   JP   Z, #90B6
+9636 C9       RET
+
+; print Willy
+
+9637 3ACF85   LD   A, (#85CF)
+963A 80       ADD  B
+963B 47       LD   B, A
+963C 17       RLA
+963D E6E0     AND  #E0
+963F 6F       LD   L, A
+9640 3AD385   LD   A, (#85D3)
+9643 E61F     AND  #1F
+9645 B5       OR   L
+9646 6F       LD   L, A
+9647 78       LD   A, B
+9648 1F       RRA
+9649 E607     AND  #07
+964B CB78     BIT  7, B
+964D 2802     JR   Z, #9651
+964F F608     OR   #08
+9651 F660     OR   #60
+9653 67       LD   H, A
+9654 3AD285   LD   A, (#85D2)
+9657 E603     AND  #03
+9659 0F       RRCA
+965A 0F       RRCA
+965B 5F       LD   E, A
+965C 3ADE80   LD   A, (#80DE)
+965F 17       RLA
+9660 3807     JR   C, #9669
+9662 3AD085   LD   A, (#85D0)
+9665 1F       RRA
+9666 3F       CCF
+9667 1801     JR   #966A
+9669 17       RLA
+966A CB1B     RR   E
+966C 3AED80   LD   A, (#80ED)
+966F 57       LD   D, A
+9670 0E00     LD   C, #00
+9672 C35694   JP   #9456
+
+9675 00       NOP
+9676 00       NOP
+9677 00       NOP
+9678 00       NOP
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; set the colour of (HL) to ink C and bright B
+
+9679 7E       LD   A, (HL)
+967A E6B8     AND  #B8
+967C B0       OR   B
+967D B1       OR   C
+967E 77       LD   (HL), A
+967F C9       RET
+
+; print message
+
+9680 DD7E00   LD   A, (IX+#00)
+9683 CD9196   CALL #9691
+9686 DD23     INC  IX
+9688 1C       INC  E
+9689 7A       LD   A, D
+968A D608     SUB  #08
+968C 57       LD   D, A
+968D 0D       DEC  C
+968E 20F0     JR   NZ, #9680
+9690 C9       RET
+
+; print character A at DE
+
+9691 2607     LD   H, #07
+9693 6F       LD   L, A
+9694 CBFD     SET  7, L
+9696 29       ADD  HL, HL
+9697 29       ADD  HL, HL
+9698 29       ADD  HL, HL
+9699 0608     LD   B, #08
+969B 7E       LD   A, (HL)
+969C 12       LD   (DE), A
+969D 23       INC  HL
+969E 14       INC  D
+969F 10FA     DJNZ  #969B
+96A1 C9       RET
+
+; play a note
+
+96A2 7E       LD   A, (HL)
+96A3 FEFF     CP   #FF
+96A5 C8       RET  Z
+96A6 016400   LD   BC, #0064
+96A9 AF       XOR  A
+96AA 5E       LD   E, (HL)
+96AB 53       LD   D, E
+96AC D3FE     OUT  (#FE), A
+96AE 15       DEC  D
+96AF 2003     JR   NZ, #96B4
+96B1 53       LD   D, E
+96B2 EE18     XOR  #18
+96B4 10F6     DJNZ  #96AC
+96B6 08       EX   AF, AF'
+96B7 79       LD   A, C
+96B8 FE32     CP   #32
+96BA 2002     JR   NZ, #96BE
+96BC CB13     RL   E
+96BE 08       EX   AF, AF'
+96BF 0D       DEC  C
+96C0 20EA     JR   NZ, #96AC
+96C2 CDC996   CALL #96C9
+96C5 C0       RET  NZ
+96C6 23       INC  HL
+96C7 18D9     JR   #96A2
+
+; enter or 0 pressed?
+
+96C9 3ACE85   LD   A, (#85CE)
+96CC B7       OR   A
+96CD 2805     JR   Z, #96D4
+96CF DB1F     IN   A, (#1F)
+96D1 CB67     BIT  4, A
+96D3 C0       RET  NZ
+96D4 01FEAF   LD   BC, #AFFE
+96D7 ED78     IN   A, (C)
+96D9 E601     AND  #01
+96DB FE01     CP   #01
+96DD C9       RET
+
+; play a note
+
+96DE 5F       LD   E, A
+96DF 0EFE     LD   C, #FE
+96E1 57       LD   D, A
+96E2 CBA2     RES  4, D
+96E4 CB9A     RES  3, D
+96E6 43       LD   B, E
+96E7 B8       CP   B
+96E8 2002     JR   NZ, #96EC
+96EA 1618     LD   D, #18
+96EC ED51     OUT  (C), D
+96EE 10F7     DJNZ  #96E7
+96F0 3D       DEC  A
+96F1 20EE     JR   NZ, #96E1
+96F3 C9       RET
+
+96F4          DEFS #010C ; blank
+
+; All these have been moved @@@
+
+9800          DEFS #1F00 ; sprite graphics
+B700          DEFS #0300 ; title screen attributes
+BA00          DEFS #0200 ; object locations
+BC00          DEFS #0400 ; sprite definitions (guardian classes)
+
+C000          DEFS #4000 ; room data
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

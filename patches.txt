@@ -1,0 +1,668 @@
+Patch vectors disassembled
+==========================
+
+##############################################################################
+
+"J4"
+----
+
+Clearly, patch vectors were very much in their infancy at this stage.
+
+==============================================================================
+
+16 (Willy's Inner Sanctum)
+--------------------------
+
+This changes the colour of one of the guardians seemingly at
+random. It was written as a test, before the true utility of patch
+vectors was realised.
+
+8C00 110181   LD   DE, #8101  ; colour of first guardian
+8C03 21D385   LD   HL, #85D3  ; Willy's position
+8C06 3A8585   LD   A, (#8585) ; timer
+8C09 AE       XOR  (HL)       ; not quite a random number
+8C0A E60F     AND  #0F        ; mask off botton 4 bits
+8C0C F6E0     OR   #E0        ; this is an 8-position sprite
+8C0E 12       LD   (DE), A    ; change its colour
+8C0F C9       RET             ; done!
+
+==============================================================================
+
+34 (Jacob's Ladder)
+-------------------
+
+Here, Willy is prevented from getting above the fourth row of the
+screen; the result is quite strange in practice. And the conveyor
+changes direction every ten ticks.
+
+87B0 3A8485   LD   A, (#8584) ; "tens" digit of timer
+87B3 E601     AND  #01        ; we're only interested in the bottom bit
+87B5 32D680   LD   (#80D6), A ; which sets the conveyor direction
+87B8 3ACF85   LD   A, (#85CF) ; Get Willy's y-coordinate
+87BB FE40     CP   #40        ; if it's greater than #40
+87BD D0       RET  NC         ; he's OK
+87BE 3E40     LD   A, #40     ; otherwise it's set to #40
+87C0 32CF85   LD   (#85CF), A ; for some weird religious reason
+87C3 C9       RET             ; that's all folks
+
+##############################################################################
+
+"Willy the Hacker"
+------------------
+
+Aside from the one in room 45, the patch vectors in this game are
+there so that the end-of-game routine works properly. Otherwise Willy
+would run out of "Willy's Defence Mechanism" into "Willy meets his
+strange friends" and die.
+
+==============================================================================
+
+33 (This used to be the bathroom)
+---------------------------------
+
+This makes the vertical guardians stop moving when all the items have
+been collected, otherwise Willy won't be able to make it to the
+toilet.
+
+86AF 3ADF85   LD   A, (#85DF) ; Have all the items
+86B2 FE02     CP   #02        ; been collected yet?
+86B4 2018     JR   NZ, #86CE  ; Don't worry if not
+86B6 3E00     LD   A, #00     ; Could have saved a byte here with "XOR A"
+86B8 320481   LD   (#8104), A ; Stop the guardians moving
+86BB 320C81   LD   (#810C), A
+86BE 321481   LD   (#8114), A
+86C1 3E00     LD   A, #00     ; Obviously, this used to be something else
+86C3 322481   LD   (#8124), A ; same idea as before
+86C6 322C81   LD   (#812C), A
+86C9 3E00     LD   A, #00     ; Here too
+86CB 323481   LD   (#8134), A
+86CE C38495   JP   #9584      ; standard "Bathroom" routine
+
+==============================================================================
+
+34 (Willy meets his strange friends)
+------------------------------------
+
+I think this is a genuine mistake (i.e. bug). Nonetheless, it isn't
+harmful!
+
+8738 02       LD   (BC), A
+8739 02       LD   (BC), A
+873A 02       LD   (BC), A
+873B 07       RLCA
+873C 0606     LD   B, #06
+873E 0606     LD   B, #06
+8740 0607     LD   B, #07
+8742 04       INC  B
+8743 04       INC  B
+8744 07       RLCA
+8745 05       DEC  B
+8746 05       DEC  B
+8747 05       DEC  B
+8748 05       DEC  B
+8749 05       DEC  B
+874A 07       RLCA
+874B 010101   LD   BC, #0101
+874E 0101BB   LD   BC, #BB01
+8751 2804     JR   Z, #8757
+8753 DD3402   INC  (IX+#02)
+8756 C9       RET
+
+==============================================================================
+
+35 (Willy's Defence Mechanism)
+------------------------------
+
+Pretty much self-explanatory.
+
+86A0 3ADF85   LD   A, (#85DF) ; Have we got all
+86A3 FE02     CP   #02        ; the items yet?
+86A5 C23B95   JP   NZ, #953B  ; Standard "Maria" routine if not
+86A8 3E21     LD   A, #21     ; Room 33 becomes the new
+86AA 32EA80   LD   (#80EA), A ; right-hand exit
+86AD C9       RET             ; that's all
+
+==============================================================================
+
+45 (Willy gets some 3D glasses)
+-------------------------------
+
+The only gratuitous patch vector in the game. This changes the colour
+of the horizontal guardian at the top of the screen depending on its
+horizontal position.
+
+87AE 00       NOP             ; Relics of an earlier instruction
+87AF 00       NOP             ; or did somebody enter the wrong address?
+87B0 3A3281   LD   A, (#8132) ; X-coordinate of the beastie
+87B3 E610     AND  #10        ; If we're in the left half
+87B5 0E05     LD   C, #05     ; it becomes cyan
+87B7 2802     JR   Z, #87BB   ; otherwise
+87B9 0E06     LD   C, #06     ; it's yellow
+87BB 3A3181   LD   A, (#8131) ; clobber current colour
+87BE E6F0     AND  #F0        ;
+87C0 B1       OR   C          ; set it to what we really want
+87C1 323181   LD   (#8131), A ;
+87C4 C9       RET             ; and get out of here.
+
+##############################################################################
+
+Patch vectors in "Willy Takes a Trip"
+-------------------------------------
+
+In response to some complaints about how little patch vectors were
+actually used, this game compensates and shows many of the things
+which can be done.
+
+==============================================================================
+
+1 (The Underground Laboratory)
+------------------------------
+
+A very simple patch vector which moves bright white squares across the
+top and bottom rows on the screen, in opposite directions.
+
+9770 3ACB85   LD   A, (#85CB) ; timer
+9773 E61F     AND  #1F        ; chop to range 0-31
+9775 265C     LD   H, #5C     ; beginning of attributes
+9777 6F       LD   L, A       ; i.e. top line on screen
+9778 36FF     LD   (HL), #FF  ; drop a white square
+977A 24       INC  H          ; move to bottom half of screen
+977B 3EFF     LD   A, #FF     ; flip the bits
+977D AD       XOR  L          ; so we're on the bottom line
+977E 6F       LD   L, A       ; but moving in the opposite direction
+977F 36FF     LD   (HL), #FF  ; drop the other white square
+9781 C9       RET
+
+==============================================================================
+
+2 (The Store Room)
+------------------
+
+The first appearance of the teleporter. Here it jumps to room 7.
+
+87AD 112C5D   LD   DE, #5D2C   ; location of teleporter
+87B0 0E07     LD   C, #07      ; room it jumps to
+
+The teleporter code is:
+
+87B2 2AD385   LD   HL, (#85D3) ; Get Willy's location
+87B5 AF       XOR  A           ; reset carry flag
+87B6 ED52     SBC  HL, DE      ; See if he's at the teleporter
+87B8 C0       RET  NZ          ; Exit if not
+87B9 79       LD   A, C        ; Jump to
+87BA 322084   LD   (#8420), A  ; new room
+87BD 3E02     LD   A, #02      ; make fuzz effect
+87BF CD6B87   CALL #876B
+87C2 C39A94   JP   #949A       ; exit this room
+
+==============================================================================
+
+7 (Downhill)
+------------
+
+Another teleporter, which jumps to room 2.
+
+8728 11D55C   LD   DE, #5CD5
+872B 0E02     LD   C, #02
+872D C3B287   JP   #87B2
+
+==============================================================================
+
+8 (The Garden of Forbidden Fruits)
+----------------------------------
+
+Something of real substance; if you haven't found this one yet, you'll
+know where to look for a bit of weirdness :-)
+
+8178 3AD085   LD   A, (#85D0)  ; check that Willy
+817B FE03     CP   #03         ; is moving left
+817D 2821     JR   Z, #81A0    ; and jump forward if so
+817F C9       RET              ; otherwise exit
+
+[snip]
+
+81A0 11A25D   LD   DE, #5DA2   ; fun starts here
+81A3 2AD385   LD   HL, (#85D3) ; check if Willy's
+81A6 AF       XOR  A           ; above the liquid blocks
+81A7 ED52     SBC  HL, DE      ; if he isn't
+81A9 C0       RET  NZ          ; then exit
+
+81AA CD6B87   CALL #876B       ; fuzz
+81AD 210340   LD   HL, #4003   ; top left of screen
+81B0 3EA8     LD   A, #A8      ; set counter to
+81B2 32E485   LD   (#85E4), A  ; effectively 256 - 168
+81B5 E5       PUSH HL          ; save position
+81B6 1100B0   LD   DE, #B000   ; the sprite
+81B9 0E02     LD   C, #02      ; print it
+81BB CD5694   CALL #9456       ; with overwrite
+81BE E1       POP  HL          ; restore position
+81BF 3600     LD   (HL), #00   ; and blank out anything
+81C1 23       INC  HL          ; above the sprite
+81C2 3600     LD   (HL), #00
+81C4 2B       DEC  HL
+81C5 CD9085   CALL #8590       ; make a noise
+81C8 CD7B94   CALL #947B       ; move HL down a row
+81CB 3AE485   LD   A, (#85E4)  ; go round again
+81CE 3C       INC  A           ; unless
+81CF 20E1     JR   NZ, #81B2   ; we've hit bottom
+
+81D1 32E485   LD   (#85E4), A  ; zero counter
+81D4 E5       PUSH HL          ; you've seen all this before
+81D5 1100B0   LD   DE, #B000   ; the difference
+81D8 0E02     LD   C, #02      ; is that
+81DA CD5694   CALL #9456       ; we're going upwards
+81DD 11009D   LD   DE, #9D00   ; and taking
+81E0 CD5694   CALL #9456       ; Willy along too
+81E3 3600     LD   (HL), #00   ; so we have to blank the
+81E5 23       INC  HL          ; pixel rows underneath
+81E6 3600     LD   (HL), #00
+81E8 E1       POP  HL
+81E9 CD9085   CALL #8590
+81EC CDA885   CALL #85A8       ; move up a row
+81EF 3AE485   LD   A, (#85E4)
+81F2 3D       DEC  A
+81F3 FEA8     CP   #A8
+81F5 20DA     JR   NZ, #81D1
+81F7 E1       POP  HL          ; finally, move up a room
+81F8 CDB094   CALL #94B0       ; yes, this is correct!
+
+==============================================================================
+
+9 (The Room of Stippled Blocks)
+-------------------------------
+
+Send two killer squares flying across the screen.
+
+86B0 3ACB85   LD   A, (#85CB) ; timer
+86B3 265C     LD   H, #5C     ; look in top half
+86B5 6F       LD   L, A       ; attributes file
+86B6 3ABB80   LD   A, (#80BB) ; attribute of plasma
+86B9 4F       LD   C, A       ; or fire, depending om your preference
+86BA 7E       LD   A, (HL)    ; if Willy's been
+86BB 3C       INC  A          ; hit by one of the blocks
+86BC E607     AND  #07        ; it will have ink 7 (now 0)
+86BE 280D     JR   Z, #86CD   ; so we jump forward
+
+86C0 71       LD   (HL), C    ; drop the square
+86C1 7D       LD   A, L       ; move to lower half
+86C2 24       INC  H          ; of screen and
+86C3 2F       CPL             ; invert the address
+86C4 6F       LD   L, A       ; so they meet in the middle
+86C5 7E       LD   A, (HL)    ; check once again
+86C6 3C       INC  A          ; to see if we've hit Willy
+86C7 E607     AND  #07
+86C9 2802     JR   Z, #86CD
+
+86CB 71       LD   (HL), C    ; drop the square again
+86CC C9       RET             ; and run away
+
+86CD E1       POP  HL         ; clean up the stack
+86CE 3ACB85   LD   A, (#85CB) ; flag Willy as killed
+86D1 C602     ADD  #02
+86D3 32CB85   LD   (#85CB), A
+86D6 C3178C   JP   #8C17      ; and do the rest as normal.
+
+==============================================================================
+
+10 (A Quiet Corner to rest in)
+------------------------------
+
+You'll have see what happens here, no doubt.
+
+B9CE 085F     DEFW #5F08       ; important address: middle of screen
+B9D0 ED5BCEB9 LD   DE, (#B9CE) ; get hold of it
+B9D4 21A080   LD   HL, #80A0   ; start of gas block data
+B9D7 CDC897   CALL #97C8       ; print it
+
+B9DA 3ACB85   LD   A, (#85CB)  ; timer
+B9DD CB7F     BIT  7, A        ; if it's > 127
+B9DF 2801     JR   Z, #B9E2    ; then invert it so that
+B9E1 2F       CPL              ; A goes from 0 to 127 and back
+B9E2 FE60     CP   #60         ; make sure that A
+B9E4 3802     JR   C, #B9E8    ; is always between
+B9E6 3E60     LD   A, #60      ; #60 and #20
+B9E8 FE20     CP   #20         ; so that the block
+B9EA 3002     JR   NC, #B9EE   ; waits for a bit at each end
+B9EC 3E20     LD   A, #20      ; of its travels
+
+B9EE CB3F     SRL  A           ; divide A by 4 so that
+B9F0 CB3F     SRL  A           ; the block moves slowly enough
+B9F2 5F       LD   E, A        ; to be walked on
+B9F3 21B280   LD   HL, #80B2   ; print it
+B9F6 CDC897   CALL #97C8
+B9F9 ED53CEB9 LD   (B9CE), DE  ; and save its location
+B9FD C9       RET
+
+==============================================================================
+
+11 (Phew, That Was Lucky!)
+--------------------------
+
+18 (The Arches of Despair, I fear)
+----------------------------------
+
+Not a lot here; simply reverses the direction of the conveyor every 32
+ticks. Too boring to be worth annotating any further.
+
+97E8 3ACB85   LD   A, (#85CB)
+97EB E61F     AND  #1F
+97ED C0       RET  NZ
+97EE 3AD680   LD   A, (#80D6)
+97F1 EE01     XOR  #01
+97F3 32D680   LD   (#80D6), A
+97F6 C9       RET
+
+==============================================================================
+
+20 (Iain's Stomach)
+-------------------
+
+A straightfoward teleport.
+
+8C0F 115B5C   LD   DE, #5C5B
+8C12 0E3B     LD   C, #3B
+8C14 C3B287   JP   #87B2
+
+==============================================================================
+
+37 (The Steno Pool (or maybe not!)
+----------------------------------
+
+An attempt at a lethal block moving randomly, although it tends to
+drift in one particular direction. Does anybody know any better ways
+of generating random numbers in Z80?
+
+B980 805C     DEFW #5C80       ; block location; starts in middle of screen
+B982 2A80B9   LD   HL, (#B980) ; pick the location up
+B985 7D       LD   A, L
+B986 E6E0     AND  #E0
+B988 47       LD   B, A        ; B = row mod 8
+B989 7D       LD   A, L
+B98A E61F     AND  #1F
+B98C 4F       LD   C, A        ; C = column
+B98D ED5F     LD   A, R
+B98F 0F       RRCA
+B990 57       LD   D, A        ; D = hopefully random by now
+B991 3ACF85   LD   A, (#85CF)  ; timer
+B994 AA       XOR  D
+B995 E603     AND  #03         ; try and get a random number in 0 .. 3
+B997 2003     JR   NZ, #B99C   ; to move in one of four directions
+
+B999 0C       INC  C           ; 0 = move right
+B99A 1817     JR   #B9B3
+
+B99C 3D       DEC  A           ; 1 = move left
+B99D 2003     JR   NZ, #B9A2
+B99F 0D       DEC  C
+B9A0 1811     JR   #B9B3
+
+B9A2 3D       DEC  A           ; 2 = move down
+B9A3 78       LD   A, B
+B9A4 2004     JR   NZ, #B9AA
+B9A6 C620     ADD  #20
+B9A8 1802     JR   #B9AC
+
+B9AA D620     SUB  #20         ; 3 = move up
+B9AC 47       LD   B, A
+B9AD 3004     JR   NC, #B9B3
+
+B9AF 7C       LD   A, H        ; change halves if necessary
+B9B0 EE01     XOR  #01
+B9B2 67       LD   H, A
+
+B9B3 79       LD   A, C
+B9B4 E61F     AND  #1F
+B9B6 B0       OR   B
+B9B7 6F       LD   L, A
+B9B8 2280B9   LD   (#B980), HL ; store location
+B9BB 7E       LD   A, (HL)     ; save current attribute
+B9BC 36FF     LD   (HL), #FF   ; drop the block
+B9BE 3C       INC  A           ; the rest is easy;
+B9BF E607     AND  #07         ; kill Willy if it hits him.
+B9C1 C0       RET  NZ
+B9C2 7C       LD   A, H
+B9C3 EE01     XOR  #01
+B9C5 67       LD   H, A
+B9C6 2280B9   LD   (#B980), HL
+B9C9 C3178C   JP   #8C17
+
+==============================================================================
+
+41 (Willy's Drinking Licence)
+-----------------------------
+
+Very simple; flip Willy's horizontal position every 63 ticks.
+
+9788 3ACB85   LD   A, (#85CB)
+978B E63F     AND  #3F
+978D C0       RET  NZ
+978E 3AD385   LD   A, (#85D3)
+9791 EE1F     XOR  #1F
+9793 32D385   LD   (#85D3), A
+9796 C9       RET
+
+==============================================================================
+
+44 (The Hideaway)
+-----------------
+
+Another teleporter.
+
+877F 115D5D   LD   DE, #5D5D
+8782 0E14     LD   C, #14
+8784 C3B287   JP   #87B2
+
+==============================================================================
+
+45 (The Custard's Last Stand)
+-----------------------------
+
+???
+
+9728 110800   LD   DE, #0008
+972B DD211081 LD   IX, #8110
+972F CD3997   CALL #9739
+9732 DD19     ADD  IX, DE
+9734 CD3997   CALL #9739
+9737 DD19     ADD  IX, DE
+9739 DD7E02   LD   A, (IX+#02)
+973C E61F     AND  #1F
+973E 0601     LD   B, #01
+9740 3D       DEC  A
+9741 00       NOP
+9742 3D       DEC  A
+9743 2809     JR   Z, #974E
+9745 3D       DEC  A
+9746 2806     JR   Z, #974E
+9748 3D       DEC  A
+9749 2803     JR   Z, #974E
+974B 04       INC  B
+974C 18F4     JR   #9742
+974E DD7E01   LD   A, (IX+#01)
+9751 E6F8     AND  #F8
+9753 B0       OR   B
+9754 DD7701   LD   (IX+#01), A
+9757 C9       RET
+
+==============================================================================
+
+46 (Holy Floor!)
+----------------
+
+Another rather silly colour-changing guardian.
+
+9758 3AD385   LD   A, (#85D3)
+975B 47       LD   B, A
+975C 3ACF85   LD   A, (#85CF)
+975F A8       XOR  B
+9760 E60F     AND  #0F
+9762 47       LD   B, A
+9763 3A0181   LD   A, (#8101)
+9766 E6F0     AND  #F0
+9768 B0       OR   B
+9769 320181   LD   (#8101), A
+976C C9       RET
+
+==============================================================================
+
+53 (but no sympathy)
+--------------------
+
+If all items in room 24 have been collected, open up a gap at the
+left.
+
+9798 3AFFA3   LD   A, (#A3FF) ; number of items
+979B 26A4     LD   H, #A4     ; item table
+979D 0600     LD   B, #00     ; counts items still to collect
+979F 6F       LD   L, A       ; first item
+97A0 4E       LD   C, (HL)    ; get the room number
+97A1 CBB9     RES  7, C       ; by killing top bit
+97A3 3E18     LD   A, #18     ; room number 24
+97A5 00       NOP             ; oops
+97A6 F640     OR   #40        ; has this item
+97A8 B9       CP   C          ; been collected?
+97A9 2001     JR   NZ, #97AC  ; jump if not
+97AB 04       INC  B          ; increment count
+97AC 2C       INC  L          ; look at next item
+97AD 20F1     JR   NZ, #97A0  ; go round again
+97AF C9       RET
+
+97B0 CD9897   CALL #9798     ; count items
+97B3 78       LD   A, B      ; if some are
+97B4 A7       AND  A         ; still left,
+97B5 C0       RET  NZ        ; quit
+97B6 21A080   LD   HL, #80A0 ; gas block
+97B9 11805E   LD   DE, #5E80 ; location of top of gap
+97BC CDC897   CALL #97C8     ; print it
+97BF 1EA0     LD   E, #A0    ; bottom of gap
+97C1 C3C897   JP   #97C8     ; print it
+
+==============================================================================
+
+56 (Oh no! SPACE INVADERS!!!)
+-----------------------------
+
+Surely you've seen this by now :-)
+
+86D9 3ACB85   LD   A, (#85CB) ; counter
+86DC E67F     AND  #7F        ; exit if
+86DE FE1F     CP   #1F        ; it isn't
+86E0 D0       RET  NC         ; within range
+86E1 F5       PUSH AF         ; save it
+86E2 0E00     LD   C, #00     ; signal "overwrite"
+86E4 1180B1   LD   DE, #B180  ; sprite data location
+86E7 2660     LD   H, #60     ; where to
+86E9 6F       LD   L, A       ; print the sprite
+86EA CD5694   CALL #9456      ; actually print it
+86ED F1       POP  AF         ; restore column number
+86EE 265C     LD   H, #5C     ; location in attributes
+86F0 6F       LD   L, A       ; ditto
+86F1 111F00   LD   DE, #001F  ; down one row and left one column
+86F4 3E06     LD   A, #06     ; turn it yellow
+86F6 77       LD   (HL), A
+86F7 23       INC  HL
+86F8 77       LD   (HL), A
+86F9 19       ADD  HL, DE
+86FA 77       LD   (HL), A
+86FB 23       INC  HL
+86FC 77       LD   (HL), A
+86FD C9       RET
+
+==============================================================================
+
+58 (Magic Mushrooms)
+--------------------
+
+It's not difficult to see what this does.
+
+8180 3ACB85   LD   A, (#85CB) ; change colours
+8183 E602     AND  #02        ; every other tick
+8185 C8       RET  Z          ; only
+8186 0608     LD   B, #08     ; 8 guardians
+8188 210181   LD   HL, #8101  ; address of first colour
+818B 110800   LD   DE, #0008  ; number of bytes of data
+818E 7E       LD   A, (HL)    ; change the colour
+818F E6F8     AND  #F8
+8191 4F       LD   C, A
+8192 7E       LD   A, (HL)
+8193 E607     AND  #07
+8195 3C       INC  A
+8196 B1       OR   C
+8197 77       LD   (HL), A
+8198 19       ADD  HL, DE
+8199 10F3     DJNZ #818E      ; repeat until done
+819B C9       RET
+
+==============================================================================
+
+59 (Weeds)
+----------
+
+Change Willy's colour according to his x-coordinate.
+
+8BFD 3AD385   LD   A, (#85D3) ; get x-coordinate
+8C00 0F       RRCA            ; divide by four
+8C01 0F       RRCA            ; and force it into
+8C02 E607     AND  #07        ; the range 0 .. 7
+8C04 EE07     XOR  #07        ; brightest at left
+8C06 4F       LD   C, A
+8C07 0600     LD   B, #00
+8C09 C30097   JP   #9700      ; change Willy's colour
+
+This routine does the actual colour changing.
+
+9700 2AD385   LD   HL, (#85D3)
+9703 111F00   LD   DE, #001F
+9706 CD7396   CALL #9673
+9709 23       INC  HL
+970A CD7396   CALL #9673
+970D 19       ADD  HL, DE
+970E CD7396   CALL #9673
+9711 23       INC  HL
+9712 CD7396   CALL #9673
+9715 3ACF85   LD   A, (#85CF)
+9718 E60F     AND  #0F
+971A 00       NOP
+971B 00       NOP
+971C C8       RET  Z
+971D 19       ADD  HL, DE
+971E CD7396   CALL #9673
+9721 23       INC  HL
+9722 C37396   JP   #9673
+
+==============================================================================
+
+61 (Good Skunk)
+---------------
+
+The same idea, but with the colour based on the y-coordinate.
+
+8B86 3ACF85   LD   A, (#85CF)
+8B89 07       RLCA
+8B8A 07       RLCA
+8B8B 07       RLCA
+8B8C E607     AND  #07
+8B8E EE07     XOR  #07
+8B90 4F       LD   C, A
+8B91 0600     LD   B, #00
+8B93 C30097   JP   #9700
+
+==============================================================================
+
+62 (Gettin' Really High)
+------------------------
+
+Pull Willy down every so often, and change his colour as above.
+
+8B73 3ACB85   LD   A, (#85CB) ; this only happens every 16 ticks
+8B76 E60F     AND  #0F
+8B78 200C     JR   NZ, #8B86
+8B7A 3ACF85   LD   A, (#85CF) ; y-coordinate
+8B7D FED0     CP   #D0        ; don't do anything if
+8B7F 3005     JR   NC, #8B86  ; Willy's on the bottom
+8B81 C610     ADD  #10        ; move him down
+8B83 32CF85   LD   (#85CF), A ; to next row
+
+8B86 (as above)
+
+==============================================================================

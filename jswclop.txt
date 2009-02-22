@@ -1,0 +1,457 @@
+# jswclop.txt
+# ===========
+#
+# This file describes the format of the text file used by jswclop.pl
+# for describing customised Jet Set Willy games.
+#
+# History
+# =======
+#
+# 14 June 2002: version 1.0 by Geoff Eddy (geoff@morven.compulink.co.uk)
+#
+# Copyright status
+# ================
+#
+# This is FREE SOFTWARE in the PUBLIC DOMAIN; you may do what you like
+# with it, as long as you do not prevent others from doing likewise,
+# or remove any lines from this header.
+#
+##############################################################################
+
+------------------------------------------------------------------------------
+
+Usage
+=====
+
+perl jswclop.pl <source file> <text file> <destination file>
+
+<source file> must be in .z80 format. NO WARNING is given if
+<destination file> will be overwritten!
+
+The choice of <source file> depends on the mode specified in <text
+file>. Recommended files are:
+
+- Matthew mode: the original JSW is as good as anything.
+
+- Old Geoff mode: any of "wtrip.z80", "hackwilly.z80" or
+  "j4.z80". This mode is deprecated and its use is not recommended.
+
+- Geoff mode: "geoffmode.z80".
+
+------------------------------------------------------------------------------
+
+File structure
+==============
+
+<text file> consists of a "mode line", followed by any number of the
+following sections, in any order:
+
+- Room description
+- Sprite page
+- Guardian table
+- Start data
+- Text
+- Bytes
+
+Except where otherwise mentioned, all lines starting with "#" are
+ignored. Such lines may be used as comments.
+
+------------------------------------------------------------------------------
+
+Mode line
+=========
+
+The first line of the file must be one of the following:
+
+Matthew mode
+Old Geoff mode
+Geoff mode
+
+This mode line must match the mode of the .z80 file used as the source
+for the resulting .z80 file, otherwise an error will be flagged.
+
+------------------------------------------------------------------------------
+
+Room description
+================
+
+A room descrition begins with a line of the form "Room <n>" and ends
+with an empty line; <n> is a decimal integer between 0 and 63 which
+specifies the number of the room to which the description applies.
+
+Within a room descrition are the following:
+
+- Room description: a line of the form "Room data:", followed by 16
+  lines of 32 characters each describing the shape of the room.
+  Comments are not allowed within the room description. Valid
+  characters within these lines are:
+
+- - "." for empty/gas/air
+- - "=" for semi-solid/liquid/water
+- - "%" for solid/earth
+- - "*" for killer/plasma/fire
+- - "$" for an item/object; note that you can only have one of these
+         per square! (sorry.) This is otherwise the same as ".".
+- - "/" or "\" for a stair/ramp NE-SW or NW-SE respectively
+- - ">" or "<" for a conveyor moving left or right respectively
+
+  Stairs and conveyors are scanned from the bottom to top and left to
+  right; thus, if you have two or more discontinuous stairs or
+  conveyors in your room, you will only get the one nearest the top
+  right.
+
+- Block descriptions: a line of the form "Block data:", followed by
+  one line containing attribute (colour) values in six groups of four
+  digits, and eight lines describing the shapes of the seven
+  blocks. Comments are not allowed within the block description. In
+  order, the blocks are: 
+
+- - empty/gas/air
+- - semi-solid/liquid/water
+- - solid/earth
+- - killer/plasma/fire
+- - stair/ramp
+- - conveyor
+- - object/item (which has no attributes)
+
+  The attributes are, in order, flash - bright - paper - ink. Flash
+  and bright must be either "0" or "1", ink and paper may be between
+  0 and 7. The block shapes are specified as eight-digit binary bytes,
+  with "%" for a set bit and "." for a reset bit.
+
+- Border specification: a line of the form "Border: <n>", where <n> is
+  an integer between 0 and 7 specifying the border colour.
+
+- Exits list: a line containing one or more of "Left <n>", "Right
+  <n>", "Up <n>" and "Down <n>", where the <n>'s are room numbers in
+  decimal. 
+
+- Sprites list: up to eight pairs of hex bytes, with the bytes in each
+  pair separated by a colon. The first byte of each pair is the
+  guardian class, the second is the start byte. See the "guardian
+  table" section for more information. In Matthew mode and Old Geoff
+  mode, a dummy guardian is necessary after each rope, since 16 bytes
+  (not 8) of data are needed. In Geoff mode, ropes take up 8 bytes
+  like everything else, so you can have eight ropes in a room if you
+  feel like it.
+
+Both variants of Geoff mode provide the following additional goodies:
+
+- Patch vector: a four-digit hex address for the patch vector,
+  followed by one or more hex bytes. Backslashes may be used to
+  continue the data onto following lines; the backslash must be
+  the last character on the line. These hex bytes represent machine
+  code which is executed once per tick. There is no theoretical limit
+  to the number of bytes in a patch vector; it's code like any other
+  code, and as such is obviously best placed in otherwise empty
+  memory.
+
+- Willy images: a line of the form "Willy: bottom <n> screen <n>",
+  where the <n>'s are four-digit hex addresses. The first <n> gives
+  the address of the four sprite images used to display Willy on the
+  bottom of the screen; within the second byte of this address, only
+  the top bit is actually used. The top byte of the second <n>
+  similarly specifies the sprite page used to display Willy within the
+  room; if the top bit of the bottom byte is 1, the second bit (bit 6)
+  restricts Willy to four of the eight images within the page.
+
+Here's a sample room description; the room should be familiar to
+anyone who has ever played JSW :->
+
+#########################
+Room 33
+Room data:
+%%............................%%
+%%............................%%
+%%............................%%
+..............................%%
+..............................%%
+==============../%============%%
+%............../.%............%%
+%............./..%............%%
+%............/...%............%%
+%.........../....%............%%
+%........../.....%............%%
+%........./......%............%%
+%......../.......%............%%
+......===..............$......%%
+....................<<<<......%%
+==============================%%
+          The Bathroom          
+Block data:
+0 0 0 0   0 0 2 6   0 0 1 6   1 1 7 7   0 0 0 7   0 0 7 5
+........  ........  ...%%%%%  ........  ......%%  %.%..%.%  ...%%%%%
+........  .%......  %.%.%.%.  ........  ........  ........  .....%..
+........  ....%..%  ........  ........  ....%%..  ........  ....%.%.
+........  .%%..%..  .%.%.%.%  ........  ........  ........  .%%%.%%%
+........  %..%..%.  %%%%%...  ........  ..%%....  ........  %....%%%
+........  ..%.%%.%  .%.%.%.%  ........  ........  ........  %.%%...%
+........  %..%.%%.  ........  ........  %%......  ........  %.%.%.%.
+........  %%%%%%%%  %.%.%.%.  ........  ........  %%%%%%%%  ....%.%.
+Border:  0
+Exits:   Left 34  Right 32  Up 39  Down 27
+Sprites: 3b:10
+
+#########################
+
+------------------------------------------------------------------------------
+
+Sprite page
+===========
+
+A sprite page starts with a line of the form "Sprite page <n>" and
+ends with a blank line; <n> is the page (upper byte of the address)
+which will store the data, in hex. This is followed by sixteen lines
+of data, and either a blank line and sixteen more lines of data, or
+the word "reverse". If "reverse" is present, the following sixteen
+lines are taken to be the sixteen just supplied reversed. Comments are
+not allowed within the data. The format of this data should be obvious
+from the following example, which is presented in both possible ways.
+
+#########################
+Sprite page 9d
+..%%%%..........    ....%%%%........    ......%%%%......    ........%%%%....
+..%%%%..........    ....%%%%........    ......%%%%......    ........%%%%....
+.%%%%%%.........    ...%%%%%%.......    .....%%%%%%.....    .......%%%%%%...
+..%%.%..........    ....%%.%........    ......%%.%......    ........%%.%....
+..%%%%%.........    ....%%%%%.......    ......%%%%%.....    ........%%%%%...
+..%%%%..........    ....%%%%........    ......%%%%......    ........%%%%....
+...%%...........    .....%%.........    .......%%.......    .........%%.....
+..%%%%..........    ....%%%%........    ......%%%%......    ........%%%%....
+.%%%%%%.........    ...%%.%%%.......    .....%%%%%%.....    .......%%%%%%...
+.%%%%%%.........    ...%%.%%%.......    .....%%%%%%.....    ......%%%%%%%%..
+%%%%.%%%........    ...%%.%%%.......    ....%%%%.%%%....    .....%%%%%%%%%%.
+%%%%%.%%........    ...%%%.%%.......    ....%%%%%.%%....    .....%%.%%%%.%%.
+..%%%%..........    ....%%%%........    ......%%%%......    ........%%%%%...
+.%%%.%%.........    .....%%.........    .....%%%.%%.....    .......%%%.%%.%.
+.%%.%%%.........    .....%%.........    .....%%.%%%.....    ......%%....%%%.
+.%%%.%%%........    .....%%%........    .....%%%.%%%....    ......%%%...%%..
+
+....%%%%........    ......%%%%......    ........%%%%....    ..........%%%%..
+....%%%%........    ......%%%%......    ........%%%%....    ..........%%%%..
+...%%%%%%.......    .....%%%%%%.....    .......%%%%%%...    .........%%%%%%.
+....%.%%........    ......%.%%......    ........%.%%....    ..........%.%%..
+...%%%%%........    .....%%%%%......    .......%%%%%....    .........%%%%%..
+....%%%%........    ......%%%%......    ........%%%%....    ..........%%%%..
+.....%%.........    .......%%.......    .........%%.....    ...........%%...
+....%%%%........    ......%%%%......    ........%%%%....    ..........%%%%..
+...%%%%%%.......    .....%%%%%%.....    .......%%%.%%...    .........%%%%%%.
+..%%%%%%%%......    .....%%%%%%.....    .......%%%.%%...    .........%%%%%%.
+.%%%%%%%%%%.....    ....%%%.%%%%....    .......%%%.%%...    ........%%%.%%%%
+.%%.%%%%.%%.....    ....%%.%%%%%....    .......%%.%%%...    ........%%.%%%%%
+...%%%%%........    ......%%%%......    ........%%%%....    ..........%%%%..
+.%.%%.%%%.......    .....%%.%%%.....    .........%%.....    .........%%.%%%.
+.%%%....%%......    .....%%%.%%.....    .........%%.....    .........%%%.%%.
+..%%...%%%......    ....%%%.%%%.....    ........%%%.....    ........%%%.%%%.
+
+#########################
+
+#########################
+Sprite page 9d
+..%%%%..........    ....%%%%........    ......%%%%......    ........%%%%....
+..%%%%..........    ....%%%%........    ......%%%%......    ........%%%%....
+.%%%%%%.........    ...%%%%%%.......    .....%%%%%%.....    .......%%%%%%...
+..%%.%..........    ....%%.%........    ......%%.%......    ........%%.%....
+..%%%%%.........    ....%%%%%.......    ......%%%%%.....    ........%%%%%...
+..%%%%..........    ....%%%%........    ......%%%%......    ........%%%%....
+...%%...........    .....%%.........    .......%%.......    .........%%.....
+..%%%%..........    ....%%%%........    ......%%%%......    ........%%%%....
+.%%%%%%.........    ...%%.%%%.......    .....%%%%%%.....    .......%%%%%%...
+.%%%%%%.........    ...%%.%%%.......    .....%%%%%%.....    ......%%%%%%%%..
+%%%%.%%%........    ...%%.%%%.......    ....%%%%.%%%....    .....%%%%%%%%%%.
+%%%%%.%%........    ...%%%.%%.......    ....%%%%%.%%....    .....%%.%%%%.%%.
+..%%%%..........    ....%%%%........    ......%%%%......    ........%%%%%...
+.%%%.%%.........    .....%%.........    .....%%%.%%.....    .......%%%.%%.%.
+.%%.%%%.........    .....%%.........    .....%%.%%%.....    ......%%....%%%.
+.%%%.%%%........    .....%%%........    .....%%%.%%%....    ......%%%...%%..
+reverse
+
+#########################
+
+------------------------------------------------------------------------------
+
+Guardian table
+==============
+
+This starts with the line "Guardians" and ends with a blank line. In
+between are one or more lines describing a guardian class. Comments
+are allowed between lines in this section. Each non-comment line
+consists of a number of space-separated items as follows.
+
+The first item is a 2-digit hex number giving the number of the
+class. This must be between 00 and 7f.
+
+The second item must be one of "unused", "rope", "arrow", "hor" or
+"ver". If it is "unused", the guardian class and the rest of the line
+are ignored. The meanings of the other possibilities should be
+obvious.
+
+The third item must be "<" or ">". This is ignored for vertical
+guardians; otherwise it indicates right-to-left or left-to-right
+motion respectively. It should be ">" for ropes.
+
+If the second item is "rope", three further hex bytes are
+expected. The first is the starting position of the rope within its
+swing, normally "22". The second is the length of the rope, and is
+usually "20". The third is the time it takes the rope to make one
+complete swing, usually "36".
+
+If the second item is "arrow", two further hex bytes are expected. The
+first byte is a delay; the second gives the top and bottom bytes of
+the arrow shape. In Matthew mode the second byte should be 82 for
+arrows moving right and 41 for those moving left. In Geoff mode they
+should be 84 and 21 respectively, and the delay byte should be ff and
+20 respectively.
+
+For the other two possible values of the second item, the following
+additional items are expected, in this order:
+
+- (Not in Matthew mode) "wrap" or "nowrap".
+
+- An integer between 0 and 3. For vertical guardians it should be 2. In
+  Geoff mode, for horizopntal sprites, it specifies how many ticks
+  elapse before moving the guardian up or down a row: 0 for none
+  (i.e. a purely horizontal sprite), 3 for 1 (i.e. an angle of 45
+  degrees), 2 for 4 and 1 for 2.
+
+- An integer between 1 and 8. If this is 1 2 4 or 8, it means that that
+  many frames are used when animating the guardian. Anything else will
+  cause strange effects I haven't investigated fully.
+
+- "n" or "b". These mean that the guardian will be normal or bright.
+
+- An integer between 0 and 7, which specifies the guardian's colour.
+
+- A decimal integer giving the guardian's speed. This may be negative
+  for vertical sprites; it is ignored in Matthew mode for horizontal
+  sprites. 
+
+- A hex byte specifiying the sprite page (9d for Willy above).
+
+- A hex byte specifying the start row.
+
+- Two hex bytes whose meaning depends on the mode. In Matthew and Old
+  Geoff modes, these are the limits of the guardian's movement:
+  columns for horizontal sprites, rows for vertical sprites. In Geoff
+  mode, the second byte is the total number of ticks the guardian
+  moves through, while the first byte is the starting tick within this
+  number; it is decremented each tick and reloaded from the total
+  when it hits zero, whereupon the guardian either changes direction
+  or wraps around.
+
+  Whichever mode is used, the first of these two bytes must be less
+  than or equal to the second.
+
+The meaning of the start byte in the "sprites" section of the room
+data depends on the type of the guardian:
+
+- For horizontal and vertical sprites, the top 3 bits give the
+  starting frame, and the bottom 5 bits the starting column.
+
+- For ropes, the bottom 5 bits specify the starting column. The top
+  bits should all be 0, i.e. the byte should be 1f or less.
+
+- For arrows in Matthew mode, the byte is twice the pixel row (I
+  think!)
+
+- For arrows in Geoff mode, the top four bits give the character row,
+  and the bottom four bits the delay between entering the room and the
+  arrow being fired.
+
+Here are some sample guardian class definitions.
+
+#########################
+# generic rope
+01  rope  <  22 20 36
+#
+# Matthew mode arrows
+3C  arrow >  d0 82
+45  arrow <  1c 41
+#
+# Geoff mode arrows
+06  arrow >  ff 84
+11  arrow <  20 21
+#
+# Matthew mode
+61  ver   <         2  4  n 5   8  ac  40 00 c0
+62  hor   >         0  4  n 6   0  af  90 07 14
+#
+# Geoff mode
+6F  hor   >    wrap 0  8  b 6   2  a6  a0 06 1b
+70  ver   <  nowrap 2  1  n 3   2  ba  30 00 50
+
+#########################
+
+------------------------------------------------------------------------------
+
+Start data
+==========
+
+This is a line of the form:
+
+start <room> <x> <y> <lives>
+
+All four parameters are in decimal; any which are missing will be
+taken to be zero.
+
+------------------------------------------------------------------------------
+
+Text
+====
+
+Text may be poked directly into the memory with a line of the format:
+
+Text <addr> <text>
+
+where <addr> is in hex, and <text> is separated from it by one space.
+
+------------------------------------------------------------------------------
+
+Bytes
+=====
+
+Similarly, bytes may be poked in directly with a line of the format:
+
+Bytes <addr> <byte> <byte>....
+
+where <addr> and the <byte>s are all in hex. As with patch vectors,
+long strings of bytes may be extended over several lines with
+backslashes.
+
+------------------------------------------------------------------------------
+
+Important locations
+===================
+
+These locations are probably the most useful with the "text" and
+"poke" directives.
+
+85fa-865e contains the tune which is played on the title screen.
+865f-869e contains the tune which is played during the game.
+
+Good locations for patch vectors and related code include:
+
+- 8148-81ff, the unused part of page 81, which is used for local
+  guardian data.
+
+- 858d-85ca, which once upon a time stored the security messages.
+
+- 85e5-85f9, which used to be the WRITETYPER data.
+
+- 869f-87c5, some of which used to be the security code. I have no
+  idea what the rest was for.
+
+- 8aa5-8aaa: only 6 bytes long, so you'd better be good at writing
+  compact code!
+
+- 8dc3-8dd2: 16 bytes here.
+
+- 811e-912c: 15 bytes here.
+
+- 939a-93b2, which was freed up by rewriting the rope code.
+
+- 96f4-97ff, which is going spare.
+
+And, of course, any unused sprite pages, or rooms!
+
+------------------------------------------------------------------------------
